@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
-@WebServlet(name = "UserDataRefresherServlet", urlPatterns = "/userDataRefresher")
-public class UserDataRefresherServlet extends HttpServlet {
+@WebServlet(name = "UserDataRefresherClientServlet", urlPatterns = "/userDataRefresher")
+public class UserDataRefresherClientServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -32,11 +32,6 @@ public class UserDataRefresherServlet extends HttpServlet {
             out.flush();
         }
 
-
-        //UserDTO user = engineManager.getUser(username);
-        //String userStr = new Gson().toJson(user, UserDTO.class);
-        //res.setStatus(HttpServletResponse.SC_OK);
-        //res.getWriter().write(userStr);
     }
 
     public User getUserByName(Map<String, User> usersMap, String name) {

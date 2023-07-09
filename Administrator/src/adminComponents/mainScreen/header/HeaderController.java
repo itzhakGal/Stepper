@@ -59,4 +59,8 @@ public class HeaderController {
     public AppController getMainController() {
         return mainController;
     }
+
+    public void updateRolesScreenTwo() {
+        mainController.updateRolesScreenTwo();
+    }
 }

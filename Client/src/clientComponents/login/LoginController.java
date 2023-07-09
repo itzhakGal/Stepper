@@ -92,6 +92,7 @@ public class LoginController {
                             //mainAppController.updateUserName(userName);
                             //mainAppController.updatePushTabButtons();
                             //mainAppController.openTabFlowDefinition();
+
                             changeSceneToMainApp(userName);
                             mainAppController.updateUserName(userName);
                             mainAppController.updatePushTabButtons();

@@ -119,14 +119,11 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <CheckBox fx:id="roleNameCheckBox" mnemonicParsing="false" onAction="#roleNameCheckBoxAction" textOverrun="CLIP" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
+                  <ListView fx:id="selectRoleNameList" maxHeight="200.0" minHeight="150.0" onEditStart="#roleNameListAction" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS">
                      <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </GridPane.margin>
-                  </CheckBox>
+                  </ListView>
                </children>
                <GridPane.margin>
                   <Insets />

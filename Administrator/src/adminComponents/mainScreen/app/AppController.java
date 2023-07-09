@@ -21,9 +21,9 @@ public class AppController {
     public void initialize() {
         if (headerComponentController != null && bodyComponentController != null) {
             headerComponentController.setMainController(this);
-            //headerComponentController.setSystemEngine(systemEngine);
             bodyComponentController.setMainController(this);
-            //bodyComponentController.setSystemEngine(systemEngine);
+
+            bodyComponentController.init();
             initListener();
         }
     }
@@ -53,5 +53,9 @@ public class AppController {
 
     public HeaderController getHeaderComponentController() {
         return headerComponentController;
+    }
+
+    public void updateRolesScreenTwo() {
+        bodyComponentController.updateRolesScreenTwo();
     }
 }

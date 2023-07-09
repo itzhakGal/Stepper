@@ -51,4 +51,5 @@ public class UsersListRefresherServlet extends HttpServlet {
         res.setStatus(HttpServletResponse.SC_OK);
         res.getWriter().write(usersNameStr);
     }*/
+
 }

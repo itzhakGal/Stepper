@@ -15,8 +15,6 @@ import java.util.Map;
 import java.util.TimerTask;
 import java.util.function.Consumer;
 
-import static util.Constants.GSON_INSTANCE;
-
 
 public class RolesListRefresher extends TimerTask {
     private final Consumer<Map<String, DTORole>> rolesListConsumer;

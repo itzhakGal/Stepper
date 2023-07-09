@@ -40,4 +40,8 @@ public class RolesManagementController {
         this.mainBodyController = mainBodyController;
     }
 
+    public void updateRolesScreenTwo() {
+        topManagementComponentController.startRolesListRefresher();
+    }
+
 }

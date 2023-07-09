@@ -78,6 +78,7 @@ public class TopManagementController implements Closeable {
     private void updateRolesRefresher(Map<String, DTORole> roleMap) {
 
         List<String> keyList = new ArrayList<>(roleMap.keySet());
+        List<DTORole> dtoRole = new ArrayList<>(roleMap.values()); // לא השתמשתי עדין
         Platform.runLater(() -> {
             ObservableList<String> items = listOfRoles.getItems();
             items.clear();

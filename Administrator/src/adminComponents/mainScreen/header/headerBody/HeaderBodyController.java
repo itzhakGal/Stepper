@@ -202,6 +202,7 @@ public class HeaderBodyController {
                                     isFileCorrectProperty.set(true);
                                     mainHeaderController.updatePushTabButtons();
                                     mainHeaderController.openTabUserManager();
+                                    mainHeaderController.updateRolesScreenTwo();
                                     loadFileButtonProperty.set(false);
                                 } else {
                                     filePath.setText(selectedFile.getPath());

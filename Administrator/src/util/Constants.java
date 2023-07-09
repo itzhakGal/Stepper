@@ -13,8 +13,9 @@ public class Constants {
     private final static String FULL_SERVER_PATH = BASE_URL + CONTEXT_PATH;
     public final static String LOAD_FILE = FULL_SERVER_PATH + "/upload_file";
     public final static String USERS_LIST = FULL_SERVER_PATH + "/usersListRefresher";
-
     public final static String ROLES_LIST = FULL_SERVER_PATH + "/rolesListRefresher";
+    public final static String USER_DATA_INFO_IN_ADMIN = FULL_SERVER_PATH + "/userDataInfoAdminRefresher";
+
     // GSON instance
     public final static Gson GSON_INSTANCE = new Gson();
 }

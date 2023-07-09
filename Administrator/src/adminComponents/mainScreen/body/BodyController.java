@@ -26,7 +26,6 @@ public class BodyController {
 
     @FXML
     private ScrollPane rolesManagementComponent;
-
     @FXML
     private RolesManagementController rolesManagementComponentController;
 
@@ -200,7 +199,7 @@ public class BodyController {
 
 
     public void initListener() {
-        //flowDefinitionScreenComponentController.initListener();
+        usersManagementComponentController.initListener();
         statisticsScreenComponentController.initListener();
         //flowExecutionScreenComponentController.initListener();
         flowExecutionHistoryScreenComponentController.initListener();
@@ -233,7 +232,11 @@ public class BodyController {
                         statisticsScreenComponentController.clearData();
                     }
                 });
-        
+
+
+
+
+
     }
 
     public FlowExecutionHistoryController getFlowExecutionHistoryScreenComponentController() {
@@ -241,4 +244,15 @@ public class BodyController {
     }
 
 
+    public void updateRolesScreenTwo() {
+        rolesManagementComponentController.updateRolesScreenTwo();
+    }
+
+    public void init() {
+        usersManagementComponentController.init(this);
+        //rolesManagementComponentController.init(this);
+        //flowExecutionHistoryScreenComponentController.init(this);
+        //statisticsScreenComponentController.init(this);
+
+    }
 }

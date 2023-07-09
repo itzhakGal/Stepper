@@ -26,8 +26,9 @@ public class RolesListRefresherServlet extends HttpServlet {
         try (PrintWriter out = res.getWriter()) {
             RolesManager rolesManager = ServletUtils.getRolesManager(getServletContext());
             Map<String, DTORole> roles = rolesManager.getRoles();
-            String rolesStr = new Gson().toJson(roles, new TypeToken<Map<String, DTORole>>(){}.getType());
-            out.println(rolesStr);
+            //String rolesStr = new Gson().toJson(roles, new TypeToken<Map<String, DTORole>>(){}.getType());
+            String rolesJson = new Gson().toJson(roles);
+            out.println(rolesJson);
             out.flush();
         }
     }
