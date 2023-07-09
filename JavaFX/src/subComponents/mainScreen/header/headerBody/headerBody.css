@@ -1,0 +1,11 @@
+/* ListView Styling */
+#filePath {
+    -fx-border-color:#B0C4DE;
+}
+
+#loadFileButton {
+    -fx-background-color:#B0C4DE; /* Set the background color */
+}
+#loadFileButton:hover {
+    -fx-background-color: linear-gradient(#61a2b1, #B0C4DE);
+}

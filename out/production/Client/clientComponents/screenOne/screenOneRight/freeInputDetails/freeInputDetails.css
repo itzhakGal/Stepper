@@ -1,0 +1,18 @@
+/* ListView Styling */
+#freeInputListView {
+    -fx-background-color: #f2f2f2; /* Set the background color */
+}
+
+/* ListCell Styling */
+#freeInputListView .list-cell {
+    -fx-padding: 5px; /* Set the padding */
+}
+
+#freeInputListView .list-cell:hover {
+    -fx-background-color: #e0e0e0; /* Set the background color on hover */
+}
+
+#freeInputListView .list-cell:selected {
+    -fx-background-color: #b3d9ff; /* Set the background color when selected */
+    -fx-text-fill: #000000; /* Set the text color when selected */
+}

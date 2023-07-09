@@ -1,0 +1,42 @@
+/* Set the background color of the table */
+.table-view {
+    -fx-background-color: #B0C4DE;
+}
+
+/* Set the text color of the table cells */
+.table-cell {
+    -fx-text-fill: black;
+}
+
+/* Set the alignment and background color of the header cells */
+.table-view .column-header {
+    -fx-alignment: center;
+    -fx-background-color: #B0C4DE;
+}
+
+/* Set the alignment and background color of the table cells */
+.table-row-cell {
+    -fx-alignment: center;
+    -fx-background-color: #B0C4DE;
+}
+
+/* Set the alternating background color of the table rows */
+.table-row-cell:even {
+    -fx-background-color: #D8E4F1;
+}
+
+/* Set the hover color of the table rows */
+.table-row-cell:hover {
+    -fx-background-color: #A9CCE3;
+}
+
+#flowStatisticsTableLabel {
+    -fx-font-family: Georgia;
+    -fx-font-size: 16px;
+    -fx-text-fill: #5c88be;
+}
+.chart-bar.series0 {
+    -fx-bar-fill: #B0C4DE;
+}
+
+

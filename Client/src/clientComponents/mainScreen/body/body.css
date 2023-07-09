@@ -1,0 +1,30 @@
+/* ListView Styling */
+#flowDefinitionButton {
+    -fx-background-color:#B0C4DE; /* Set the background color */
+}
+#flowDefinitionButton:hover {
+    -fx-background-color: linear-gradient(#61a2b1, #B0C4DE);
+}
+
+/* ListCell Styling */
+#flowsExecutionButton {
+    -fx-background-color:#B0C4DE;
+}
+#flowsExecutionButton:hover {
+    -fx-background-color: linear-gradient(#61a2b1, #B0C4DE);
+}
+
+#executionsHistoryButton  {
+    -fx-background-color:#B0C4DE;/* Set the background color on hover */
+}
+#executionsHistoryButton:hover {
+    -fx-background-color: linear-gradient(#61a2b1, #B0C4DE);
+}
+
+#statisticsButton  {
+    -fx-background-color:#B0C4DE; /* Set the background color when selected */
+}
+
+#statisticsButton:hover {
+    -fx-background-color: linear-gradient(#61a2b1, #B0C4DE);
+}

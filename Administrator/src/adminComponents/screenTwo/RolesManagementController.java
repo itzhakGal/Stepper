@@ -1,0 +1,43 @@
+package adminComponents.screenTwo;
+
+import adminComponents.mainScreen.body.BodyController;
+import adminComponents.screenTwo.lowerScreen.LowerManagementController;
+import adminComponents.screenTwo.topScreen.TopManagementController;
+import javafx.fxml.FXML;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import stepper.systemEngine.SystemEngineInterface;
+
+public class RolesManagementController {
+
+    private BodyController mainBodyController;
+    //private SystemEngineInterface systemEngine;
+    @FXML
+    private GridPane topManagementComponent;
+    @FXML
+    private TopManagementController topManagementComponentController;
+    @FXML
+    private VBox lowerManagementComponent;
+    @FXML
+    private LowerManagementController lowerManagementComponentController;
+
+    @FXML
+    public void initialize() {
+        if (topManagementComponentController != null && lowerManagementComponentController != null) {
+            topManagementComponentController.setMainController(this);
+            lowerManagementComponentController.setMainController(this);
+        }
+    }
+
+    public void setSystemEngine(SystemEngineInterface systemEngine) {
+        //this.systemEngine = systemEngine;
+        //topManagementComponentController.setSystemEngine(systemEngine);
+        //lowerManagementComponentController.setSystemEngine(systemEngine);
+    }
+
+    public void setMainController(BodyController mainBodyController) {
+        this.mainBodyController = mainBodyController;
+    }
+
+}

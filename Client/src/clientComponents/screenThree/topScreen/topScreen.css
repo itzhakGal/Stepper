@@ -1,0 +1,13 @@
+/* ListView Styling */
+
+#historyFlowsLabel {
+    -fx-font-family: Georgia;
+    -fx-font-size: 16px;
+    -fx-text-fill: #5c88be;
+}
+#rerunFlowButton {
+    -fx-background-color:#B0C4DE; /* Set the background color */
+}
+#rerunFlowButton:hover {
+    -fx-background-color: linear-gradient(#61a2b1, #B0C4DE);
+}

@@ -1,0 +1,7 @@
+/* ListView Styling */
+
+#availableFlowsLabel {
+    -fx-font-family: Georgia;
+    -fx-font-size: 16px;
+    -fx-text-fill: #5c88be;
+}

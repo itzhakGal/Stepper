@@ -1,0 +1,11 @@
+/* ListView Styling */
+
+#titleLabel {
+    -fx-font-size: 28px; /* Set the font size */
+    -fx-text-fill: #9fbbd5; /* Set the text color (red) */
+    -fx-font-family: "Impact"; /* Set the font family to Impact */
+    -fx-font-weight: bold; /* Set the font weight to bold */
+    -fx-padding: 10px; /* Set the padding */
+}
+
+

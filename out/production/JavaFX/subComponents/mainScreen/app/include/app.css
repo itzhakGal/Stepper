@@ -1,0 +1,141 @@
+
+.tab{
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5c88be;
+    -fx-font-family: fantasy;
+    -fx-background-color: #B0C4DE;
+    -fx-border-color: #5c88be;
+    -fx-border-radius: 4px;
+}
+
+.tab:pressed
+{
+    -fx-background-color: #B0C4DE;
+}
+
+.accordion:hover
+{
+    -fx-border-color: #5c88be;
+    -fx-border-radius: 4px;
+}
+
+.tree-view {
+    -fx-font-size: 14px;
+    -fx-padding: 10px;
+    -fx-border-color: #5c88be;
+    -fx-border-radius: 4px;
+}
+.tree-view:pressed
+{
+    -fx-background-color: #B0C4DE;
+    -fx-text-fill: #020205;
+}
+.tree-view:hover {
+    -fx-border-color: #5c88be;
+    -fx-border-radius: 4px;
+}
+
+.tree-cell:filled:selected {
+    -fx-background-color: #B0C4DE;
+    -fx-text-fill: #020205;
+    -fx-font-weight: bold;
+}
+.tree-cell:hover{
+    -fx-border-color: #5c88be;
+    -fx-border-radius: 5px;
+    -fx-text-fill: #020205;
+}
+#filepath
+{
+    -fx-font-family: "fantasy";
+    -fx-font-size: 14px;
+}
+
+.list-view
+{
+    -fx-border-color: #5c88be;
+    -fx-border-radius: 2px;
+    -fx-font-size: 14px;
+    -fx-padding: 3px;
+}
+.list-view .list-cell:hover
+{
+    -fx-border-color: #5c88be;
+    -fx-border-radius: 5px;
+}
+.list-view:pressed
+{
+    -fx-background-color: #B0C4DE;
+    -fx-text-fill: #020205;
+    -fx-font-weight: bold;
+
+}
+.list-view .list-cell:filled:selected {
+    -fx-background-color: #B0C4DE;
+    -fx-text-fill: #020205;
+    -fx-font-weight: bold;
+}
+
+.button {
+    -fx-background-color: #B0C4DE;
+    -fx-text-fill: #020205;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 10px;
+    -fx-align-items: center;
+    -fx-justify-content: center;
+    -fx-border-color: #5c88be;
+    -fx-border-radius: 4px;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(#61a2b1, #B0C4DE);
+}
+
+/* Style a text field */
+.text-field {
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #999999;
+    -fx-background-radius: 5px;
+    -fx-border-color: #5c88be;
+    -fx-border-radius: 4px;
+}
+
+/* Style a table */
+.table-view {
+    -fx-font-size: 14px;
+}
+.table-view:hover{
+    -fx-background-color: #5c88be;
+}
+
+/* Style table column headers */
+.table-view .column-header {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Style table rows */
+.table-view .table-row-cell:hover {
+    -fx-border-color: #B0C4DE;
+    -fx-border-radius: 5px;
+    -fx-text-fill: #020205;
+    -fx-font-weight: bold;
+}
+
+/* Style selected table rows */
+.table-view .table-row-cell:selected {
+    -fx-background-color: #B0C4DE;
+    -fx-text-fill: #020205;
+    -fx-font-weight: bold;
+}
+.table-view .table-row-cell:pressed {
+    -fx-background-color: #B0C4DE;
+    -fx-text-fill: #020205;
+    -fx-font-weight: bold;
+}
+
+/* Style a checkbox */
+.check-box {
+    -fx-text-fill: #020205;
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminComponents.mainScreen.header.HeaderController">
+   <content>
+      <VBox alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" stylesheets="@header.css">
+         <children>
+            <GridPane alignment="CENTER" VBox.vgrow="ALWAYS">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints vgrow="ALWAYS" />
+               </rowConstraints>
+               <children>
+                  <Label fx:id="titleLabel" alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-weight: bold;" stylesheets="@header.css" text="Stepper - Administrator" GridPane.halignment="CENTER" />
+               </children>
+            </GridPane>
+            <fx:include fx:id="headerBodyComponent" source="headerBody/headerBody.fxml" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+   </content>
+</ScrollPane>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="subComponents.mainScreen.body.BodyController">
+   <content>
+      <TabPane fx:id="optionsTabPane" nodeOrientation="RIGHT_TO_LEFT" stylesheets="@body.css" tabClosingPolicy="UNAVAILABLE" tabMinHeight="30.0">
+        <tabs>
+          <Tab fx:id="statisticsButton" disable="true" onSelectionChanged="#statisticsButtonAction" style="-fx-font-weight: bold;" text="Statistics">
+            <content>
+              <AnchorPane>
+                     <children>
+                        <fx:include fx:id="statisticsScreenComponent" source="../../screenFour/statisticScreen/statisticFullScreen.fxml" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="executionsHistoryButton" disable="true" onSelectionChanged="#executionsHistoryButtonAction" style="-fx-font-weight: bold;" text="Executions History">
+            <content>
+              <AnchorPane>
+                     <children>
+                        <fx:include fx:id="flowExecutionHistoryScreenComponent" source="../../screenThree/flowExecutionHistory/flowExecutionHistory.fxml" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+            <Tab fx:id="flowsExecutionButton" disable="true" onSelectionChanged="#flowsExecutionButtonAction" style="-fx-font-weight: bold;" text="Flows Execution">
+               <content>
+                  <AnchorPane>
+                     <children>
+                        <fx:include fx:id="flowExecutionScreenComponent" source="../../screenTwo/flowsExecutionScreen.fxml" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="flowDefinitionButton" disable="true" onSelectionChanged="#flowDefinitionButtonAction" style="-fx-font-weight: bold;" text="Flows Definition">
+               <content>
+                  <AnchorPane nodeOrientation="LEFT_TO_RIGHT">
+                     <children>
+                        <fx:include fx:id="flowDefinitionScreenComponent" source="../../screenOne/flowDefinitionScreen/flowDefinition.fxml" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </content>
+</ScrollPane>

@@ -1,0 +1,7 @@
+/* ListView Styling */
+#executeFlowButton {
+    -fx-background-color:#B0C4DE; /* Set the background color */
+}
+#executeFlowButton:hover {
+    -fx-background-color: linear-gradient(#61a2b1, #B0C4DE);
+}

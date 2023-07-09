@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Administrator/Administrator.iml" filepath="$PROJECT_DIR$/Administrator/Administrator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Client/Client.iml" filepath="$PROJECT_DIR$/Client/Client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ConsoleUI/ConsoleUI.iml" filepath="$PROJECT_DIR$/ConsoleUI/ConsoleUI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Dto/Dto.iml" filepath="$PROJECT_DIR$/Dto/Dto.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JavaFX/JavaFX.iml" filepath="$PROJECT_DIR$/JavaFX/JavaFX.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/StepperProject.iml" filepath="$PROJECT_DIR$/.idea/StepperProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/System/System.iml" filepath="$PROJECT_DIR$/System/System.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Tomcat/Tomcat.iml" filepath="$PROJECT_DIR$/Tomcat/Tomcat.iml" />
+    </modules>
+  </component>
+</project>

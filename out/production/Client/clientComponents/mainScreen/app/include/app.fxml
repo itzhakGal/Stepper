@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<ScrollPane fx:id="mainComponent" fitToHeight="true" fitToWidth="true" pannable="true" stylesheets="@app.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientComponents.mainScreen.app.AppController">
+   <content>
+      <BorderPane>
+         <center>
+            <fx:include fx:id="bodyComponent" source="../../body/body.fxml" BorderPane.alignment="TOP_LEFT" />
+         </center>
+         <top>
+            <fx:include fx:id="headerComponent" source="../../header/headerClient.fxml" />
+         </top>
+      </BorderPane>
+   </content>
+</ScrollPane>
