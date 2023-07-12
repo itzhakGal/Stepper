@@ -5,10 +5,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import stepper.systemEngine.SystemEngineInterface;
 import stepper.users.UserManager;
 import utils.ServletUtils;
 import utils.SessionUtils;
-
 import java.io.IOException;
 
 @WebServlet(name = "LoginServlet", urlPatterns = "/loginShortResponse")
@@ -18,8 +18,11 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/plain;charset=UTF-8");
 
+        SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
         String usernameFromSession = SessionUtils.getUsername(request);
-        UserManager userManager = ServletUtils.getUserManager(getServletContext());
+        UserManager userManager = systemEngine.getUserManager();
+        //UserManager userManager = ServletUtils.getUserManager(getServletContext());
+
 
         if (usernameFromSession == null) { //user is not logged in yet
 

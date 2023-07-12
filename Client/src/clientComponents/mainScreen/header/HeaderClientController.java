@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import stepper.role.Role;
+import stepper.role.RoleImpl;
 import stepper.systemEngine.SystemEngineInterface;
 import stepper.users.User;
 
@@ -59,7 +60,7 @@ public class HeaderClientController implements Closeable {
         else
             isUserManager = "False";
 
-        Map<String, Role> associatedRole = userData.getAssociatedRole();
+        Map<String, RoleImpl> associatedRole = userData.getAssociatedRole();
         List<String> keyList = new ArrayList<>(associatedRole.keySet());
 
         Platform.runLater(() -> {

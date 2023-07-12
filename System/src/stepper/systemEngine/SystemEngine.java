@@ -1,6 +1,5 @@
 package stepper.systemEngine;
 
-
 import stepper.dataDefinition.impl.Enumerator.EnumeratorData;
 import stepper.exception.*;
 import stepper.flow.definition.api.*;
@@ -19,10 +18,8 @@ import stepper.role.RolesManager;
 import stepper.statistics.StatisticsDataImpl;
 import stepper.step.api.DataNecessity;
 import stepper.step.api.StepsNamesImpl;
-import stepper.users.User;
 import stepper.users.UserManager;
 import utilWebApp.DTOFullDetailsPastRunWeb;
-import utilWebApp.DTOUser;
 import utils.*;
 import utilsDesktopApp.DTOFlowDetails;
 import utilsDesktopApp.DTOListContinuationFlowName;
@@ -33,7 +30,6 @@ import xmlReader.schema.generated.STStepInFlow;
 import xmlReader.schema.generated.STStepper;
 import xmlReaderJavaFX.schema.SchemaBasedJAXBMainJavaFX;
 import xmlReaderJavaFX.schema.generated.STContinuation;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -50,9 +46,8 @@ public class SystemEngine implements SystemEngineInterface {
     public FlowExecutionImpl optionalFlowExecution;
     private ExecutorService threadPoolExecutor;
     private Map<UUID, FlowExecution> executedFlowsMap;
-
-    //private final RolesManager roles;
-    //private final UserManager userManager;
+    private final RolesManager roles;
+    private final UserManager userManager;
 
 
     public SystemEngine ()
@@ -62,7 +57,8 @@ public class SystemEngine implements SystemEngineInterface {
         this.statisticsData = new StatisticsDataImpl();
         this.optionalFlowExecution = null;
         this.executedFlowsMap = new HashMap<>();
-        //this.userManager = new UserManager();
+        this.userManager = new UserManager();
+        this.roles = new RolesManager();
     }
 
     public static SystemEngine getInstance() {
@@ -739,6 +735,26 @@ public class SystemEngine implements SystemEngineInterface {
         return fullDetails;
     }
 
+    public RolesManager getRolesManager() {
+        return roles;
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
+    @Override
+    public List<String> getListOfFlowsAvailable()
+    {
+        List<String> listOfFlowsAvailable = new ArrayList<>();
+        for(FlowDefinition flowDefinition : currentFlowsDefinition.getListFlowsDefinition()) {
+            listOfFlowsAvailable.add(flowDefinition.getName());
+        }
+        return listOfFlowsAvailable;
+    }
+
+
+
 
     /*@Override
     public Set<DTOUser> getUsers() {
@@ -750,5 +766,8 @@ public class SystemEngine implements SystemEngineInterface {
         }
         return users;
     }*/
+
+
+
 
 }

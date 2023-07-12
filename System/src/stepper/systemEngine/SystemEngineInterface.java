@@ -5,8 +5,9 @@ import stepper.flow.execution.FlowExecution;
 import stepper.flow.execution.context.DataInFlowExecution;
 import stepper.flow.execution.context.ExecutionContextInterface;
 import stepper.flows.definition.FlowsDefinition;
+import stepper.role.RolesManager;
+import stepper.users.UserManager;
 import utilWebApp.DTOFullDetailsPastRunWeb;
-import utilWebApp.DTOUser;
 import utils.*;
 import utilsDesktopApp.DTOListContinuationFlowName;
 import utilsDesktopApp.DTOListFlowsDetails;
@@ -18,7 +19,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 public interface SystemEngineInterface extends Serializable {
@@ -121,7 +121,8 @@ public interface SystemEngineInterface extends Serializable {
     DTOFullDetailsPastRunWeb getFlowExecutedDataDTOWeb(UUID flowId);
     DTOFullDetailsPastRunWeb flowActivationAndExecutionWeb(String flowName);
     void validContinuationFlowNameExistWeb(xmlReaderJavaFX.schema.generated.STStepper stepper);
-    //Set<DTOUser> getUsers();
-
+    UserManager getUserManager();
+    RolesManager getRolesManager();
+    List<String> getListOfFlowsAvailable();
 }
 

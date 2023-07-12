@@ -77,15 +77,12 @@ public class ExecutionContextImpl implements ExecutionContextInterface {
             throw new DifferentTypeException();
         }
     }
-
     private void updateListInputsStep(String finalStepName,  DataInFlowExecution data) {
 
         StepExecutionDataImpl step = StepExecutionDataByStepName(finalStepName);
         StepExecutionDataImpl stepJavaFX = StepExecutionDataByStepNameJavaFX(finalStepName);
         step.getInputsData().add(data);
-        //הוספתי IF
-        if(!stepJavaFX.getInputsData().contains(data))
-            stepJavaFX.getInputsData().add(data);
+        stepJavaFX.getInputsData().add(data);
     }
 
     @Override

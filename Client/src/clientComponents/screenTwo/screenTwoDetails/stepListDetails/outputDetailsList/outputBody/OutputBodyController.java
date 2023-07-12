@@ -63,7 +63,7 @@ public class OutputBodyController {
         updateInputContent(output);
     }
 
-    /*private void updateInputContent(DTOOutputDetailsWeb output) {
+    private void updateInputContent(DTOOutputDetailsWeb output) {
         if (output.getTypePresentation().equals("FileListData")) {
             FileListData listData = (FileListData) output.getValue();
             createListDataContent(listData.getItem().isEmpty(), listData.toString(), listData.getItem().size());
@@ -87,9 +87,9 @@ public class OutputBodyController {
         else {
             createStringContent((String) (output.getValue() + ""));
         }
-    }*/
+    }
 
-    private void updateInputContent(DTOOutputDetailsWeb output) {
+    /*private void updateInputContent(DTOOutputDetailsWeb output) {
         if (output.getTypePresentation().equals("FileListData")) {
             if (output.getValue() instanceof FileListData) {
                 FileListData listData = (FileListData) output.getValue();
@@ -131,7 +131,7 @@ public class OutputBodyController {
                 // You can show an error message or perform alternative actions here
             }
         }
-    }
+    }*/
 
     public VBox createVBox(MappingData<?, ?> mappingData) {
         VBox vbox = new VBox();

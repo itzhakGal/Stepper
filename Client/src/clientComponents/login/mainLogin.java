@@ -27,7 +27,7 @@ public class mainLogin extends Application {
         // Pass the primaryStage to the AppController
         loginController.setPrimaryStage(primaryStage);
 
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

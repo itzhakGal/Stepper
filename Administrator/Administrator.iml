@@ -14,5 +14,6 @@
     <orderEntry type="module" module-name="Client" />
     <orderEntry type="module" module-name="Tomcat" />
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="controlsfx-8.40.14" level="project" />
   </component>
 </module>

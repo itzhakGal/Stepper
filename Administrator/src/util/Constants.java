@@ -15,6 +15,9 @@ public class Constants {
     public final static String USERS_LIST = FULL_SERVER_PATH + "/usersListRefresher";
     public final static String ROLES_LIST = FULL_SERVER_PATH + "/rolesListRefresher";
     public final static String USER_DATA_INFO_IN_ADMIN = FULL_SERVER_PATH + "/userDataInfoAdminRefresher";
+    public final static String SAVA_NEW_DATA_USER = FULL_SERVER_PATH + "/savaNewDataUser";
+    public final static String ROLE_DATA_INFO_IN_ADMIN = FULL_SERVER_PATH + "/roleDataInfoAdminRefresher";
+
 
     // GSON instance
     public final static Gson GSON_INSTANCE = new Gson();

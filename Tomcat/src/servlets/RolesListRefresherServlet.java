@@ -24,7 +24,11 @@ public class RolesListRefresherServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         try (PrintWriter out = res.getWriter()) {
-            RolesManager rolesManager = ServletUtils.getRolesManager(getServletContext());
+            //RolesManager rolesManager = ServletUtils.getRolesManager(getServletContext());
+
+            SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
+            RolesManager rolesManager = systemEngine.getRolesManager();
+
             Map<String, DTORole> roles = rolesManager.getRoles();
             //String rolesStr = new Gson().toJson(roles, new TypeToken<Map<String, DTORole>>(){}.getType());
             String rolesJson = new Gson().toJson(roles);

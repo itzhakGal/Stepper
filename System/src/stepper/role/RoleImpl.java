@@ -16,7 +16,9 @@ public class RoleImpl implements Role {
         this.roleDescription = description;
         this.allowedFlows = new HashSet<>();
     }
-
+    public RoleImpl() {
+        //this.allowedFlows = new HashSet<>();
+    }
     @Override
     public String getName() {
         return roleName;
@@ -35,5 +37,17 @@ public class RoleImpl implements Role {
     @Override
     public void addAllowedFlow(String flowName) {
         allowedFlows.add(flowName);
+    }
+
+    public void setAllowedFlows(Set<String> allowedFlows) {
+        this.allowedFlows = allowedFlows;
+    }
+
+    public void setRoleDescription(String roleDescription) {
+        this.roleDescription = roleDescription;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

@@ -214,9 +214,7 @@ public class FreeInputsController {
     }
 
     public void clearDetails() {
-        // Reset the start button click property
         startButtonClickProperty.set(false);
-        // Clear the grid pane and reset the row and column constraints
         freeInputsGridPane.getChildren().clear();
         freeInputsGridPane.getRowConstraints().clear();
         freeInputsGridPane.getColumnConstraints().clear();

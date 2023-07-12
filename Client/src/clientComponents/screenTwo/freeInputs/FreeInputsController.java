@@ -3,6 +3,7 @@ package clientComponents.screenTwo.freeInputs;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.JsonToken;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -21,14 +22,12 @@ import clientComponents.screenTwo.FlowsExecutionScreenController;
 import clientComponents.screenTwo.freeInputs.freeInputDetails.collectionInputs.CollectionInputs;
 import util.Constants;
 import util.http.HttpClientUtil;
-import utilWebApp.ClassTypeAdapter;
-import utilWebApp.DTODataInFlowExecution;
-import utilWebApp.DTOFullDetailsPastRunWeb;
-import utilWebApp.DTOInputFlowPastWeb;
+import utilWebApp.*;
 import utils.*;
 import utilsDesktopApp.DTOListFlowsDetails;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -125,7 +124,6 @@ public class FreeInputsController {
         //this.flowIdRerun = systemEngine.updateOptionalExecution(dtoFlowExecution.getFlowName(), isContinuation);
         //systemEngine.removeInitialFreeInputFromDTO(dtoFlowExecution);
     }
-
     private void updateDetailsFreeInputsWab(DTOFlowExecution dtoFlowExecution, IntWrapper row, IntWrapper amountOfMandatoryInputs, IntWrapper amountOfOptionalInput, IntWrapper countAmountUpdateData, UUID flowIdRerun){
 
         mainFlowsExecutionScreenController.setExecutedFlowID(flowIdRerun);
@@ -208,6 +206,10 @@ public class FreeInputsController {
             HttpClientUtil.runAsync(finalUrl, new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    Platform.runLater(() -> {
+                        createTitleFreeInputs("getRow", "-fx-font-weight: bold; -fx-font-size: 12", row);
+                    });
+
                 }
                 // יום רביעי עם חריגות
                 /*@Override
@@ -238,7 +240,8 @@ public class FreeInputsController {
                     try {
                     if (response.isSuccessful()) {
                         //DataInFlowExecution freeInputDataInFlow = new Gson().fromJson(response.body().string(), DataInFlowExecution.class);
-                        DTODataInFlowExecution freeInputDataInFlow = gson.fromJson(response.body().string(), DTODataInFlowExecution.class);
+                        String res = response.body().string();
+                        DTODataInFlowExecution freeInputDataInFlow = gson.fromJson(res, DTODataInFlowExecution.class);
 
                         Platform.runLater(() -> {
                             if(freeInputDataInFlow.getItem() != null)
@@ -301,7 +304,7 @@ public class FreeInputsController {
         }
     }
 
-    private void handleButtonClick(int amountOfMandatoryInputs, DTOFlowExecution dtoFlowExecution) {
+    private void handleButtonClick1(int amountOfMandatoryInputs, DTOFlowExecution dtoFlowExecution) {
         CollectionInputs controller;
 
         for (IntWrapper row = new IntWrapper(2); row.getValue() < (dtoFlowExecution.getInputsExecution().size()+3); row.setValue(row.getValue() + 1)) {
@@ -325,7 +328,9 @@ public class FreeInputsController {
                     HttpClientUtil.runAsync(finalUrl, new Callback() {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                            createTitleFreeInputs("The input value is not an int", "-fx-font-weight: bold; -fx-font-size: 12", row);
+                            Platform.runLater(() -> {
+                                    createTitleFreeInputs("The input value is not an int", "-fx-font-weight: bold; -fx-font-size: 12", row);
+                            });
                         }
 
                         @Override
@@ -333,7 +338,7 @@ public class FreeInputsController {
                             try {
                                 if (response.isSuccessful()) {
                                     Platform.runLater(() -> {
-                                        executionFlow(dtoFlowExecution);
+                                        //executionFlow(dtoFlowExecution);
                                         mainFlowsExecutionScreenController.setVisibleDetails(true);
                                         mainFlowsExecutionScreenController.getRerunButtonProperty().set(false);
                                         mainFlowsExecutionScreenController.getProgressBar().setVisible(true);
@@ -364,6 +369,57 @@ public class FreeInputsController {
                 }
             }
         }
+        executionFlow(dtoFlowExecution);
+    }
+
+    private void handleButtonClick(int amountOfMandatoryInputs, DTOFlowExecution dtoFlowExecution) {
+        CollectionInputs controller;
+        Gson gson = new Gson();
+
+        List<DTOMandatoryInputsWeb> listDtoMandatoryInput = new ArrayList<>();
+        for (int row = 2; row < (dtoFlowExecution.getInputsExecution().size()+3); row++) {
+            if(row != (2+amountOfMandatoryInputs)) {
+                GridPane childGridPane = (GridPane) freeInputsGridPane.getChildren().get(row);
+                controller = (CollectionInputs) childGridPane.getProperties().get("controller");
+                String labelValue = controller.getName();
+                String value = controller.getInputData();
+                String type= dtoFlowExecution.getInputByFinalName(labelValue).getType();
+                listDtoMandatoryInput.add(new DTOMandatoryInputsWeb(type, labelValue, value));
+            }
+        }
+        ListDTOMandatoryInputsWeb listDTOMandatoryInputsWeb = new ListDTOMandatoryInputsWeb(listDtoMandatoryInput);
+
+
+        String finalUrl = HttpUrl
+                .parse(Constants.TEST)
+                .newBuilder()
+                .build()
+                .toString();
+
+        String listDTOMandatoryInputsWebJSON = gson.toJson(listDTOMandatoryInputsWeb);
+        RequestBody body = RequestBody.create(listDTOMandatoryInputsWebJSON.getBytes());
+        HttpClientUtil.runAsyncPost(finalUrl, body, new Callback(){
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (response.isSuccessful()) {
+                        Platform.runLater(() -> {
+                            executionFlow(dtoFlowExecution);
+                            mainFlowsExecutionScreenController.setVisibleDetails(true);
+                            mainFlowsExecutionScreenController.getRerunButtonProperty().set(false);
+                            mainFlowsExecutionScreenController.getProgressBar().setVisible(true);
+                        });
+                    }} finally {
+                    response.close();
+                }
+            }
+        });
 
     }
     private void executionFlow(DTOFlowExecution dtoFlowExecution) {
@@ -483,4 +539,5 @@ public class FreeInputsController {
     public UUID getCurrFlowId() {
         return currFlowId;
     }
+
 }

@@ -1,5 +1,7 @@
 package utilWebApp;
 
+import stepper.users.User;
+
 import java.util.Map;
 
 public class DTOUser {

@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import stepper.role.RolesManager;
 import stepper.systemEngine.SystemEngineInterface;
 import stepper.users.User;
 import stepper.users.UserManager;
@@ -26,7 +27,10 @@ public class UsersListRefresherServlet extends HttpServlet {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
-            UserManager userManager = ServletUtils.getUserManager(getServletContext());
+            //UserManager userManager = ServletUtils.getUserManager(getServletContext());
+
+            SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
+            UserManager userManager = systemEngine.getUserManager();
 
             Map<String, User> usersMap = userManager.getUsers();
             Set<String> usersList = usersMap.keySet();

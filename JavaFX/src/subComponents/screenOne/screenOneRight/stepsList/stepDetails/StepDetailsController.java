@@ -120,7 +120,7 @@ public class StepDetailsController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 
-                setVisibleLabelsInput();
+                    setVisibleLabelsInput();
 
                 String currentSelected = inputListLV.getSelectionModel().getSelectedItem();
                 DTOInputDetailsConnectedToStep inputDetailsConnectedToStep = getInputDetails(currentSelected, stepDefinitionJavaFX);

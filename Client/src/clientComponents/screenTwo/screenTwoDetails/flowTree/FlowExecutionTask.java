@@ -22,9 +22,10 @@ import utilsDesktopApp.DTOListFlowsDetails;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.TimerTask;
 import java.util.UUID;
 
-public class FlowExecutionTask extends Task<Boolean> {
+public class FlowExecutionTask extends TimerTask {  //extends Task<Boolean>
     //private final SystemEngineInterface systemEngine;
     private final UIAdapter uiAdapter;
     private final UUID flowId;
@@ -32,7 +33,7 @@ public class FlowExecutionTask extends Task<Boolean> {
     private final SimpleBooleanProperty onFinish;
     private SimpleDoubleProperty progress;
 
-    public FlowExecutionTask(UUID flowId, UIAdapter uiAdapter, SimpleBooleanProperty onFinish, SimpleStringProperty currentFlowId) {
+    public FlowExecutionTask(UUID flowId, UIAdapter uiAdapter, SimpleStringProperty currentFlowId, SimpleBooleanProperty onFinish) {
         this.flowId = flowId;
         this.uiAdapter = uiAdapter;
         this.onFinish = onFinish;
@@ -41,6 +42,48 @@ public class FlowExecutionTask extends Task<Boolean> {
         this.progress = new SimpleDoubleProperty(0.0);
     }
 
+    @Override
+    public void run() {
+        if (currentFlowId.getValue().equals(flowId.toString())) {
+            String finalUrl = HttpUrl
+                    .parse(Constants.FLOW_EXECUTION_TASK)
+                    .newBuilder()
+                    .addQueryParameter("flowId", this.flowId.toString())
+                    .build()
+                    .toString();
+
+            HttpClientUtil.runAsync(finalUrl, new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) {
+                    if (response.isSuccessful()) {
+                        try {
+                            String responseData = response.body().string();
+                            DTOFullDetailsPastRunWeb executedData = new Gson().fromJson(responseData, DTOFullDetailsPastRunWeb.class);
+                            uiAdapter.update(executedData);
+                            if (executedData.getFinalResult() != null) {
+                                onFinish.set(true);
+                                double progressValue = calculateProgress(executedData);  // Implement this method
+                                progress.set(progressValue);
+                                cancel();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            });
+        }
+    }
+
+
+
+
+    // עבודה ישנה
     /*@Override
     protected Boolean call() {
         int SLEEP_TIME = 100;
@@ -64,7 +107,8 @@ public class FlowExecutionTask extends Task<Boolean> {
         return Boolean.TRUE;
     }*/
 
-    @Override
+    // יום שני 10/07 אחרי אביעד מריץ אבל עדיין יש כפילויות
+    /*@Override
     protected Boolean call() {
         int SLEEP_TIME = 100;
         if (currentFlowId.getValue().equals(flowId.toString())) {
@@ -111,7 +155,7 @@ public class FlowExecutionTask extends Task<Boolean> {
             });
         }
         return Boolean.TRUE;
-    }
+    }*/
 
     /*@Override
     protected Boolean call() {
@@ -224,7 +268,7 @@ public class FlowExecutionTask extends Task<Boolean> {
         return progressValue;
     }
 
-
+        //לולאה אין סופית
         /*public void updateMoreData(DTOFullDetailsPastRunWeb executedData) {
         int SLEEP_TIME = 100;
         Boolean result = false;

@@ -12,5 +12,6 @@
     <orderEntry type="module" module-name="Dto" />
     <orderEntry type="library" name="okHttp" level="project" />
     <orderEntry type="library" name="google-gson-2" level="project" />
+    <orderEntry type="library" name="controlsfx-8.40.14" level="project" />
   </component>
 </module>

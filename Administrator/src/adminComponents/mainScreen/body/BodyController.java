@@ -71,6 +71,15 @@ public class BodyController {
             flowExecutionHistoryScreenComponentController.setMainController(this);
         }
         setTabsListener();
+
+        usersManagementComponentController.getListOfUsers().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(oldValue == null)
+                usersManagementComponentController.getChosenUserFromListProperty().set(newValue);
+            else if(newValue == null)
+                usersManagementComponentController.getChosenUserFromListProperty().set(oldValue);
+            else if(!oldValue.equals(newValue))
+                usersManagementComponentController.getChosenUserFromListProperty().set(newValue);
+        });
     }
 
     public void setMainController(AppController mainController) {
@@ -199,7 +208,7 @@ public class BodyController {
 
 
     public void initListener() {
-        usersManagementComponentController.initListener();
+        //usersManagementComponentController.initListener();
         statisticsScreenComponentController.initListener();
         //flowExecutionScreenComponentController.initListener();
         flowExecutionHistoryScreenComponentController.initListener();
@@ -232,10 +241,6 @@ public class BodyController {
                         statisticsScreenComponentController.clearData();
                     }
                 });
-
-
-
-
 
     }
 

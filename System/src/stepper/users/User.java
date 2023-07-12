@@ -1,6 +1,7 @@
 package stepper.users;
 
 import stepper.role.Role;
+import stepper.role.RoleImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +11,7 @@ import java.util.Map;
 public class User {
     boolean isManager;
     protected String userName;
-    private Map<String, Role> associatedRole;
+    private Map<String, RoleImpl> associatedRole;
 
     public User(String name, boolean isManager)
     {
@@ -26,7 +27,7 @@ public class User {
         return userName;
     }
 
-    public Map<String, Role> getAssociatedRole() {
+    public Map<String, RoleImpl> getAssociatedRole() {
         return associatedRole;
     }
 
@@ -34,19 +35,19 @@ public class User {
         this.userName = userName;
     }
 
-    public void setManager(boolean manager) {
+    public void setIsManager(boolean manager) {
         isManager = manager;
     }
 
-    public Map<String, Role> getRoles() {
+    public Map<String, RoleImpl> getRoles() {
         return associatedRole;
     }
 
     public boolean getIsManager() {
         return isManager;
     }
-    public void setAssociatedRole(Map<String, Role> roles) {
-        for (Map.Entry<String, Role> role : roles.entrySet()) {
+    public void setAssociatedRole(Map<String, RoleImpl> roles) {
+        for (Map.Entry<String, RoleImpl> role : roles.entrySet()) {
             if (!this.associatedRole.containsKey(role.getKey()))
                 this.associatedRole.put(role.getKey(), role.getValue());
         }

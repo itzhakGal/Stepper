@@ -7,6 +7,7 @@ public class Constants {
     // Server resources locations
     //public final static int REFRESH_RATE = 2000;
 
+    public final static int REFRESH_RATE1 = 1000;
     public final static int REFRESH_RATE = 10000;
     public final static String BASE_DOMAIN = "localhost";
     private final static String BASE_URL = "http://" + BASE_DOMAIN + ":8080";
@@ -27,6 +28,9 @@ public class Constants {
     public final static String FLOW_EXECUTION_RESULT = FULL_SERVER_PATH + "/flowExecutionResult";
     public final static String FLOW_DEFINITION_REFRESHER = FULL_SERVER_PATH + "/flowDefinitionRefresher";
     public final static String USER_DATA_REFRESHER = FULL_SERVER_PATH + "/userDataRefresher";
+
+    public final static String TEST = FULL_SERVER_PATH + "/test";
+
 
 
 

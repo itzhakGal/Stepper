@@ -1,5 +1,7 @@
 package stepper.users;
 import stepper.role.Role;
+import stepper.role.RoleImpl;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +25,7 @@ public class UserManager {
         return usersMap;
     }
 
-    public Map<String, Role> getUserRoles(String userName) {
+    public Map<String, RoleImpl> getUserRoles(String userName) {
         return this.usersMap.get(userName).getRoles();
     }
 
