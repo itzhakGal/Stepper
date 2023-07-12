@@ -154,8 +154,7 @@ public class UsersManagementController implements Closeable {
     public void handleUserSelection() {
 
         //String selectedUser = listOfUsers.getSelectionModel().getSelectedItem();
-        //String selectedUser = chosenUserFromListProperty.getValue();
-        //this.userSelected = chosenUserFromListProperty.getValue();
+
         String finalUrl = HttpUrl
                 .parse(Constants.USER_DATA_INFO_IN_ADMIN)
                 .newBuilder()
@@ -190,12 +189,11 @@ public class UsersManagementController implements Closeable {
 
     public void updateUserFullData(DTOUserDataFullInfo userDataFullInfo) {
 
-
         if(userDataFullInfo.getUser() == null)
             return;
 
-        // תוסיף רק את הרולים שאין ליוזר שיבחר מהם עוד להוספה
-        List<String> selectedAssignedRoles = new ArrayList<>();
+        // תוסיף רק את הרולים שאין ליוזר שיבחר מהם עוד להוספה???
+        /*List<String> selectedAssignedRoles = new ArrayList<>();
 
         for(String role : userDataFullInfo.getAllRoleInSystem())
         {
@@ -203,7 +201,7 @@ public class UsersManagementController implements Closeable {
             {
                 selectedAssignedRoles.add(role);
             }
-        }
+        }*/
 
         //List<String> totalFlowsPreformedByUser = userDataFullInfo.getTotalFlowPreformedByUser();   // לא מאותל כראוי
 
@@ -218,7 +216,7 @@ public class UsersManagementController implements Closeable {
         }
 
 
-        updateLists(userDataFullInfo.getUser().getUserName(), userDataFullInfo.getUser().getIsManager(), listOfRoles, listOfFlowAvailable, selectedAssignedRoles);
+        updateLists(userDataFullInfo.getUser().getUserName(), userDataFullInfo.getUser().getIsManager(), listOfRoles, listOfFlowAvailable, userDataFullInfo.getAllRoleInSystem());
 
     }
     
@@ -364,8 +362,8 @@ public class UsersManagementController implements Closeable {
     }
     @FXML
     void autoUpdatesButtonAction(ActionEvent event) {
-        //handleUserSelection();
 
+        cleanListsData();
         String finalUrl = HttpUrl
                 .parse(Constants.USER_DATA_INFO_IN_ADMIN)
                 .newBuilder()

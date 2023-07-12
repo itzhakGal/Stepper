@@ -1,6 +1,7 @@
 package clientComponents.screenTwo.screenTwoDetails.flowTree;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -16,6 +17,7 @@ import util.Constants;
 import util.http.HttpClientUtil;
 import utilWebApp.DTOFullDetailsPastRunWeb;
 import utilWebApp.DTOStepFlowPastWeb;
+import utilWebApp.DTOUserDataFullInfo;
 import utils.DTOFullDetailsPastRun;
 import utils.DTOStepFlowPast;
 import utilsDesktopApp.DTOListFlowsDetails;
@@ -63,12 +65,15 @@ public class FlowExecutionTask extends TimerTask {  //extends Task<Boolean>
                         try {
                             String responseData = response.body().string();
                             DTOFullDetailsPastRunWeb executedData = new Gson().fromJson(responseData, DTOFullDetailsPastRunWeb.class);
+
                             uiAdapter.update(executedData);
                             if (executedData.getFinalResult() != null) {
-                                onFinish.set(true);
-                                double progressValue = calculateProgress(executedData);  // Implement this method
-                                progress.set(progressValue);
-                                cancel();
+                                Platform.runLater(() -> {
+                                    onFinish.set(true);
+                                    double progressValue = calculateProgress(executedData);  // Implement this method
+                                    progress.set(progressValue);
+                                    cancel();
+                                });
                             }
                         } catch (IOException e) {
                             e.printStackTrace();

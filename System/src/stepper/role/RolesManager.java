@@ -12,8 +12,9 @@ public class RolesManager {
 
     public RolesManager() {
         this.roleMap = new HashMap<String, RoleImpl>() {{
-            put("Read Only Flows",new AllFlowsRole());
-            put("All Flows",new FlowsReadOnlyRole());
+            put("Read Only Flows",new FlowsReadOnlyRole());
+            put("All Flows",new AllFlowsRole());
+
         }};
         this.rolesNames = new HashSet<String>() {{
             add("Read Only Flows");

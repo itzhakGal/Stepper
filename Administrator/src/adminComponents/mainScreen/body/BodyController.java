@@ -80,6 +80,15 @@ public class BodyController {
             else if(!oldValue.equals(newValue))
                 usersManagementComponentController.getChosenUserFromListProperty().set(newValue);
         });
+
+        rolesManagementComponentController.getTopManagementComponentController().getListOfRoles().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(oldValue == null)
+                rolesManagementComponentController.getTopManagementComponentController().getChosenRoleFromListProperty().set(newValue);
+            else if(newValue == null)
+                rolesManagementComponentController.getTopManagementComponentController().getChosenRoleFromListProperty().set(oldValue);
+            else if(!oldValue.equals(newValue))
+                rolesManagementComponentController.getTopManagementComponentController().getChosenRoleFromListProperty().set(newValue);
+        });
     }
 
     public void setMainController(AppController mainController) {
@@ -255,7 +264,7 @@ public class BodyController {
 
     public void init() {
         usersManagementComponentController.init(this);
-        //rolesManagementComponentController.init(this);
+        rolesManagementComponentController.init(this);
         //flowExecutionHistoryScreenComponentController.init(this);
         //statisticsScreenComponentController.init(this);
 

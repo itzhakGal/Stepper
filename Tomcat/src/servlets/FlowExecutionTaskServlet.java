@@ -1,6 +1,7 @@
 package servlets;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import stepper.systemEngine.SystemEngineInterface;
 import utilWebApp.DTOFullDetailsPastRunWeb;
+import utilWebApp.DTOUserDataFullInfo;
 import utils.DTOFlowExecution;
 import utils.DTOFullDetailsPastRun;
 import utils.ServletUtils;
@@ -28,6 +30,8 @@ public class FlowExecutionTaskServlet extends HttpServlet {
         Gson gson = new Gson();
 
         DTOFullDetailsPastRunWeb executedData = systemEngine.getFlowExecutedDataDTOWeb(flowIdUUID);
+
+        //String executedDataToJSON = new Gson().toJson(executedData, new TypeToken<DTOFullDetailsPastRunWeb>(){}.getType());
 
         String executedDataToJSON = gson.toJson(executedData);
         res.setStatus(HttpServletResponse.SC_OK);

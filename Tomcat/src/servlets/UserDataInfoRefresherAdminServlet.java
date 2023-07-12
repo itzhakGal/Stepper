@@ -35,8 +35,6 @@ public class UserDataInfoRefresherAdminServlet extends HttpServlet {
             return;
         }
 
-        Gson gson = new Gson();
-
         SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
         UserManager userManager = systemEngine.getUserManager();
         RolesManager rolesManager = systemEngine.getRolesManager();

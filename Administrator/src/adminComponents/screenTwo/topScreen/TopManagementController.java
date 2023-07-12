@@ -1,27 +1,24 @@
 package adminComponents.screenTwo.topScreen;
 
+import adminComponents.mainScreen.body.BodyController;
 import adminComponents.screenTwo.RolesManagementController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.HttpUrl;
-import okhttp3.Response;
+import okhttp3.*;
 import org.controlsfx.control.CheckTreeView;
 import org.jetbrains.annotations.NotNull;
 import stepper.role.RoleImpl;
 import util.Constants;
 import util.http.HttpClientUtil;
-import utilWebApp.DTORole;
-import utilWebApp.DTORoleDataFullInfo;
-import utilWebApp.DTOUserDataFullInfo;
+import utilWebApp.*;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -50,18 +47,49 @@ public class TopManagementController implements Closeable {
 
     @FXML
     private Label roleName;
-
     @FXML
     private ListView<String> listOfUsersConnected;
-
     @FXML
     private Button newRoleButton;
-
+    @FXML
+    private Button autoUpdatesButton;
+    @FXML
+    private Button savaChangeButton;
+    @FXML
+    private Label labelMassage;
     private String roleSelected;
-
     private List<String> listFlowsToAddToTheRole;
     private List<String> listUserToAddToTheRole;
+    private SimpleStringProperty chosenRoleFromListProperty;
+    public void initialize() {
+        chosenRoleFromListProperty = new SimpleStringProperty();
+    }
 
+    public void init(BodyController bodyController) {
+
+        getChosenRoleFromListProperty().addListener((observable, oldValue, newValue) -> {
+
+            if (oldValue == null) {
+                this.roleSelected = newValue;
+                handleRoleSelection();
+            }
+            else if (!this.roleSelected.equals(newValue)) {
+                this.roleSelected = newValue;
+                cleanListsData();
+                handleRoleSelection();
+            }
+
+        });
+
+    }
+    public void cleanListsData()
+    {
+        allowedFlowsList.getItems().clear();
+        listOfUsersConnected.getItems().clear();
+    }
+    public SimpleStringProperty getChosenRoleFromListProperty() {
+        return this.chosenRoleFromListProperty;
+    }
     public void handleRoleSelection() {
 
         String finalUrl = HttpUrl
@@ -100,7 +128,7 @@ public class TopManagementController implements Closeable {
             return;
 
         // תוסיף רק את הפלואים שאין ליוזר שיבחר מהם עוד להוספה
-        List<String> selectedAssignedFlowToRole = new ArrayList<>();
+        /*List<String> selectedAssignedFlowToRole = new ArrayList<>();
 
         for(String flow : roleDataFullInfo.getAllFlowsInTheSystem())
         {
@@ -118,9 +146,9 @@ public class TopManagementController implements Closeable {
             {
                 selectedAssignedUserToRole.add(user);
             }
-        }
+        }*/
 
-        updateLists(roleDataFullInfo,selectedAssignedFlowToRole, selectedAssignedUserToRole);
+        updateLists(roleDataFullInfo,roleDataFullInfo.getAllFlowsInTheSystem(), roleDataFullInfo.getAllUsersInTheSystem());
 
 
     }
@@ -147,11 +175,10 @@ public class TopManagementController implements Closeable {
         this.listUserToAddToTheRole = createSelectedAssignedUsersCheckBoxTreeItem(selectedAssignedUserToRole);
 
     }
-
     private List<String> createSelectedAssignedUsersCheckBoxTreeItem(List<String> selectedAssignedUserToRole) {
 
         List<String> listUserToAddToTheRole = new ArrayList<>();
-        CheckBoxTreeItem<String> rootItem = new  CheckBoxTreeItem<String>("Assign Flows To Role");
+        CheckBoxTreeItem<String> rootItem = new  CheckBoxTreeItem<String>("Assign User To User Roles");
 
         for(String userName : selectedAssignedUserToRole) {
             CheckBoxTreeItem<String> role = new CheckBoxTreeItem<String>(userName);
@@ -190,13 +217,11 @@ public class TopManagementController implements Closeable {
 
         return listUserToAddToTheRole;
 
-
     }
-
     private List<String> createSelectedAssignedFlowsCheckBoxTreeItem(List<String> selectedAssignedFlowToRole) {
 
         List<String> listFlowsToAddToTheRole = new ArrayList<>();
-        CheckBoxTreeItem<String> rootItem = new  CheckBoxTreeItem<String>("Assign Roles To User");
+        CheckBoxTreeItem<String> rootItem = new  CheckBoxTreeItem<String>("Assign Flows To Role");
 
         for(String flowName : selectedAssignedFlowToRole) {
             CheckBoxTreeItem<String> role = new CheckBoxTreeItem<String>(flowName);
@@ -235,8 +260,42 @@ public class TopManagementController implements Closeable {
 
         return listFlowsToAddToTheRole;
     }
+    @FXML
+    void savaChangeButtonAction(ActionEvent event) {
+        DTOSavaNewInfoForRole dtoSavaNewInfoForRole = new DTOSavaNewInfoForRole(this.roleSelected , this.listFlowsToAddToTheRole, this.listUserToAddToTheRole);
 
+        String finalUrl = HttpUrl
+                .parse(Constants.SAVA_NEW_DATA_ROLE)
+                .newBuilder()
+                .build()
+                .toString();
 
+        String roleInfoJson = new Gson().toJson(dtoSavaNewInfoForRole);
+        RequestBody body = RequestBody.create(roleInfoJson.getBytes());
+        HttpClientUtil.runAsyncPost(finalUrl, body, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                try {
+                    if (response.isSuccessful()) {
+                        Platform.runLater(() -> {
+                            labelMassage.setText("Saved.");
+                        });
+                    }
+                }finally {
+                    response.close();
+                }
+            }
+        });
+    }
+    @FXML
+    void autoUpdatesButtonAction(ActionEvent event) {
+        cleanListsData();
+        handleRoleSelection();
+    }
     @FXML
     void listOfRolesAction(ActionEvent event) {
 
@@ -273,6 +332,9 @@ public class TopManagementController implements Closeable {
     }
     public void setMainController(RolesManagementController rolesManagementController) {
         this.mainRolesManagementController = rolesManagementController;
+    }
+    public ListView<String> getListOfRoles() {
+        return listOfRoles;
     }
     @Override
     public void close() {

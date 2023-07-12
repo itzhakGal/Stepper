@@ -12,7 +12,6 @@ import stepper.systemEngine.SystemEngineInterface;
 public class RolesManagementController {
 
     private BodyController mainBodyController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private GridPane topManagementComponent;
     @FXML
@@ -44,4 +43,19 @@ public class RolesManagementController {
         topManagementComponentController.startRolesListRefresher();
     }
 
+    public void init(BodyController bodyController) {
+        topManagementComponentController.init(bodyController);
+    }
+
+    public BodyController getMainBodyController() {
+        return mainBodyController;
+    }
+
+    public LowerManagementController getLowerManagementComponentController() {
+        return lowerManagementComponentController;
+    }
+
+    public TopManagementController getTopManagementComponentController() {
+        return topManagementComponentController;
+    }
 }
