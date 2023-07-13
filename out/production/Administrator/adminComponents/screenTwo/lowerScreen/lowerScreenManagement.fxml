@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminComponents.screenTwo.lowerScreen.LowerManagementController">
+<VBox visible="false" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminComponents.screenTwo.lowerScreen.LowerManagementController">
    <children>
       <HBox prefHeight="80.0">
          <children>
@@ -36,7 +36,7 @@
           <RowConstraints vgrow="ALWAYS" />
           <RowConstraints vgrow="ALWAYS" />
             <RowConstraints vgrow="ALWAYS" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+            <RowConstraints vgrow="ALWAYS" />
         </rowConstraints>
          <children>
             <Label text="Name:" textOverrun="CLIP" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
@@ -63,7 +63,7 @@
                   <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
                </GridPane.margin>
             </Label>
-            <Button fx:id="saveRole" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#saveRoleAction" text="Save Role!" textOverrun="CLIP" visible="false" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS">
+            <Button fx:id="saveRole" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#saveRoleAction" text="Save Role!" textOverrun="CLIP" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS">
                <GridPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
@@ -88,7 +88,7 @@
             </AnchorPane>
             <Label fx:id="labelMassage" prefHeight="21.0" prefWidth="315.0" textOverrun="CLIP" wrapText="true" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS">
                <GridPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                  <Insets bottom="20.0" left="5.0" right="5.0" top="20.0" />
                </GridPane.margin></Label>
          </children>
       </GridPane>

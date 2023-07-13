@@ -38,13 +38,10 @@ public class TopManagementController implements Closeable {
     private ListView<String> listOfRoles;
     @FXML
     private ListView<String> allowedFlowsList;
-
     @FXML
     private AnchorPane assignUserAnchor;
-
     @FXML
     private AnchorPane assignFlowsAnchor;
-
     @FXML
     private Label roleName;
     @FXML
@@ -60,7 +57,6 @@ public class TopManagementController implements Closeable {
     private String roleSelected;
     private List<String> listFlowsToAddToTheRole;
     private List<String> listUserToAddToTheRole;
-
     private List<String> allFlowsInTheSystem;
     private SimpleStringProperty chosenRoleFromListProperty;
     public void initialize() {
@@ -94,7 +90,6 @@ public class TopManagementController implements Closeable {
     }
     public void handleRoleSelection() {
 
-        //List<String> allFlowsInTheSystem = new ArrayList<>();
         String finalUrl = HttpUrl
                 .parse(Constants.ROLE_DATA_INFO_IN_ADMIN)
                 .newBuilder()
@@ -179,7 +174,7 @@ public class TopManagementController implements Closeable {
         this.listUserToAddToTheRole = createSelectedAssignedUsersCheckBoxTreeItem(selectedAssignedUserToRole);
 
     }
-    private List<String> createSelectedAssignedUsersCheckBoxTreeItem(List<String> selectedAssignedUserToRole) {
+    public List<String> createSelectedAssignedUsersCheckBoxTreeItem(List<String> selectedAssignedUserToRole) {
 
         List<String> listUserToAddToTheRole = new ArrayList<>();
         CheckBoxTreeItem<String> rootItem = new  CheckBoxTreeItem<String>("Assign User To User Roles");
@@ -222,7 +217,7 @@ public class TopManagementController implements Closeable {
         return listUserToAddToTheRole;
 
     }
-    private List<String> createSelectedAssignedFlowsCheckBoxTreeItem(List<String> selectedAssignedFlowToRole) {
+    public List<String> createSelectedAssignedFlowsCheckBoxTreeItem(List<String> selectedAssignedFlowToRole) {
 
         List<String> listFlowsToAddToTheRole = new ArrayList<>();
         CheckBoxTreeItem<String> rootItem = new  CheckBoxTreeItem<String>("Assign Flows To Role");
@@ -310,14 +305,16 @@ public class TopManagementController implements Closeable {
     }
     @FXML
     void newRoleButtonActivate(ActionEvent event) {
+        newRoleButton.setDisable(true);
         mainRolesManagementController.getLowerManagementComponent().setVisible(true);
-        mainRolesManagementController.getLowerManagementComponentController().createNewRole();
+        //mainRolesManagementController.getLowerManagementComponentController().createNewRole();
+        mainRolesManagementController.getLowerManagementComponentController().updateListOfFlowInSystemFromServer();
     }
     @FXML
     void allowedFlowsListAction(ActionEvent event) {
 
     }
-    private void updateRolesRefresher(Map<String, DTORole> roleMap) {
+    public void updateRolesRefresher(Map<String, DTORole> roleMap) {
 
         List<String> keyList = new ArrayList<>(roleMap.keySet());
         List<DTORole> dtoRole = new ArrayList<>(roleMap.values()); // לא השתמשתי עדין
@@ -344,6 +341,10 @@ public class TopManagementController implements Closeable {
     public List<String> getAllFlowsInTheSystem() {
         return allFlowsInTheSystem;
     }
+    public Button getNewRoleButton() {
+        return newRoleButton;
+    }
+
     @Override
     public void close() {
         listOfRoles.getItems().clear();

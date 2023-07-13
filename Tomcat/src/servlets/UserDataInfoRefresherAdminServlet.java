@@ -44,10 +44,10 @@ public class UserDataInfoRefresherAdminServlet extends HttpServlet {
 
         Map<String, DTORole> roles = rolesManager.getRoles();
         List<String> assignedRoles = new ArrayList<>(roles.keySet());
-        //List<String> totalFlowsPreformedBySpecificUser - צריך להוסיף את הרשימה של הפלואו שהורצו ע"י יוזר ספציפי
-        DTOUserDataFullInfo dtoUserDataFullInfo = new DTOUserDataFullInfo(specificUser, assignedRoles);
 
-        //String dtoUserDataFullInfoToJSON = gson.toJson(dtoUserDataFullInfo);
+        //List<String> totalFlowsPreformedBySpecificUser - צריך להוסיף את הרשימה של הפלואו שהורצו ע"י יוזר ספציפי
+
+        DTOUserDataFullInfo dtoUserDataFullInfo = new DTOUserDataFullInfo(specificUser, assignedRoles);
         String dtoUserDataFullInfoToJSON = new Gson().toJson(dtoUserDataFullInfo, new TypeToken<DTOUserDataFullInfo>(){}.getType());
         response.getWriter().write(dtoUserDataFullInfoToJSON);
         response.setStatus(HttpServletResponse.SC_OK);

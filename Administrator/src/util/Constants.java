@@ -19,7 +19,7 @@ public class Constants {
     public final static String ROLE_DATA_INFO_IN_ADMIN = FULL_SERVER_PATH + "/roleDataInfoAdminRefresher";
     public final static String SAVA_NEW_DATA_ROLE = FULL_SERVER_PATH + "/savaNewDataRole";
     public final static String NEW_ROLE_DATA_TO_SAVE = FULL_SERVER_PATH + "/newRoleDataToSave";
+    public final static String LIST_OF_FLOW_AVAILABLE_FOR_ROLE = FULL_SERVER_PATH + "/listOfFlowAvailableForRole";
 
-    // GSON instance
     public final static Gson GSON_INSTANCE = new Gson();
 }

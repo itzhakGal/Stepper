@@ -40,20 +40,4 @@ public class UsersListRefresherServlet extends HttpServlet {
         }
     }
 
-    /*@Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-
-        SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
-        String username = SessionUtils.getUsername(req);
-        if (username == null) {
-            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        Set<DTOUser> usersName = systemEngine.getUsers();
-        String usersNameStr = new Gson().toJson(usersName, new TypeToken<Set<DTOUser>>(){}.getType());
-        res.setStatus(HttpServletResponse.SC_OK);
-        res.getWriter().write(usersNameStr);
-    }*/
-
 }

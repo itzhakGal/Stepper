@@ -41,8 +41,6 @@ public class TopScreenController implements Initializable {
     private TableColumn<ExecutionData, String> resultExecutionColumn;
 
     @FXML private ComboBox<String> resultComboBox;
-    @FXML private VBox continuationComponent;
-    @FXML private ContinuationController continuationComponentController;
     @FXML
     private Label historyFlowsLabel;
     @FXML
@@ -89,9 +87,6 @@ public class TopScreenController implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        if (continuationComponentController != null) {
-            continuationComponentController.setMainController(this);
-        }
 
         flowNameColumn.setCellValueFactory(new PropertyValueFactory<ExecutionData, String>("flowName"));
         startDateColumn.setCellValueFactory(new PropertyValueFactory<ExecutionData, String>("startDate"));
@@ -215,14 +210,9 @@ public class TopScreenController implements Initializable {
         return mainFlowExecutionHistoryController;
     }
 
-    public ContinuationController getContinuationComponentController() {
-        return continuationComponentController;
-    }
-
     public void clearDetails() {
         ObservableList<ExecutionData> data = tableFlowExecution.getItems();
         data.clear(); // Clear the items in the tableFlowExecution
-        continuationComponentController.getFlowNameContinuationListView().getItems().clear(); // Clear the items in the flowNameContinuationListView
     }
 
     public SimpleBooleanProperty getRerunFlowButtonProperty()
@@ -238,7 +228,6 @@ public class TopScreenController implements Initializable {
                         rerunFlowButton.setDisable(true);
                     }
                 });
-        continuationComponentController.initListener();
     }
 
     public Button getRerunFlowButton() {

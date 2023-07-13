@@ -40,8 +40,9 @@ public class FlowTreeController {
                 .addListener((observable, oldValue, newValue) -> {
                     if (!newValue.equals("")) {
                         insertDataToTreeView();
-                        mainFlowExecutionHistoryController.getTableFlowExecutionController().getContinuationComponentController().getContinueToFlowButton().setVisible(false);
-                        mainFlowExecutionHistoryController.getTableFlowExecutionController().getContinuationComponentController().getFlowNameContinuationListView().getItems().clear();
+                        //getTableFlowExecutionController().getContinuationComponentController().getContinueToFlowButton().setVisible(false);
+                        //
+                        // mainFlowExecutionHistoryController.getTableFlowExecutionController().getContinuationComponentController().getFlowNameContinuationListView().getItems().clear();
                     } else {
                         if(flowTreeView.getRoot() != null) {
                             flowTreeView.getRoot().getChildren().clear();

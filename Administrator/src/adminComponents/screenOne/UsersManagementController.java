@@ -94,24 +94,16 @@ public class UsersManagementController implements Closeable {
     public void init(BodyController bodyController) {
 
         getChosenUserFromListProperty().addListener((observable, oldValue, newValue) -> {
-                    /*if (oldValue == null || !oldValue.equals(newValue)) {
-                        this.userSelected = newValue;
-                        handleUserSelection();
-                    }*/
                 if (oldValue == null) {
                     this.userSelected = newValue;
                     handleUserSelection();
                 }
-                /*else if (!oldValue.equals(this.userSelected)) {
-                    this.userSelected = oldValue;
-                    handleUserSelection();
-                }*/
+
                 else if (!this.userSelected.equals(newValue)) {
                     this.userSelected = newValue;
                     cleanListsData();
                     handleUserSelection();
                 }
-
         });
 
 
