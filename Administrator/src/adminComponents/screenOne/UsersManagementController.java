@@ -185,7 +185,7 @@ public class UsersManagementController implements Closeable {
             return;
 
         // תוסיף רק את הרולים שאין ליוזר שיבחר מהם עוד להוספה???
-        /*List<String> selectedAssignedRoles = new ArrayList<>();
+        List<String> selectedAssignedRoles = new ArrayList<>();
 
         for(String role : userDataFullInfo.getAllRoleInSystem())
         {
@@ -193,22 +193,33 @@ public class UsersManagementController implements Closeable {
             {
                 selectedAssignedRoles.add(role);
             }
-        }*/
+        }
 
         //List<String> totalFlowsPreformedByUser = userDataFullInfo.getTotalFlowPreformedByUser();   // לא מאותל כראוי
 
         Map<String, RoleImpl> associatedRoleMap = userDataFullInfo.getUser().getAssociatedRole();
         List<String> listOfRoles = new ArrayList<>(associatedRoleMap.keySet());
 
-        List<String> listOfFlowAvailable = new ArrayList<>();
+        /*List<String> listOfFlowAvailable = new ArrayList<>();
         for (RoleImpl role : associatedRoleMap.values()) {
             Set<String> allowedFlows = role.getFlowsAllowed();
             // Add all the allowed flows to the list
             listOfFlowAvailable.addAll(allowedFlows);
+        }*/
+
+        List<String> listOfFlowAvailable = new ArrayList<>();
+        Set<String> uniqueFlows = new HashSet<>(); // Use a set to store unique flow names
+        for (RoleImpl role : associatedRoleMap.values()) {
+            Set<String> allowedFlows = role.getFlowsAllowed();
+            // Add unique flow names to the set
+            uniqueFlows.addAll(allowedFlows);
         }
 
+        // Add the unique flow names from the set to the list
+        listOfFlowAvailable.addAll(uniqueFlows);
 
-        updateLists(userDataFullInfo.getUser().getUserName(), userDataFullInfo.getUser().getIsManager(), listOfRoles, listOfFlowAvailable, userDataFullInfo.getAllRoleInSystem());
+
+        updateLists(userDataFullInfo.getUser().getUserName(), userDataFullInfo.getUser().getIsManager(), listOfRoles , listOfFlowAvailable, selectedAssignedRoles);
 
     }
     
@@ -244,22 +255,29 @@ public class UsersManagementController implements Closeable {
             this.isManager.setSelected(false);
 
         ObservableList<String> itemsListRoles = this.listOfRoles.getItems();
-        for (String role : listOfRoles) {
+        itemsListRoles.clear();
+        itemsListRoles.addAll(listOfRoles);
+
+    //להוסיף רק מה שלא נמצא כבר לא מוריד את מה שכבר קיין ונבחר להורדה אז לא מספיק טוב
+    /*for (String role : listOfRoles) {
             if (!itemsListRoles.contains(role)) {
                 itemsListRoles.add(role);
-            }
-        }
+            }*/
 
         ObservableList<String> itemsListOfFlowAvailable = this.listOfFlowsAvailable.getItems();
-        for (String flow : listOfFlowAvailable) {
+        itemsListOfFlowAvailable.clear();
+        itemsListOfFlowAvailable.addAll(listOfFlowAvailable);
+
+
+         /*for (String flow : listOfFlowAvailable) {
             if (!itemsListOfFlowAvailable.contains(flow)) {
                 itemsListOfFlowAvailable.add(flow);
-            }
-        }
+            }*/
+
 
         /*ObservableList<String> itemsTotalFlowsPreformedByUser = this.totalFlowsPerformed.getItems();
-        itemsListOfFlowAvailable.clear();
-        itemsListOfFlowAvailable.addAll(totalFlowsPreformedByUser);*/
+        itemsTotalFlowsPreformedByUser.clear();
+        itemsTotalFlowsPreformedByUser.addAll(totalFlowsPreformedByUser);*/
 
         this.listRolesToAddToTheUser = createSelectedAssignedRolesCheckBoxTreeItem(selectedAssignedRoles);
 

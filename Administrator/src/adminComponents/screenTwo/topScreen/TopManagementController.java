@@ -127,7 +127,7 @@ public class TopManagementController implements Closeable {
             return;
 
         // תוסיף רק את הפלואים שאין ליוזר שיבחר מהם עוד להוספה
-        /*List<String> selectedAssignedFlowToRole = new ArrayList<>();
+        List<String> selectedAssignedFlowToRole = new ArrayList<>();
 
         for(String flow : roleDataFullInfo.getAllFlowsInTheSystem())
         {
@@ -145,9 +145,9 @@ public class TopManagementController implements Closeable {
             {
                 selectedAssignedUserToRole.add(user);
             }
-        }*/
+        }
 
-        updateLists(roleDataFullInfo,roleDataFullInfo.getAllFlowsInTheSystem(), roleDataFullInfo.getAllUsersInTheSystem());
+        updateLists(roleDataFullInfo, selectedAssignedFlowToRole , selectedAssignedUserToRole);
 
 
     }
@@ -157,18 +157,24 @@ public class TopManagementController implements Closeable {
         this.roleDescription.setText(roleDataFullInfo.getRoleData().getDescription());
 
         ObservableList<String> itemsFlowsList = this.allowedFlowsList.getItems();
-        for (String flow : roleDataFullInfo.getRoleData().getAllowedFlows()) {
+        itemsFlowsList.clear();
+        itemsFlowsList.addAll(roleDataFullInfo.getRoleData().getAllowedFlows());
+
+        /*for (String flow : roleDataFullInfo.getRoleData().getAllowedFlows()) {
             if (!itemsFlowsList.contains(flow)) {
                 itemsFlowsList.add(flow);
             }
-        }
+        }*/
 
         ObservableList<String> itemsListOfUserConnected = this.listOfUsersConnected.getItems();
-        for (String user : roleDataFullInfo.getAllUserConnectedToRole()) {
+        itemsListOfUserConnected.clear();
+        itemsListOfUserConnected.addAll(roleDataFullInfo.getAllUserConnectedToRole());
+
+        /*for (String user : roleDataFullInfo.getAllUserConnectedToRole()) {
             if (!itemsListOfUserConnected.contains(user)) {
                 itemsListOfUserConnected.add(user);
             }
-        }
+        }*/
 
         this.listFlowsToAddToTheRole = createSelectedAssignedFlowsCheckBoxTreeItem(selectedAssignedFlowToRole);
         this.listUserToAddToTheRole = createSelectedAssignedUsersCheckBoxTreeItem(selectedAssignedUserToRole);
@@ -177,7 +183,7 @@ public class TopManagementController implements Closeable {
     public List<String> createSelectedAssignedUsersCheckBoxTreeItem(List<String> selectedAssignedUserToRole) {
 
         List<String> listUserToAddToTheRole = new ArrayList<>();
-        CheckBoxTreeItem<String> rootItem = new  CheckBoxTreeItem<String>("Assign User To User Roles");
+        CheckBoxTreeItem<String> rootItem = new  CheckBoxTreeItem<String>("Assign User To Roles");
 
         for(String userName : selectedAssignedUserToRole) {
             CheckBoxTreeItem<String> role = new CheckBoxTreeItem<String>(userName);

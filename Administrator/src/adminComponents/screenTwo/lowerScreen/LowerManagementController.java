@@ -63,7 +63,8 @@ public class LowerManagementController {
     @FXML
     void saveRoleAction(ActionEvent event) {
 
-        this.mainRolesManagementController.getTopManagementComponentController().getNewRoleButton().setDisable(false);
+        //this.mainRolesManagementController.getTopManagementComponentController().getNewRoleButton().setDisable(false);
+
         String finalUrl = HttpUrl
                 .parse(Constants.NEW_ROLE_DATA_TO_SAVE)
                 .newBuilder()
@@ -84,7 +85,8 @@ public class LowerManagementController {
                         String res = response.body().string();
                         Platform.runLater(() -> {
                             labelMassage.setText(res.toString());
-                            mainRolesManagementController.getLowerManagementComponent().setVisible(true);
+                            mainRolesManagementController.getLowerManagementComponent().setVisible(false);
+                            mainRolesManagementController.getTopManagementComponentController().getNewRoleButton().setDisable(false);
                         });
                     }
                 } finally {
@@ -95,25 +97,6 @@ public class LowerManagementController {
     }
     public void setMainController(RolesManagementController rolesManagementController) {
         this.mainRolesManagementController = rolesManagementController;
-    }
-    public void createNewRole(List<String> allFlowInTheSystem) {
-
-        roleName.setText("");
-        roleDescription.setText("");
-        labelMassage.setText("");
-
-        //updateListOfFlowInSystemFromServer();
-        this.saveListOfFlowConnectedToRole = createListOfFlowConnectedToRole(allFlowInTheSystem);
-
-        // Add listeners to the properties
-        isRoleNameEmptyProperty.addListener((observable, oldValue, newValue) -> {
-            checkPropertiesAndPerformAction();
-        });
-
-        isRoleDescriptionEmptyProperty.addListener((observable, oldValue, newValue) -> {
-            checkPropertiesAndPerformAction();
-        });
-
     }
 
     public void updateListOfFlowInSystemFromServer() {
@@ -148,9 +131,28 @@ public class LowerManagementController {
         });
     }
 
+    public void createNewRole(List<String> allFlowInTheSystem) {
+
+        roleName.setText("");
+        roleDescription.setText("");
+        labelMassage.setText("");
+
+        this.saveListOfFlowConnectedToRole = createListOfFlowConnectedToRole(allFlowInTheSystem);
+
+        // Add listeners to the properties
+        isRoleNameEmptyProperty.addListener((observable, oldValue, newValue) -> {
+            checkPropertiesAndPerformAction();
+        });
+
+        isRoleDescriptionEmptyProperty.addListener((observable, oldValue, newValue) -> {
+            checkPropertiesAndPerformAction();
+        });
+
+    }
+
     public void checkPropertiesAndPerformAction() {
 
-        if (!isRoleNameEmptyProperty.get().isEmpty() && !isRoleDescriptionEmptyProperty.get().isEmpty())
+        if (!isRoleNameEmptyProperty.get().isEmpty() && !isRoleDescriptionEmptyProperty.get().isEmpty() && !saveListOfFlowConnectedToRole.isEmpty())
         {
             this.newRole = new DTORole(roleName.getText(), roleDescription.getText(), new HashSet<>(saveListOfFlowConnectedToRole));
             saveRole.setDisable(false);
@@ -192,6 +194,8 @@ public class LowerManagementController {
                         );
                     }
                 }
+
+                checkPropertiesAndPerformAction(); // לא יודעת אם נכון לשים פה
             }
         });
 

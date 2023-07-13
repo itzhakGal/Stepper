@@ -25,7 +25,7 @@ public class NewRoleSaveInfoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
-        UserManager userManager = systemEngine.getUserManager();
+        //UserManager userManager = systemEngine.getUserManager();
         RolesManager rolesManager = systemEngine.getRolesManager();
 
         String errorMessage;
