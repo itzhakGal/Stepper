@@ -56,7 +56,6 @@ public class RoleNewInfoSavedServlet extends HttpServlet {
             }
         }
     }
-
     public void updateRoleFlowList(RoleImpl roleData, DTOSavaNewInfoForRole dtoSavaNewInfoForRole)
     {
         for(String flow : dtoSavaNewInfoForRole.getListFlowsToAddToTheRole()) {
@@ -65,7 +64,6 @@ public class RoleNewInfoSavedServlet extends HttpServlet {
             }
         }
     }
-
     public RoleImpl getRoleByName(Map<String, RoleImpl> roleMap, String name) {
         for (Map.Entry<String, RoleImpl> entry : roleMap.entrySet()) {
             String key = entry.getKey();

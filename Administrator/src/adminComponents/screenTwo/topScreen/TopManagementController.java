@@ -60,11 +60,13 @@ public class TopManagementController implements Closeable {
     private String roleSelected;
     private List<String> listFlowsToAddToTheRole;
     private List<String> listUserToAddToTheRole;
+
+    private List<String> allFlowsInTheSystem;
     private SimpleStringProperty chosenRoleFromListProperty;
     public void initialize() {
         chosenRoleFromListProperty = new SimpleStringProperty();
+        this.allFlowsInTheSystem = new ArrayList<>();
     }
-
     public void init(BodyController bodyController) {
 
         getChosenRoleFromListProperty().addListener((observable, oldValue, newValue) -> {
@@ -92,6 +94,7 @@ public class TopManagementController implements Closeable {
     }
     public void handleRoleSelection() {
 
+        //List<String> allFlowsInTheSystem = new ArrayList<>();
         String finalUrl = HttpUrl
                 .parse(Constants.ROLE_DATA_INFO_IN_ADMIN)
                 .newBuilder()
@@ -112,6 +115,7 @@ public class TopManagementController implements Closeable {
                     if (response.isSuccessful()) {
                         String res = response.body().string();
                         DTORoleDataFullInfo dtoRoleDataFullInfo = new Gson().fromJson(res, new TypeToken<DTORoleDataFullInfo>(){}.getType());
+                        allFlowsInTheSystem = dtoRoleDataFullInfo.getAllFlowsInTheSystem();
                         Platform.runLater(() -> {
                             updateRoleFullData(dtoRoleDataFullInfo);
                         });
@@ -306,8 +310,8 @@ public class TopManagementController implements Closeable {
     }
     @FXML
     void newRoleButtonActivate(ActionEvent event) {
+        mainRolesManagementController.getLowerManagementComponent().setVisible(true);
         mainRolesManagementController.getLowerManagementComponentController().createNewRole();
-
     }
     @FXML
     void allowedFlowsListAction(ActionEvent event) {
@@ -336,6 +340,9 @@ public class TopManagementController implements Closeable {
     }
     public ListView<String> getListOfRoles() {
         return listOfRoles;
+    }
+    public List<String> getAllFlowsInTheSystem() {
+        return allFlowsInTheSystem;
     }
     @Override
     public void close() {

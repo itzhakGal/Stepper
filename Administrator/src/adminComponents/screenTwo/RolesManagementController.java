@@ -28,35 +28,26 @@ public class RolesManagementController {
             lowerManagementComponentController.setMainController(this);
         }
     }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //topManagementComponentController.setSystemEngine(systemEngine);
-        //lowerManagementComponentController.setSystemEngine(systemEngine);
-    }
-
     public void setMainController(BodyController mainBodyController) {
         this.mainBodyController = mainBodyController;
     }
-
     public void updateRolesScreenTwo() {
         topManagementComponentController.startRolesListRefresher();
     }
-
     public void init(BodyController bodyController) {
         topManagementComponentController.init(bodyController);
     }
-
     public BodyController getMainBodyController() {
         return mainBodyController;
     }
-
     public LowerManagementController getLowerManagementComponentController() {
         return lowerManagementComponentController;
     }
-
     public TopManagementController getTopManagementComponentController() {
         return topManagementComponentController;
     }
 
+    public VBox getLowerManagementComponent() {
+        return lowerManagementComponent;
+    }
 }

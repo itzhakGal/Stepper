@@ -29,7 +29,6 @@ public class RolesDataInfoRefresherAdminServlet extends HttpServlet {
         String roleNameFromParameter = request.getParameter("roleName");
 
         if (roleNameFromParameter == null) {
-            //response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 

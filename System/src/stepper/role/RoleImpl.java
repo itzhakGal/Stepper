@@ -1,5 +1,7 @@
 package stepper.role;
 
+import utilWebApp.DTORole;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -16,8 +18,10 @@ public class RoleImpl implements Role {
         this.roleDescription = description;
         this.allowedFlows = new HashSet<>();
     }
-    public RoleImpl() {
-        //this.allowedFlows = new HashSet<>();
+    public RoleImpl(DTORole dtoRole) {
+        this.roleName = dtoRole.getRoleName();
+        this.roleDescription = dtoRole.getDescription();
+        this.allowedFlows = dtoRole.getAllowedFlows();
     }
     @Override
     public String getName() {

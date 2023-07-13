@@ -10,17 +10,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-import stepper.dataDefinition.impl.Enumerator.EnumeratorData;
-import stepper.dataDefinition.impl.file.FileData;
 import stepper.dataDefinition.impl.fileList.FileListData;
 import stepper.dataDefinition.impl.list.ListData;
-import stepper.dataDefinition.impl.mapping.MappingData;
-import stepper.dataDefinition.impl.relation.RelationData;
 import stepper.systemEngine.SystemEngineInterface;
 import utilWebApp.DTOOutPutFlowPastWeb;
-import utils.DTOOutPutFlowPast;
 import utilsDesktopApp.DTOOutputDetailsJAVAFX;
 
 import java.util.*;
@@ -54,64 +47,34 @@ public class OutputBodyController {
 
     public void setFlowData(DTOOutPutFlowPastWeb output) {
         typeProperty.set(output.getType());
-        updateInputContent(output);
+        updateOutputContent(output);
     }
 
-    /*private void updateInputContent(DTOOutPutFlowPastWeb output) {
-        if (output.getTypePresentation().equals("FileListData")) {
-            FileListData listData = (FileListData) output.getContent();
-            createListDataContent(listData.getItem().isEmpty(), listData.toString(), listData.getItem().size());
-        }else if (output.getTypePresentation().equals("EnumeratorData")) {
-            EnumeratorData enumeratorData = (EnumeratorData) output.getContent();
-            createStringContent((String) ((String)((EnumeratorData) output.getContent()).getAllMembers()));
-        }
-        else if(output.getTypePresentation().equals("ListData"))
-        {
-            ListData<String> listData = (ListData<String>) output.getContent();
-            createListDataContent(listData.getItem().isEmpty(), listData.toString(), listData.getItem().size());
-        }
-        else if (output.getTypePresentation().equals("MappingData")) {
-            VBox vBox = createVBox((MappingData) output.getContent());
-            outputContentAnchorPane.getChildren().add(vBox);
-        }
-        else if (output.getTypePresentation().equals("RelationData")) {
-            TableView tableView = createTableView((RelationData) output.getContent());
-            outputContentAnchorPane.getChildren().add(tableView);
-        }
-        else {
-            createStringContent((String) (output.getContent() + ""));
-        }
-    }*/
-
-    private void updateInputContent(DTOOutPutFlowPastWeb output) {
+    private void updateOutputContent(DTOOutPutFlowPastWeb output) {
 
         Integer num;
-        String car;
-        String cdr;
 
         if (output.getTypePresentation().equals("FileListData")) {
 
             FileListData listData = new FileListData(((LinkedHashMap<String, ArrayList>)output.getContent()).get("item"));
-            //FileListData listData = (FileListData) output.getContent();
-            String fileName = listData.getItem().get(0).getFileName();
-            createListDataContent(listData.getItem().isEmpty(), fileName, listData.getItem().size());
+
+            String returnVal = getString(output);
+
+            createListDataContent(listData.getItem().isEmpty(), returnVal, listData.getItem().size());
         }else if (output.getTypePresentation().equals("EnumeratorData")) {
-            EnumeratorData enumeratorData = (EnumeratorData) output.getContent();
-            createStringContent((String) ((String)((EnumeratorData) output.getContent()).getAllMembers()));
+            createStringContent(getStringEnumerator(output));
         }
         else if(output.getTypePresentation().equals("ListData"))
         {
-
-            ListData<String> listData = new ListData<String>(((LinkedHashMap<String, ArrayList>)output.getContent()).get("item"));
-            //ListData<String> listData = (ListData<String>) output.getContent();
+            ListData<String> listData = new ListData<String>((ArrayList)(((LinkedHashMap)output.getContent()).get("item")));
             createListDataContent(listData.getItem().isEmpty(), listData.toString(), listData.getItem().size());
         }
         else if (output.getTypePresentation().equals("MappingData")) {
-            VBox vBox = createVBox((MappingData) output.getContent());
+            VBox vBox = createVBox(output.getContent());
             outputContentAnchorPane.getChildren().add(vBox);
         }
         else if (output.getTypePresentation().equals("RelationData")) {
-            TableView tableView = createTableView((RelationData) output.getContent());
+            TableView tableView = createTableView(output.getContent());
             outputContentAnchorPane.getChildren().add(tableView);
         }
         else if(output.getTypePresentation().equals("Integer"))
@@ -124,13 +87,56 @@ public class OutputBodyController {
         }
     }
 
+    private static String getStringEnumerator(DTOOutPutFlowPastWeb output) {
+        ArrayList arrayList =  ((ArrayList)((LinkedHashMap)output.getContent()).get("enumerator"));
+        String rerurnVal = "";
+        int counter = 1;
+        for (int i = 0; i < arrayList.size(); i++) {
+            String enumerator = (String) ((ArrayList)((LinkedHashMap)output.getContent()).get("enumerator")).get(i);
+            rerurnVal = rerurnVal + enumerator + "\n";
+            counter++;
+        }
+        return rerurnVal;
+    }
+    private static String getString(DTOOutPutFlowPastWeb input) {
+        ArrayList arrayList =  (ArrayList)((LinkedHashMap) input.getContent()).get("item");
+        String rerurnVal = "";
+        int counter = 1;
+        for (int i = 0; i < arrayList.size(); i++) {
+            String filePath = (String) ((LinkedHashMap) ((ArrayList)((LinkedHashMap) input.getContent()).get("item")).get(i)).get("fileName");
+            rerurnVal = rerurnVal + "Item number: " + counter + ". " + filePath + "\n";
+            counter++;
+        }
+        return rerurnVal;
+    }
 
-    public VBox createVBox(MappingData<?, ?> mappingData) {
+
+    public VBox createVBox(Object output) {
+        Integer num;
+        String cdr;
+        String car;
         VBox vbox = new VBox();
+        StringBuilder res= new StringBuilder();
+        for(Map.Entry<Object,Object> entry :((Map<Object,Object>)((LinkedHashMap)((LinkedHashMap)output).get("pairs"))).entrySet())
+        {
+            if(entry.getKey() instanceof Double)
+            {
+                num=((Double)entry.getKey()).intValue();
+                car=num.toString();
+            }
+            else
+                car=entry.getKey().toString();
 
-        for (Map.Entry<?, ?> entry : mappingData.getPairs().entrySet()) {
-            String keyText = "The number of files deleted successfully: " + entry.getKey().toString();
-            String valueText = "The amount of files that failed to delete: " + entry.getValue().toString();
+            if(entry.getValue() instanceof Double)
+            {
+                num=((Double)entry.getValue()).intValue();
+                cdr=num.toString();
+            }
+            else
+                cdr=entry.getValue().toString();
+
+            String keyText = "The number of files deleted successfully: " + car;
+            String valueText = "The amount of files that failed to delete: " + cdr;
 
             Label keyLabel = new Label(keyText);
             Label valueLabel = new Label(valueText);
@@ -143,8 +149,10 @@ public class OutputBodyController {
 
         return vbox;
     }
-    public TableView<List<String>> createTableView(RelationData relationData) {
-        List<List<String>> table = relationData.getTable();
+    public TableView<List<String>> createTableView(Object input) {
+
+        List<List<String>> table = ((List<List<String>>)((ArrayList)((LinkedHashMap)input).get("table")));
+
         List<String> columnNames = table.get(0);
 
         TableView<List<String>> tableView = new TableView<>();
@@ -170,6 +178,7 @@ public class OutputBodyController {
 
         return tableView;
     }
+
     private void createListDataContent(boolean listData, String listData1, int listData2) {
         if (!listData) {
             ObservableList<String> observableInputs = FXCollections.observableArrayList(listData1);
@@ -184,7 +193,6 @@ public class OutputBodyController {
         }
     }
 
-
     private void createStringContent(String content) {
         Label label = new Label(content);
         label.setPadding(new Insets(10, 0, 0, 0)); // Add 10 pixels of padding from the top
@@ -194,6 +202,7 @@ public class OutputBodyController {
 
         outputContentAnchorPane.getChildren().add(label);
     }
+
     public void setOutputData(DTOOutputDetailsJAVAFX output) {
         typeProperty.set(output.getType());
         // להשלים תוכן

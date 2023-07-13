@@ -39,11 +39,6 @@ public class UserDataInfoRefresherAdminServlet extends HttpServlet {
         UserManager userManager = systemEngine.getUserManager();
         RolesManager rolesManager = systemEngine.getRolesManager();
 
-        //SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
-        //UserManager userManager = ServletUtils.getUserManager(getServletContext());
-        //RolesManager rolesManager = ServletUtils.getRolesManager(getServletContext());
-
-
         Map<String, User> usersMap = userManager.getUsers();
         User specificUser = getUserByName(usersMap, usernameFromParameter);
 
