@@ -6,14 +6,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import stepper.dataDefinition.impl.Enumerator.EnumeratorData;
+import stepper.dataDefinition.impl.file.FileData;
 import stepper.dataDefinition.impl.fileList.FileListData;
 import stepper.dataDefinition.impl.list.ListData;
 import stepper.dataDefinition.impl.mapping.MappingData;
@@ -23,8 +23,7 @@ import utilWebApp.DTOOutPutFlowPastWeb;
 import utils.DTOOutPutFlowPast;
 import utilsDesktopApp.DTOOutputDetailsJAVAFX;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OutputBodyController {
 
@@ -58,7 +57,7 @@ public class OutputBodyController {
         updateInputContent(output);
     }
 
-    private void updateInputContent(DTOOutPutFlowPastWeb output) {
+    /*private void updateInputContent(DTOOutPutFlowPastWeb output) {
         if (output.getTypePresentation().equals("FileListData")) {
             FileListData listData = (FileListData) output.getContent();
             createListDataContent(listData.getItem().isEmpty(), listData.toString(), listData.getItem().size());
@@ -82,7 +81,50 @@ public class OutputBodyController {
         else {
             createStringContent((String) (output.getContent() + ""));
         }
+    }*/
+
+    private void updateInputContent(DTOOutPutFlowPastWeb output) {
+
+        Integer num;
+        String car;
+        String cdr;
+
+        if (output.getTypePresentation().equals("FileListData")) {
+
+            FileListData listData = new FileListData(((LinkedHashMap<String, ArrayList>)output.getContent()).get("item"));
+            //FileListData listData = (FileListData) output.getContent();
+            String fileName = listData.getItem().get(0).getFileName();
+            createListDataContent(listData.getItem().isEmpty(), fileName, listData.getItem().size());
+        }else if (output.getTypePresentation().equals("EnumeratorData")) {
+            EnumeratorData enumeratorData = (EnumeratorData) output.getContent();
+            createStringContent((String) ((String)((EnumeratorData) output.getContent()).getAllMembers()));
+        }
+        else if(output.getTypePresentation().equals("ListData"))
+        {
+
+            ListData<String> listData = new ListData<String>(((LinkedHashMap<String, ArrayList>)output.getContent()).get("item"));
+            //ListData<String> listData = (ListData<String>) output.getContent();
+            createListDataContent(listData.getItem().isEmpty(), listData.toString(), listData.getItem().size());
+        }
+        else if (output.getTypePresentation().equals("MappingData")) {
+            VBox vBox = createVBox((MappingData) output.getContent());
+            outputContentAnchorPane.getChildren().add(vBox);
+        }
+        else if (output.getTypePresentation().equals("RelationData")) {
+            TableView tableView = createTableView((RelationData) output.getContent());
+            outputContentAnchorPane.getChildren().add(tableView);
+        }
+        else if(output.getTypePresentation().equals("Integer"))
+        {
+            num =((Double)output.getContent()).intValue();
+            createStringContent(num.toString());
+
+        }else{
+            createStringContent((String) (output.getContent() + ""));
+        }
     }
+
+
     public VBox createVBox(MappingData<?, ?> mappingData) {
         VBox vbox = new VBox();
 
@@ -128,7 +170,6 @@ public class OutputBodyController {
 
         return tableView;
     }
-
     private void createListDataContent(boolean listData, String listData1, int listData2) {
         if (!listData) {
             ObservableList<String> observableInputs = FXCollections.observableArrayList(listData1);
@@ -143,6 +184,7 @@ public class OutputBodyController {
         }
     }
 
+
     private void createStringContent(String content) {
         Label label = new Label(content);
         label.setPadding(new Insets(10, 0, 0, 0)); // Add 10 pixels of padding from the top
@@ -152,7 +194,6 @@ public class OutputBodyController {
 
         outputContentAnchorPane.getChildren().add(label);
     }
-
     public void setOutputData(DTOOutputDetailsJAVAFX output) {
         typeProperty.set(output.getType());
         // להשלים תוכן

@@ -58,4 +58,5 @@ public class RolesManagementController {
     public TopManagementController getTopManagementComponentController() {
         return topManagementComponentController;
     }
+
 }

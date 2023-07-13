@@ -42,8 +42,15 @@ public class RoleNewInfoSavedServlet extends HttpServlet {
 
     public void insertNewDataToRoleInMap(RoleImpl roleData, Map<String, User> usersMap, DTOSavaNewInfoForRole dtoSavaNewInfoForRole) {
 
-        for (Map.Entry<String, User> entry : usersMap.entrySet()) {
+        /*for (Map.Entry<String, User> entry : usersMap.entrySet()) {
             if(!entry.getValue().getAssociatedRole().containsKey(dtoSavaNewInfoForRole.getRoleName()))
+            {
+                entry.getValue().getAssociatedRole().put(dtoSavaNewInfoForRole.getRoleName(), roleData);
+            }
+        }*/
+
+        for (Map.Entry<String, User> entry : usersMap.entrySet()) {
+            if(dtoSavaNewInfoForRole.getListUserToAddToTheRole().contains(entry.getKey()))
             {
                 entry.getValue().getAssociatedRole().put(dtoSavaNewInfoForRole.getRoleName(), roleData);
             }

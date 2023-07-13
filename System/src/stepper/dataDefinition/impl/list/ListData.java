@@ -12,6 +12,11 @@ public class ListData<T extends Object> implements Serializable
     {
         item = new ArrayList<T>();
     }
+
+    public ListData(ArrayList<T> item)
+    {
+        this.item = item;
+    }
     public void setItem(List<T> item) {
         this.item = item;
     }

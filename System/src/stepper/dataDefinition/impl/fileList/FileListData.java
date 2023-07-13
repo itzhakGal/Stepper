@@ -5,6 +5,7 @@ import stepper.dataDefinition.impl.file.FileData;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class FileListData implements Serializable
@@ -13,6 +14,10 @@ public class FileListData implements Serializable
 
     public FileListData() {
         item = new ArrayList<FileData>();
+    }
+
+    public FileListData(ArrayList<FileData> item) {
+        this.item =item;
     }
 
     public void setItem(List<FileData> item) {

@@ -306,6 +306,7 @@ public class TopManagementController implements Closeable {
     }
     @FXML
     void newRoleButtonActivate(ActionEvent event) {
+        mainRolesManagementController.getLowerManagementComponentController().createNewRole();
 
     }
     @FXML
