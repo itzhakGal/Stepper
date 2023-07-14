@@ -31,7 +31,6 @@ public class UserDataInfoRefresherAdminServlet extends HttpServlet {
         String usernameFromParameter = request.getParameter("username");
 
         if (usernameFromParameter == null) {
-            //response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 

@@ -5,6 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import stepper.flows.definition.FlowsDefinition;
+import stepper.flows.definition.FlowsDefinitionImpl;
 import stepper.systemEngine.SystemEngineInterface;
 import stepper.users.UserManager;
 import utils.ServletUtils;
@@ -48,6 +50,7 @@ public class LoginServlet extends HttpServlet {
                     else {
                         //add the new user to the users list
                         userManager.addUser(usernameFromParameter,false);
+                        systemEngine.getUserFlowsDefinitionMap().put(userManager.getUser(usernameFromParameter), new FlowsDefinitionImpl());
                         //set the username in a session so it will be available on each request
                         //the true parameter means that if a session object does not exists yet
                         //create a new one

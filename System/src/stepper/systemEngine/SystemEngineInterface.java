@@ -9,6 +9,8 @@ import stepper.role.RolesManager;
 import stepper.users.User;
 import stepper.users.UserManager;
 import utilWebApp.DTOFullDetailsPastRunWeb;
+import utilWebApp.DTOSavaNewInfoForRole;
+import utilWebApp.DTOSavaNewInfoForUser;
 import utils.*;
 import utilsDesktopApp.DTOListContinuationFlowName;
 import utilsDesktopApp.DTOListFlowsDetails;
@@ -125,7 +127,10 @@ public interface SystemEngineInterface extends Serializable {
     UserManager getUserManager();
     RolesManager getRolesManager();
     List<String> getListOfFlowsAvailable();
-
     DTOListFlowsDetails readFlowsDetailsWeb(User userName);
+    void initialUserMapFlowsDefinition(DTOSavaNewInfoForUser dtoSavaNewInfoForUser);
+    Map<User, FlowsDefinition> getUserFlowsDefinitionMap();
+
+    void initialUserMapFlowsDefinitionFromUpdateRole(DTOSavaNewInfoForRole dtoSavaNewInfoForRole);
 }
 

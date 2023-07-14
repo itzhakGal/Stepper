@@ -41,6 +41,7 @@ public class FlowExecutionImpl  implements FlowExecution{
         this.freeInputsExist = new HashMap<>();
         this.flowExecutionResult = null;
         this.stepsDataJavaFX = new ArrayList<>();
+
         initialStepsData(flowDefinition);
         initialMapFreeInputsExists(flowDefinition.getFreeInputs());
         updateInitialValues();

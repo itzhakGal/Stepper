@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.AnchorPane;
 import okhttp3.*;
 import org.controlsfx.control.CheckTreeView;
@@ -325,6 +326,7 @@ public class UsersManagementController implements Closeable {
 
         return listRolesToAddToTheUser;
     }
+
     private void updateUsersList(List<String> usersNames) {
         Platform.runLater(() -> {
             ObservableList<String> items = listOfUsers.getItems();

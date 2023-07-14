@@ -14,6 +14,7 @@ import stepper.flows.definition.FlowsDefinition;
 import stepper.flows.definition.FlowsDefinitionImpl;
 import stepper.flows.execution.FlowsExecution;
 import stepper.flows.execution.FlowsExecutionImp;
+import stepper.role.RoleImpl;
 import stepper.role.RolesManager;
 import stepper.statistics.StatisticsDataImpl;
 import stepper.step.api.DataNecessity;
@@ -21,6 +22,8 @@ import stepper.step.api.StepsNamesImpl;
 import stepper.users.User;
 import stepper.users.UserManager;
 import utilWebApp.DTOFullDetailsPastRunWeb;
+import utilWebApp.DTOSavaNewInfoForRole;
+import utilWebApp.DTOSavaNewInfoForUser;
 import utils.*;
 import utilsDesktopApp.DTOFlowDetails;
 import utilsDesktopApp.DTOListContinuationFlowName;
@@ -61,6 +64,7 @@ public class SystemEngine implements SystemEngineInterface {
         this.executedFlowsMap = new HashMap<>();
         this.userManager = new UserManager();
         this.roles = new RolesManager();
+        this.userFlowsDefinitionMap = new HashMap<>();
     }
 
 
@@ -780,6 +784,72 @@ public class SystemEngine implements SystemEngineInterface {
             listFlowsDetails.getDtoFlowDetailsList().add(new DTOFlowDetails(flowDefinition));
         }
         return listFlowsDetails;
+    }
+
+    public Map<User, FlowsDefinition> getUserFlowsDefinitionMap() {
+        return userFlowsDefinitionMap;
+    }
+
+    public void initialUserMapFlowsDefinition(DTOSavaNewInfoForUser dtoSavaNewInfoForUser)
+    {
+        String userName = dtoSavaNewInfoForUser.getUserName();
+        User user = userManager.getUser(userName);
+
+        //this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().clear();
+        if(dtoSavaNewInfoForUser.isManager())
+        {
+            this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().clear();
+            for(FlowDefinition flowDefinition : currentFlowsDefinition.getListFlowsDefinition()) {
+                this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().add(flowDefinition);
+            }
+        }
+        else{
+            Set<String> flowDefinitionNameToAdd = new HashSet<>();
+            for(String roleName : dtoSavaNewInfoForUser.getListRolesToAddToTheUser())
+            {
+                RoleImpl role = roles.getRole(roleName);
+                flowDefinitionNameToAdd.addAll(role.getFlowsAllowed());
+            }
+            if(user.isAllFlowExistsFromManager())
+            {
+                this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().clear();
+            }
+            for(String flowDefinitionName : flowDefinitionNameToAdd)
+            {
+                FlowDefinition  flowDefinition = getFlowDefinitionByFlowNameJavaFX(flowDefinitionName);
+                this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().add(flowDefinition);
+            }
+        }
+    }
+    public void initialUserMapFlowsDefinitionFromUpdateRole(DTOSavaNewInfoForRole dtoSavaNewInfoForRole) {
+        RoleImpl role = roles.getRole(dtoSavaNewInfoForRole.getRoleName());
+        Set<String> listOfFlowsToAdd = role.getFlowsAllowed();
+
+        //הרול לא היה קיים אצל היוזר בעבר ולכן נוסיף לרשימה את הפלואים הרלוונטים של הרול
+        for (String userName : dtoSavaNewInfoForRole.getListUserToAddToTheRole()) {
+            User user = userManager.getUser(userName);
+            for (String flowName : listOfFlowsToAdd) {
+                FlowDefinition flowDefinition = getFlowDefinitionByFlowNameJavaFX(flowName);
+                if (!this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().contains(flowDefinition)) {
+                    this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().add(flowDefinition);
+                }
+            }
+        }
+
+        //הרול קיים אצל היוזר אז צריך להוסיף לו את הפלואים שלא היו בעבר
+        for (Map.Entry<User, FlowsDefinition> userMapDefinition : this.userFlowsDefinitionMap.entrySet())
+        {
+            if(userMapDefinition.getKey().getAssociatedRole().containsKey(role.getName()))
+            {
+                for(String flowName : dtoSavaNewInfoForRole.getListFlowsToAddToTheRole())
+                {
+                    FlowDefinition flowDefinition = getFlowDefinitionByFlowNameJavaFX(flowName);
+                    if (!this.userFlowsDefinitionMap.get(userMapDefinition.getKey()).getListFlowsDefinition().contains(flowDefinition)) {
+                        this.userFlowsDefinitionMap.get(userMapDefinition.getKey()).getListFlowsDefinition().add(flowDefinition);
+                    }
+                }
+            }
+        }
     }
 
 

@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import stepper.systemEngine.SystemEngineInterface;
-import stepper.users.User;
 import utils.ServletUtils;
 import utilsDesktopApp.DTOListFlowsDetails;
 
@@ -19,12 +18,9 @@ public class AvailableFlowsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
         SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
-        String userName = req.getParameter("userName");
         Gson gson = new Gson();
 
-        User user = systemEngine.getUserManager().getUser(userName);
-        DTOListFlowsDetails listFlowsDetails = systemEngine.readFlowsDetailsWeb(user);
-
+        DTOListFlowsDetails listFlowsDetails = systemEngine.readFlowsDetails();
         String listFlowsDetailsJSON = gson.toJson(listFlowsDetails);
         res.setStatus(HttpServletResponse.SC_OK);
         res.getWriter().write(listFlowsDetailsJSON);

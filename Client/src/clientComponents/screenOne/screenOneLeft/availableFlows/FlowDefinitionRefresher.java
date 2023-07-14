@@ -1,10 +1,7 @@
 package clientComponents.screenOne.screenOneLeft.availableFlows;
 
 import com.google.gson.Gson;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Response;
+import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import util.Constants;
 import util.http.HttpClientUtil;
@@ -18,24 +15,25 @@ import java.util.logging.Logger;
 public class FlowDefinitionRefresher extends TimerTask {
 
     private final Consumer<DTOListFlowsDetails> listFlowsDetailsConsumer;
-    //private final BooleanProperty shouldUpdate;
+    public  String userName;
 
 
-    public FlowDefinitionRefresher(Consumer<DTOListFlowsDetails> listFlowsDetails) {
-        //this.shouldUpdate = shouldUpdate;
+    public FlowDefinitionRefresher(String userName, Consumer<DTOListFlowsDetails> listFlowsDetails) {
         this.listFlowsDetailsConsumer = listFlowsDetails;
+        this.userName = userName;
     }
 
     @Override
     public void run() {
 
-        /*if (!shouldUpdate.get()) {
-            return;
-        }*/
+        String finalUrl = HttpUrl
+                .parse(Constants.FLOW_DEFINITION_REFRESHER)
+                .newBuilder()
+                .addQueryParameter("userName", userName)
+                .build()
+                .toString();
 
-        //Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);
-
-        HttpClientUtil.runAsync(Constants.FLOW_DEFINITION_REFRESHER, new Callback() {
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
 
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
 

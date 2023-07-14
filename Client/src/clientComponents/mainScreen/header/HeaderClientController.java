@@ -25,13 +25,10 @@ public class HeaderClientController implements Closeable {
     private AppController mainController;
     @FXML
     private Label titleLabel;
-
     @FXML
     private Label clientName;
-
     @FXML
     private ListView<String> assignedRolesList;
-
     @FXML
     private Label isManager;
 

@@ -37,10 +37,6 @@ public class HeaderDataRefresher extends TimerTask {
     @Override
     public void run() {
 
-        /*if (!shouldUpdate.get()) {
-            return;
-        }*/
-
         String finalUrl = HttpUrl
                 .parse(Constants.USER_DATA_REFRESHER)
                 .newBuilder()

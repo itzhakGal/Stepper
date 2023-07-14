@@ -34,7 +34,7 @@ public class RoleNewInfoSavedServlet extends HttpServlet {
         RoleImpl roleData = getRoleByName(rolesManager.getRoleMap(), dtoSavaNewInfoForRole.getRoleName());
         insertNewDataToRoleInMap(roleData, userManager.getUsers(), dtoSavaNewInfoForRole);
         updateRoleFlowList(roleData, dtoSavaNewInfoForRole);
-
+        systemEngine.initialUserMapFlowsDefinitionFromUpdateRole(dtoSavaNewInfoForRole);
 
         res.setStatus(HttpServletResponse.SC_OK);
     }

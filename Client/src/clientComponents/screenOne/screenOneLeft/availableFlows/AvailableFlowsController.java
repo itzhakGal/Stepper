@@ -40,20 +40,16 @@ public class AvailableFlowsController implements Closeable {
     private TimerTask flowDefinitionRefresher;
     private final BooleanProperty autoUpdate;
     private clientComponents.screenOne.flowDefinitionScreen.FlowDefinitionScreenController mainFlowDefinitionController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private Accordion listFlowsName;
     @FXML private HBox detailsComponent;
     @FXML private FlowDefinitionDetailsController detailsComponentController;
-
     @FXML private Label availableFlowsLabel;
     private SimpleBooleanProperty isAccordionClicked;
-
     public AvailableFlowsController()
     {
         autoUpdate = new SimpleBooleanProperty();
     }
-
     @FXML
     public void initialize() {
         if (detailsComponentController != null) {
@@ -61,7 +57,6 @@ public class AvailableFlowsController implements Closeable {
         }
         isAccordionClicked = new SimpleBooleanProperty(false);
     }
-
     public void initListener()
     {
 
@@ -74,7 +69,6 @@ public class AvailableFlowsController implements Closeable {
         });
 
     }
-
     private void animateAccordion(TitledPane pane) {
         FadeTransition fadeAnimation = new FadeTransition(Duration.seconds(0.5), pane.getContent());
 
@@ -119,66 +113,57 @@ public class AvailableFlowsController implements Closeable {
 
 
     }
-    public void initListFlowsFromDTOResponse(DTOListFlowsDetails listFlowsDetails)
-    {
+    public void initListFlowsFromDTOResponse(DTOListFlowsDetails listFlowsDetails) {
         //DTOListFlowsDetails listFlowsDetails = systemEngine.readFlowsDetails();
         availableFlowsLabel.setVisible(true);
         listFlowsName.getPanes().clear();
 
-        for (DTOFlowDetails flowDetails : listFlowsDetails.getDtoFlowDetailsList()) {
+        if (listFlowsDetails != null)
+        {
+            for (DTOFlowDetails flowDetails : listFlowsDetails.getDtoFlowDetailsList()) {
 
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("flowDefinitionDetails/flowDefinitionDetails.fxml"));
-                HBox contentPane = fxmlLoader.load();
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("flowDefinitionDetails/flowDefinitionDetails.fxml"));
+                    HBox contentPane = fxmlLoader.load();
 
-                FlowDefinitionDetailsController controller = fxmlLoader.getController();
-                controller.setMainController(this);
-                //controller.setSystemEngine(systemEngine);
+                    FlowDefinitionDetailsController controller = fxmlLoader.getController();
+                    controller.setMainController(this);
+                    //controller.setSystemEngine(systemEngine);
 
-                TitledPane titledPane = new TitledPane(flowDetails.getName(), contentPane);
-                titledPane.getProperties().put("controller", controller);
+                    TitledPane titledPane = new TitledPane(flowDetails.getName(), contentPane);
+                    titledPane.getProperties().put("controller", controller);
 
-                controller.setFlowData(flowDetails);
+                    controller.setFlowData(flowDetails);
 
-                listFlowsName.getPanes().add(titledPane);
-            } catch (IOException e) {
-                e.printStackTrace();
+                    listFlowsName.getPanes().add(titledPane);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
     }
-
+    }
     public void setMainController(FlowDefinitionScreenController flowDefinitionController) {
         this.mainFlowDefinitionController = flowDefinitionController;
     }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //this.detailsComponentController.setSystemEngine(systemEngine);
-    }
-
     public void setFlowSelectedDetails(String flowName)
     {
         mainFlowDefinitionController.setFlowSelectedDetails(flowName);
     }
-
     public SimpleBooleanProperty isAccordionClickedProperty() {
         return isAccordionClicked;
     }
-
-
     private void updateFlowDefinitionListFromDTOResponse(DTOListFlowsDetails listFlowsDetails) {
         Platform.runLater(() -> {
             initListFlowsFromDTOResponse(listFlowsDetails);
         });
     }
-
     public void startListRefresher() {
         flowDefinitionRefresher = new FlowDefinitionRefresher(
+                mainFlowDefinitionController.getMainBodyController().getMainController().currentUserNameProperty().getValue(),
                 this::updateFlowDefinitionListFromDTOResponse);
         timer = new Timer();
         timer.schedule(flowDefinitionRefresher, REFRESH_RATE, REFRESH_RATE);
     }
-
     public BooleanProperty autoUpdatesProperty() {
         return autoUpdate;
     }

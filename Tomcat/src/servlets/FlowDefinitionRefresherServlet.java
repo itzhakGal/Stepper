@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import stepper.systemEngine.SystemEngineInterface;
+import stepper.users.User;
 import utils.ServletUtils;
 import utilsDesktopApp.DTOListFlowsDetails;
 
@@ -19,10 +20,13 @@ public class FlowDefinitionRefresherServlet extends HttpServlet {
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
             try (PrintWriter out = response.getWriter()) {
+
+                String userName = request.getParameter("userName");
                 Gson gson = new Gson();
                 SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
 
-                DTOListFlowsDetails listFlowsDetails = systemEngine.readFlowsDetails();
+                User user = systemEngine.getUserManager().getUser(userName);
+                DTOListFlowsDetails listFlowsDetails = systemEngine.readFlowsDetailsWeb(user);
                 String listFlowsDetailsJSON = gson.toJson(listFlowsDetails);
                 out.println(listFlowsDetailsJSON);
                 out.flush();

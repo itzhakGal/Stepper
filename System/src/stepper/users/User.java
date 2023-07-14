@@ -9,15 +9,17 @@ import java.util.List;
 import java.util.Map;
 
 public class User {
-    boolean isManager;
+    private boolean isManager;
     protected String userName;
     private Map<String, RoleImpl> associatedRole;
+    private boolean isAllFlowExistsFromManager;
 
     public User(String name, boolean isManager)
     {
         this.userName = name;
         this.isManager = isManager;
         this.associatedRole = new HashMap<>();
+        this.isAllFlowExistsFromManager = false;
     }
 
     public boolean isManager() {
@@ -52,5 +54,10 @@ public class User {
                 this.associatedRole.put(role.getKey(), role.getValue());
         }
     }
-
+    public boolean isAllFlowExistsFromManager() {
+        return isAllFlowExistsFromManager;
+    }
+    public void setAllFlowExistsFromManager(boolean allFlowExistsFromManager) {
+        isAllFlowExistsFromManager = allFlowExistsFromManager;
+    }
 }
