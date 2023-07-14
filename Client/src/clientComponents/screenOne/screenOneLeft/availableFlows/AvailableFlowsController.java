@@ -177,7 +177,6 @@ public class AvailableFlowsController implements Closeable {
                 this::updateFlowDefinitionListFromDTOResponse);
         timer = new Timer();
         timer.schedule(flowDefinitionRefresher, REFRESH_RATE, REFRESH_RATE);
-        //timer.schedule(flowDefinitionRefresher, 0, 500);
     }
 
     public BooleanProperty autoUpdatesProperty() {

@@ -9,6 +9,7 @@ import stepper.flow.execution.context.DataInFlowExecution;
 import stepper.flow.execution.context.DataInFlowExecutionImp;
 import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.StepResult;
+import stepper.users.User;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.util.*;
 
 public class FlowExecutionImpl  implements FlowExecution{
     private final UUID uniqueId;
+    private User userExecute;
     private final FlowDefinition flowDefinition;
     private Duration totalTime;
     private long startTime;

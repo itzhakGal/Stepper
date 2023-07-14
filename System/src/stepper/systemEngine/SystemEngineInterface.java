@@ -6,6 +6,7 @@ import stepper.flow.execution.context.DataInFlowExecution;
 import stepper.flow.execution.context.ExecutionContextInterface;
 import stepper.flows.definition.FlowsDefinition;
 import stepper.role.RolesManager;
+import stepper.users.User;
 import stepper.users.UserManager;
 import utilWebApp.DTOFullDetailsPastRunWeb;
 import utils.*;
@@ -124,5 +125,7 @@ public interface SystemEngineInterface extends Serializable {
     UserManager getUserManager();
     RolesManager getRolesManager();
     List<String> getListOfFlowsAvailable();
+
+    DTOListFlowsDetails readFlowsDetailsWeb(User userName);
 }
 

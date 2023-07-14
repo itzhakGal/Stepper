@@ -18,6 +18,7 @@ import stepper.role.RolesManager;
 import stepper.statistics.StatisticsDataImpl;
 import stepper.step.api.DataNecessity;
 import stepper.step.api.StepsNamesImpl;
+import stepper.users.User;
 import stepper.users.UserManager;
 import utilWebApp.DTOFullDetailsPastRunWeb;
 import utils.*;
@@ -48,6 +49,7 @@ public class SystemEngine implements SystemEngineInterface {
     private Map<UUID, FlowExecution> executedFlowsMap;
     private final RolesManager roles;
     private final UserManager userManager;
+    private Map<User, FlowsDefinition> userFlowsDefinitionMap;
 
 
     public SystemEngine ()
@@ -60,6 +62,7 @@ public class SystemEngine implements SystemEngineInterface {
         this.userManager = new UserManager();
         this.roles = new RolesManager();
     }
+
 
     public static SystemEngine getInstance() {
         return instance;
@@ -604,7 +607,6 @@ public class SystemEngine implements SystemEngineInterface {
         return executedFlowsMap;
     }
 
-
     @Override
     public DTOString readingSystemInformationFromFileWeb(InputStream InputStreamFile,boolean isFirstUpload)  {
 
@@ -630,11 +632,26 @@ public class SystemEngine implements SystemEngineInterface {
             insertMoreFlowsFromXML(optionalFlowsDefinition);
         }
 
+        associatingFlowToExistingRollsInTheSystem();
         String result = "The file is found to be correct and fully loaded for the user.";
         validResult = new DTOString(result, true);
 
         return validResult;
     }
+
+    public void associatingFlowToExistingRollsInTheSystem(){
+
+        for(FlowDefinition flowsDefinition: currentFlowsDefinition.getListFlowsDefinition())
+        {
+            if(flowsDefinition.isReadonly())
+            {
+                roles.getRoleMap().get("Read Only Flows").getFlowsAllowed().add(flowsDefinition.getName());
+            }
+            roles.getRoleMap().get("All Flows").getFlowsAllowed().add(flowsDefinition.getName());
+
+        }
+    }
+
 
     public void insertMoreFlowsFromXML(FlowsDefinition optionalFlowsDefinition)
     {
@@ -754,18 +771,16 @@ public class SystemEngine implements SystemEngineInterface {
     }
 
 
+    @Override
+    public DTOListFlowsDetails readFlowsDetailsWeb(User userName)
+    {
+        DTOListFlowsDetails listFlowsDetails= new DTOListFlowsDetails();
 
-
-    /*@Override
-    public Set<DTOUser> getUsers() {
-        Set<DTOUser> users = new HashSet<>();
-
-        for (Map.Entry<String, User> userEntry : this.userManager.getUsers().entrySet()) {
-            if (!userEntry.getKey().equals("Admin"))
-                users.add(new DTOUser(userEntry.getKey(), userEntry.getValue().getIsManager()));
+        for(FlowDefinition flowDefinition : userFlowsDefinitionMap.get(userName).getListFlowsDefinition()) {
+            listFlowsDetails.getDtoFlowDetailsList().add(new DTOFlowDetails(flowDefinition));
         }
-        return users;
-    }*/
+        return listFlowsDetails;
+    }
 
 
 
