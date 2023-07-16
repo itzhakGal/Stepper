@@ -58,4 +58,8 @@ public class AppController {
     public void updateRolesScreenTwo() {
         bodyComponentController.updateRolesScreenTwo();
     }
+
+    public BodyController getBodyComponentController() {
+        return bodyComponentController;
+    }
 }

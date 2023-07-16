@@ -207,6 +207,7 @@ public class FreeInputsController {
         currFlowId = fullDetails.getUniqueId();
         runButton.setDisable(true);
         mainFlowsExecutionScreenController.updateDetailsFlowRun(fullDetails);
+
         startButtonClickProperty.set(true);
     }
     public SimpleBooleanProperty getStartButtonClickProperty() {

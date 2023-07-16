@@ -2,8 +2,6 @@ package clientComponents.screenTwo.freeInputs;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.stream.JsonToken;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -15,7 +13,6 @@ import javafx.scene.layout.GridPane;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import stepper.dataDefinition.impl.number.IntWrapper;
-import stepper.flow.execution.context.DataInFlowExecution;
 import stepper.step.api.DataNecessity;
 import stepper.systemEngine.SystemEngineInterface;
 import clientComponents.screenTwo.FlowsExecutionScreenController;
@@ -24,7 +21,7 @@ import util.Constants;
 import util.http.HttpClientUtil;
 import utilWebApp.*;
 import utils.*;
-import utilsDesktopApp.DTOListFlowsDetails;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -94,6 +91,7 @@ public class FreeInputsController {
                 .newBuilder()
                 .addQueryParameter("flowName", dtoFlowExecution.getFlowName())
                 .addQueryParameter("strContinuation", strContinuation)
+                .addQueryParameter("userName", mainFlowsExecutionScreenController.getMainBodyController().getMainController().currentUserNameProperty().getValue())
                 .build()
                 .toString();
 
@@ -127,8 +125,8 @@ public class FreeInputsController {
     private void updateDetailsFreeInputsWab(DTOFlowExecution dtoFlowExecution, IntWrapper row, IntWrapper amountOfMandatoryInputs, IntWrapper amountOfOptionalInput, IntWrapper countAmountUpdateData, UUID flowIdRerun){
 
         mainFlowsExecutionScreenController.setExecutedFlowID(flowIdRerun);
-        row = createTitleFreeInputs("Free Inputs:", "-fx-font-weight: bold; -fx-font-size: 16", row);
-        row = createTitleFreeInputs("Mandatory Inputs:", "-fx-font-weight: bold; -fx-font-size: 14", row);
+        row = createTitleFreeInputs("Free Inputs:", "-fx-font-weight: bold; -fx-font-size: 20", row);
+        row = createTitleFreeInputs("Mandatory Inputs:", "-fx-font-weight: bold; -fx-font-size: 16", row);
         //systemEngine.removeInitialFreeInputFromDTO(dtoFlowExecution);
 
         for(DTOInputExecution inputExecution : dtoFlowExecution.getInputsExecution())
@@ -145,7 +143,7 @@ public class FreeInputsController {
             }
         }
         if(amountOfOptionalInput.getValue() > 0) {
-            row = createTitleFreeInputs("Optional Inputs:", "-fx-font-weight: bold; -fx-font-size: 14", row);
+            row = createTitleFreeInputs("Optional Inputs:", "-fx-font-weight: bold; -fx-font-size: 16", row);
             for (DTOInputExecution inputExecution : dtoFlowExecution.getInputsExecution()) {
                 if (inputExecution.getNecessity() == DataNecessity.OPTIONAL) {
                     row = getRow(row, inputExecution, dtoFlowExecution.getFlowName(), countAmountUpdateData);

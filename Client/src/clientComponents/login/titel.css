@@ -1,7 +1,9 @@
 #chat-app-client-header {
-    -fx-text-fill: PURPLE;
-    -fx-font-size: 20px;
-    -fx-font-weight: BOLD;
+    -fx-font-size: 30px; /* Set the font size */
+    -fx-text-fill: #779ac0; /* Set the text color (red) */
+    -fx-font-family: "Impact"; /* Set the font family to Impact */
+    -fx-font-weight: bold; /* Set the font weight to bold */
+    -fx-padding: 10px; /* Set the padding */
 }
 
 #greeting-label {

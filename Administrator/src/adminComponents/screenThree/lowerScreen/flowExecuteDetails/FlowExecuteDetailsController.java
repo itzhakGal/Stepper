@@ -8,6 +8,7 @@ import javafx.scene.layout.GridPane;
 import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController;
 import adminComponents.screenThree.lowerScreen.flowExecuteDetails.flowDetails.FlowDetailsController;
+import utilWebApp.DTOFullDetailsPastRunWeb;
 import utils.DTOFullDetailsPastRun;
 
 public class FlowExecuteDetailsController {
@@ -53,7 +54,7 @@ public class FlowExecuteDetailsController {
         mainFlowExecutionHistoryController.setFlowName(flowName);
     }
 
-    public void setFlowData(DTOFullDetailsPastRun executedData) {
+    public void setFlowData(DTOFullDetailsPastRunWeb executedData) {
         detailsGridPaneComponentController.updateDetailsFlowRun(executedData);
         inputsDetailsComponentController.updateDetailsFlowRun(executedData);
         outputDetailsComponentController.updateDetailsFlowRun(executedData);

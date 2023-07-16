@@ -19,6 +19,7 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.systemEngine.SystemEngineInterface;
+import utilWebApp.DTOFullDetailsPastRunWeb;
 import utils.DTOFullDetailsPastRun;
 import utilsDesktopApp.DTOListContinuationFlowName;
 
@@ -39,6 +40,8 @@ public class TopScreenController implements Initializable {
     private TableColumn<ExecutionData, String> startDateColumn;
     @FXML
     private TableColumn<ExecutionData, String> resultExecutionColumn;
+    @FXML
+    private TableColumn<ExecutionData, String>  userNameTableColum;
 
     @FXML private ComboBox<String> resultComboBox;
     @FXML
@@ -49,7 +52,7 @@ public class TopScreenController implements Initializable {
     private SimpleStringProperty chosenFlowNameProperty;
 
     private SimpleBooleanProperty selectedNameTableView;
-    private List<DTOFullDetailsPastRun> flowsExecutedList ;
+    private List<DTOFullDetailsPastRunWeb> flowsExecutedList ;
     private SimpleBooleanProperty rerunFlowButtonProperty;
     public TopScreenController()
     {
@@ -91,9 +94,11 @@ public class TopScreenController implements Initializable {
         flowNameColumn.setCellValueFactory(new PropertyValueFactory<ExecutionData, String>("flowName"));
         startDateColumn.setCellValueFactory(new PropertyValueFactory<ExecutionData, String>("startDate"));
         resultExecutionColumn.setCellValueFactory(new PropertyValueFactory<ExecutionData, String>("resultExecutions"));
+        userNameTableColum.setCellValueFactory(new PropertyValueFactory<ExecutionData, String>("userName"));
         setRightToLeftAlignment(flowNameColumn);
         setRightToLeftAlignment(startDateColumn);
         setRightToLeftAlignment(resultExecutionColumn);
+        setRightToLeftAlignment(userNameTableColum);
         initialComboBox();
         addAnimation();
     }
@@ -160,16 +165,16 @@ public class TopScreenController implements Initializable {
         return chosenFlowNameProperty;
     }
 
-    public void setTableView(List<DTOFullDetailsPastRun> flowsExecutedList) {
+    public void setTableView(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
         chosenFlowIdProperty.set("");
         setDetailsFlowExecutionHistory(flowsExecutedList);
     }
 
-    public void setDetailsFlowExecutionHistory(List<DTOFullDetailsPastRun> flowsExecutedList) {
+    public void setDetailsFlowExecutionHistory(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
         ObservableList<ExecutionData> data = tableFlowExecution.getItems();
         data.clear();
 
-        for (DTOFullDetailsPastRun flowDetails : flowsExecutedList) {
+        for (DTOFullDetailsPastRunWeb flowDetails : flowsExecutedList) {
             String flowResult;
             String activationDate = flowDetails.getActivationDate();
             if (flowDetails.getFinalResult() != null)
@@ -178,7 +183,7 @@ public class TopScreenController implements Initializable {
                 flowResult = "The flow is still in progress";
 
             UUID flowId = flowDetails.getUniqueId();
-            ExecutionData executionData = new ExecutionData(flowDetails.getFlowName(), flowResult, activationDate, flowId);
+            ExecutionData executionData = new ExecutionData(flowDetails.getFlowName(), flowResult, activationDate, flowId, flowDetails.getUserName());
             tableFlowExecution.getItems().add(executionData);
         }
         this.flowsExecutedList = flowsExecutedList;

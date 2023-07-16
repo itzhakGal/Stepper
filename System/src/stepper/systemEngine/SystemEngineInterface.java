@@ -117,8 +117,8 @@ public interface SystemEngineInterface extends Serializable {
     public Map<UUID, FlowExecution> getExecutedFlowsMap();
 
     DTOString readingSystemInformationFromFileWeb(InputStream file, boolean isFirstUpload);
-    void continuationToOtherFlowWeb(String currFlowId, String sourceFlowName, String targetFlowName);
-    UUID updateOptionalExecutionWeb(String flowName, String isContinuation);
+    void continuationToOtherFlowWeb(String currFlowId, String sourceFlowName, String targetFlowName, String userName);
+    UUID updateOptionalExecutionWeb(String flowName, String isContinuation, String userName);
     DTOFlowExecution removeInitialFreeInputFromDTOWeb(DTOFlowExecution dtoFlowExecution);
     List<DTOFullDetailsPastRunWeb> getFlowsExecutedDataDTOHistoryWeb();
     DTOFullDetailsPastRunWeb getFlowExecutedDataDTOWeb(UUID flowId);
@@ -132,5 +132,7 @@ public interface SystemEngineInterface extends Serializable {
     Map<User, FlowsDefinition> getUserFlowsDefinitionMap();
 
     void initialUserMapFlowsDefinitionFromUpdateRole(DTOSavaNewInfoForRole dtoSavaNewInfoForRole);
+
+    List<DTOFullDetailsPastRunWeb> getFlowsExecutedDataDTOHistoryByUserName(String userName);
 }
 

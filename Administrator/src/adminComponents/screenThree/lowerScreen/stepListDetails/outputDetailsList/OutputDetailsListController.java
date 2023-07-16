@@ -8,6 +8,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.screenThree.lowerScreen.stepListDetails.StepListDetailsController;
+import utilWebApp.DTOOutputDetailsWeb;
 import utilsDesktopApp.DTOOutputDetailsJAVAFX;
 
 import java.io.IOException;
@@ -40,11 +41,11 @@ public class OutputDetailsListController {
         this.maimStepListDetailsController = maimStepListDetailsController;
     }
 
-    public void updateOutputsStepDetails(List<DTOOutputDetailsJAVAFX> dtoOutputDetails)
+    public void updateOutputsStepDetails(List<DTOOutputDetailsWeb> dtoOutputDetails)
     {
         outputListAccordion.getPanes().clear();
 
-        for (DTOOutputDetailsJAVAFX output : dtoOutputDetails) {
+        for (DTOOutputDetailsWeb output : dtoOutputDetails) {
 
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("outputBody/outputBody.fxml"));

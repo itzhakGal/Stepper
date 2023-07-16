@@ -19,6 +19,7 @@ import stepper.dataDefinition.impl.mapping.MappingData;
 import stepper.dataDefinition.impl.relation.RelationData;
 import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.screenThree.lowerScreen.stepListDetails.outputDetailsList.OutputDetailsListController;
+import utilWebApp.DTOOutputDetailsWeb;
 import utils.DTOOutPutFlowPast;
 import utilsDesktopApp.DTOOutputDetailsJAVAFX;
 
@@ -57,12 +58,12 @@ public class OutputBodyController {
         //להשלים תוכן
     }
 
-    public void setOutputData(DTOOutputDetailsJAVAFX output) {
+    public void setOutputData(DTOOutputDetailsWeb output) {
         typeProperty.set(output.getType());
         updateInputContent(output);
     }
 
-    private void updateInputContent(DTOOutputDetailsJAVAFX output) {
+    private void updateInputContent(DTOOutputDetailsWeb output) {
         if (output.getTypePresentation().equals("FileListData")) {
             FileListData listData = (FileListData) output.getValue();
             createListDataContent(listData.getItem().isEmpty(), listData.toString(), listData.getItem().size());

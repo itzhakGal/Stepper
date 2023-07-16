@@ -23,11 +23,12 @@ public class ContinuationServlet extends HttpServlet {
         String flowUUID = req.getParameter("flowUUID");
         String sourceFlowName = req.getParameter("sourceFlowName");
         String targetFlowName = req.getParameter("targetFlowName");
+        String userName = req.getParameter("userName");
 
         SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
         Gson gson = new Gson();
 
-        systemEngine.continuationToOtherFlowWeb(flowUUID, sourceFlowName, targetFlowName);
+        systemEngine.continuationToOtherFlowWeb(flowUUID, sourceFlowName, targetFlowName, userName);
         res.setStatus(HttpServletResponse.SC_OK);
     }
 }

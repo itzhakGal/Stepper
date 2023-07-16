@@ -9,6 +9,7 @@ import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.mainScreen.body.BodyController;
 import adminComponents.screenThree.lowerScreen.flowTree.FlowTreeController;
 import adminComponents.screenThree.topScreen.TopScreenController;
+import utilWebApp.DTOFullDetailsPastRunWeb;
 import utils.DTOFullDetailsPastRun;
 
 import java.util.List;
@@ -57,7 +58,7 @@ public class FlowExecutionHistoryController {
 
     }
 
-    public void updateListOfExecutedFlows(List<DTOFullDetailsPastRun> flowsExecutedList) {
+    public void updateListOfExecutedFlows(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
         flowExecutionTableComponentController.setTableView(flowsExecutedList);
 
     }

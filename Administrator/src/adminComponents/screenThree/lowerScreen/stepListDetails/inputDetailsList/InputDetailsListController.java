@@ -9,6 +9,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.screenThree.lowerScreen.stepListDetails.StepListDetailsController;
+import utilWebApp.DTOInputDetailsWeb;
 import utilsDesktopApp.DTOInputDetailsJavaFX;
 
 import java.io.IOException;
@@ -42,10 +43,10 @@ public class InputDetailsListController {
     }
 
 
-    public void updateInputsStepDetails(List<DTOInputDetailsJavaFX> dtoInputsDetails) {
+    public void updateInputsStepDetails(List<DTOInputDetailsWeb> dtoInputsDetails) {
         inputListAccordion.getPanes().clear();
 
-        for (DTOInputDetailsJavaFX input : dtoInputsDetails) {
+        for (DTOInputDetailsWeb input : dtoInputsDetails) {
 
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("inputBody/inputBody.fxml"));

@@ -4,6 +4,8 @@ import adminComponents.mainScreen.app.AppController;
 import adminComponents.screenOne.UsersManagementController;
 import adminComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController;
 import adminComponents.screenTwo.RolesManagementController;
+import com.google.gson.Gson;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -11,8 +13,21 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.screenFour.statisticScreen.StatisticMainController;
+import util.Constants;
+import util.http.HttpClientUtil;
+import utilWebApp.DTOFullDetailsPastRunWeb;
+import utilWebApp.DTOListFullDetailsPastRunWeb;
+import utils.DTOStatistics;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public class BodyController {
@@ -116,6 +131,8 @@ public class BodyController {
     public void updatePushTabButtons()
     {
         usersManagementButton.setDisable(false);
+        statisticsButton.setDisable(false);
+        executionsHistoryButton.setDisable(false);
         usersManagementComponentController.startUserListRefresher();
         //flowDefinitionScreenComponentController.setListFlowsDetails();
     }
@@ -133,9 +150,39 @@ public class BodyController {
     }
     @FXML
     void executionsHistoryButtonAction(Event event) {
+
+        String finalUrl = HttpUrl
+                .parse(Constants.LIST_FLOWS_EXECUTION)
+                .newBuilder()
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try{
+                if (response.isSuccessful()) {
+                    DTOListFullDetailsPastRunWeb dtoListFullDetailsPastRun = new Gson().fromJson(response.body().string(), DTOListFullDetailsPastRunWeb.class);
+                    List<DTOFullDetailsPastRunWeb> flowsExecutedList = dtoListFullDetailsPastRun.getDtoListFullDetailsPastRun();
+
+
+                    Platform.runLater(() -> {
+                        flowExecutionHistoryScreenComponentController.updateListOfExecutedFlows(flowsExecutedList);
+                    });
+                }}finally {
+                    response.close();
+                }
+            }
+        });
         //List<DTOFullDetailsPastRun> flowsExecutedList = systemEngine.getFlowsExecutedDataDTOHistory();
         //flowExecutionHistoryScreenComponentController.updateListOfExecutedFlows(flowsExecutedList);
     }
+
 
 
     @FXML
@@ -152,9 +199,37 @@ public class BodyController {
     @FXML
     void statisticsButtonAction(Event event) {
 
-        //DTOStatistics statistics = systemEngine.readStatistics();
-        //if(statistics != null)
-            //statisticsScreenComponentController.setTableView(statistics);
+        String finalUrl = HttpUrl
+                .parse(Constants.STATISTICS_DATA)
+                .newBuilder()
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try{
+                    if (response.isSuccessful()) {
+                        DTOStatistics statistics = new Gson().fromJson(response.body().string(), DTOStatistics.class);
+
+                        Platform.runLater(() -> {
+                            if (statistics != null)
+                                statisticsScreenComponentController.setTableView(statistics);
+                        });
+                    }}finally {
+                    response.close();
+                }
+            }
+        });
+
+       /* DTOStatistics statistics = systemEngine.readStatistics();
+        if (statistics != null)
+            statisticsScreenComponentController.setTableView(statistics);*/
     }
 
 
@@ -268,5 +343,9 @@ public class BodyController {
         //flowExecutionHistoryScreenComponentController.init(this);
         //statisticsScreenComponentController.init(this);
 
+    }
+
+    public HBox getStatisticsScreenComponent() {
+        return statisticsScreenComponent;
     }
 }

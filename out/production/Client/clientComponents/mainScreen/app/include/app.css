@@ -8,6 +8,9 @@
     -fx-border-color: #5c88be;
     -fx-border-radius: 4px;
 }
+.label{
+    -fx-font-family: Georgia;
+}
 
 .tab:pressed
 {

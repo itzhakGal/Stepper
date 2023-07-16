@@ -1,16 +1,24 @@
 
 .error-label {
-    -fx-text-fill: RED;
+    -fx-text-fill: #9f5656;
     -fx-font-weight: BOLD;
     -fx-font-size: 12px;
 }
 
 .main-action-button {
-    -fx-text-fill: GREEN;
-    -fx-font-size: 20px;
-    -fx-font-weight: BOLD;
+    -fx-background-color: #B0C4DE;
+    -fx-text-fill: #020205;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 10px;
+    -fx-align-items: center;
+    -fx-justify-content: center;
+    -fx-border-color: #5c88be;
+    -fx-border-radius: 4px;
+}
+.main-action-button:hover {
+    -fx-background-color: linear-gradient(#61a2b1, #B0C4DE);
 }
 
 #quit-button {
-    -fx-text-fill: RED;
+    -fx-text-fill: #9f5656;
 }

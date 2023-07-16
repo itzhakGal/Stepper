@@ -1,6 +1,7 @@
 /* Set the background color of the table */
 .table-view {
     -fx-background-color: #B0C4DE;
+    -fx-font-size: 16px;
 }
 
 /* Set the text color of the table cells */
@@ -31,7 +32,7 @@
 }
 #stepsStatisticsTableLabel {
     -fx-font-family: Georgia;
-    -fx-font-size: 16px;
+    -fx-font-size: 20px;
     -fx-text-fill: #5c88be;
 }
 

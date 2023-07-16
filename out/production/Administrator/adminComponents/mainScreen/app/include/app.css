@@ -13,7 +13,9 @@
 {
     -fx-background-color: #B0C4DE;
 }
-
+.label{
+    -fx-font-family: Georgia;
+}
 .accordion:hover
 {
     -fx-border-color: #5c88be;

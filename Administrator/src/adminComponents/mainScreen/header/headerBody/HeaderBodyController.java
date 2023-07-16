@@ -210,6 +210,7 @@ public class HeaderBodyController {
                                     statusFileXML.setText(errorMessage);
                                     statusFileXML.setVisible(true);
                                 }
+                                mainHeaderController.getMainController().getBodyComponentController().updateButtons();
                             });
                         }}finally {
                     response.close();

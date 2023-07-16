@@ -3,7 +3,9 @@ package adminComponents.screenThree.lowerScreen.flowTree;
 
 import adminComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController;
 import adminComponents.screenThree.topScreen.TopScreenController;
+import com.google.gson.Gson;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -12,11 +14,19 @@ import javafx.scene.control.TreeView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 import stepper.systemEngine.SystemEngineInterface;
-import utils.DTOFullDetailsPastRun;
-import utils.DTOStepFlowPast;
+import util.Constants;
+import util.http.HttpClientUtil;
+import utilWebApp.DTOFullDetailsPastRunWeb;
+import utilWebApp.DTOStepFlowPastWeb;
 
-import java.util.UUID;
+
+import java.io.IOException;
 
 public class FlowTreeController {
     public FlowExecutionHistoryController mainFlowExecutionHistoryController;
@@ -58,16 +68,47 @@ public class FlowTreeController {
         TreeItem<String> root = new TreeItem<>(
                 this.tableFlowExecutionController.getChosenFlowNameProperty().getValue()
         );
-
         this.flowTreeView.setRoot(root);
 
+        String finalUrl = HttpUrl
+                .parse(Constants.FLOW_EXECUTION_TASK)
+                .newBuilder()
+                .addQueryParameter("flowId", this.tableFlowExecutionController.getChosenFlowIdProperty().getValue())
+                //.addQueryParameter("flowUUID", this.tableFlowExecutionController.getChosenFlowIdProperty().getValue())
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (response.isSuccessful()) {
+                        String responseData = response.body().string();
+                        DTOFullDetailsPastRunWeb executedData = new Gson().fromJson(responseData, DTOFullDetailsPastRunWeb.class);
+
+                        Platform.runLater(() -> {
+                            addExecutedFlowData(executedData);
+                            flowTreeView.getRoot().setExpanded(true);
+                        });
+                    }}finally {
+                    response.close();
+                }
+
+            }
+        });
+
         //addExecutedFlowData(systemEngine.getFlowExecutedDataDTO(UUID.fromString(this.tableFlowExecutionController.getChosenFlowIdProperty().getValue())));
-        this.flowTreeView.getRoot().setExpanded(true);
+        //this.flowTreeView.getRoot().setExpanded(true);
     }
 
-    private void addExecutedFlowData(DTOFullDetailsPastRun executedData) {
+
+    private void addExecutedFlowData(DTOFullDetailsPastRunWeb executedData) {
         boolean found;
-        for (DTOStepFlowPast step : executedData.getSteps()) {
+        for (DTOStepFlowPastWeb step : executedData.getSteps()) {
             found = false;
             for (TreeItem<String> item : this.flowTreeView.getRoot().getChildren()) {
                 if (item.getValue().equals(step.getFinalStepName())) {

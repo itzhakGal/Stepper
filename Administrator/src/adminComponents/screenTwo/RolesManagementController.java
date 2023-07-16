@@ -8,6 +8,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import stepper.systemEngine.SystemEngineInterface;
+import utils.DTOFullDetailsPastRun;
 
 public class RolesManagementController {
 
@@ -50,4 +51,10 @@ public class RolesManagementController {
     public VBox getLowerManagementComponent() {
         return lowerManagementComponent;
     }
+
+    public void updateDetailsFlowRun()
+    {
+        mainBodyController.updateButtons();
+    }
+
 }

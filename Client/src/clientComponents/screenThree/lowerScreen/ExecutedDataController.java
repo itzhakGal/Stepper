@@ -74,7 +74,8 @@ public class ExecutedDataController {
         String finalUrl = HttpUrl
                 .parse(Constants.FLOW_EXECUTION_TASK)
                 .newBuilder()
-                .addQueryParameter("flowUUID", this.flowExecutionHistoryController.getTableFlowExecutionController().getChosenFlowIdProperty().getValue())
+                // .addQueryParameter("flowUUID", this.flowExecutionHistoryController.getTableFlowExecutionController().getChosenFlowIdProperty().getValue()
+                .addQueryParameter("flowId", this.flowExecutionHistoryController.getTableFlowExecutionController().getChosenFlowIdProperty().getValue())
                 .build()
                 .toString();
 
@@ -137,50 +138,6 @@ public class ExecutedDataController {
 
             }
         });
-
-
-
-        /*executedData = systemEngine.getFlowExecutedDataDTO(UUID.fromString(this.flowExecutionHistoryController.getTableFlowExecutionController().getChosenFlowIdProperty().getValue()));
-        boolean isRootSelected = (selectedTreeItemItem != null && selectedTreeItemItem.getParent() == null);
-
-
-        if (isRootSelected) {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("flowExecuteDetails/flowExecuteDetails.fxml"));
-                VBox contentPane = fxmlLoader.load();
-                FlowExecuteDetailsController controller = fxmlLoader.getController();
-                controller.setMainController(this.flowExecutionHistoryController);
-                //controller.setSystemEngine(systemEngine);
-
-                this.flowExecutionHistoryController.getVboxDetails().getChildren().add(contentPane);
-
-                // Store the controller in the TitledPane's properties
-                controller.setFlowData(executedData);
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-        }
-        else {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("stepListDetails/stepListDetails.fxml"));
-                ScrollPane contentPane = fxmlLoader.load();
-
-                StepListDetailsController controller = fxmlLoader.getController();
-                controller.setMainController(this.flowExecutionHistoryController);
-                //controller.setSystemEngine(systemEngine);
-
-                this.flowExecutionHistoryController.getVboxDetails().getChildren().add(contentPane);
-
-                // Store the controller in the TitledPane's properties
-                //DTOStepFlowPast stepDetails = getStepDetails(selectedTreeItemItem.getValue().toString(), executedData.getSteps());
-                //controller.updateDetailsFlowRun(stepDetails);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
 
     }
     public DTOStepFlowPastWeb getStepDetails(String currentSelected, List<DTOStepFlowPastWeb> steps )

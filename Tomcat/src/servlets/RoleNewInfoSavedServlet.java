@@ -31,6 +31,9 @@ public class RoleNewInfoSavedServlet extends HttpServlet {
         String infoDataSaved = req.getReader().lines().collect(Collectors.joining(" "));
         DTOSavaNewInfoForRole dtoSavaNewInfoForRole = new Gson().fromJson(infoDataSaved, DTOSavaNewInfoForRole.class);
 
+        dtoSavaNewInfoForRole.getListFlowsToAddToTheRole().remove("Assign Flows To Role");
+        dtoSavaNewInfoForRole.getListUserToAddToTheRole().remove("Assign User To Roles");
+
         RoleImpl roleData = getRoleByName(rolesManager.getRoleMap(), dtoSavaNewInfoForRole.getRoleName());
         insertNewDataToRoleInMap(roleData, userManager.getUsers(), dtoSavaNewInfoForRole);
         updateRoleFlowList(roleData, dtoSavaNewInfoForRole);

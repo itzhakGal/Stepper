@@ -68,6 +68,7 @@ public class ContinuationController {
                         sourceFlowName)
                 .addQueryParameter("targetFlowName",
                         targetFlowName)
+                .addQueryParameter("userName", mainFlowsExecutionScreenController.getMainBodyController().getMainController().currentUserNameProperty().getValue())
                 .build()
                 .toString();
 

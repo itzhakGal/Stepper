@@ -272,57 +272,6 @@ public class FlowExecutionTask extends TimerTask {  //extends Task<Boolean>
         double progressValue = (double) completedCount / members.size();
         return progressValue;
     }
-
-        //לולאה אין סופית
-        /*public void updateMoreData(DTOFullDetailsPastRunWeb executedData) {
-        int SLEEP_TIME = 100;
-        Boolean result = false;
-
-        while (executedData.getFinalResult() == null) {
-            String finalUrl = HttpUrl
-                    .parse(Constants.COLLECT_MORE_DATA_EXECUTION_TASK)
-                    .newBuilder()
-                    .addQueryParameter("flowId", this.flowId.toString())
-                    .build()
-                    .toString();
-
-            HttpClientUtil.runAsync(finalUrl, new Callback() {
-
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-                }
-
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    try {
-                        if (response.isSuccessful()) {
-                            String responseData = response.body().string();
-                            DTOFullDetailsPastRunWeb executed = new Gson().fromJson(responseData, DTOFullDetailsPastRunWeb.class);
-
-                            Platform.runLater(() -> {
-                                if (currentFlowId.getValue().equals(flowId.toString())) {
-                                    uiAdapter.update(executed);
-                                    // Calculate and update the progress based on your logic
-                                    double progressValue = calculateProgress(executed);  // Implement this method
-                                    progress.set(progressValue);
-                                }
-
-                                try {
-                                    Thread.sleep(SLEEP_TIME);
-                                } catch (InterruptedException ignored) {
-                                }
-                            });
-                            executedData = executed;
-                        }
-                    } finally {
-                        response.close();
-                    }
-
-                }
-            });
-        }
-    }*/
 }
 
 

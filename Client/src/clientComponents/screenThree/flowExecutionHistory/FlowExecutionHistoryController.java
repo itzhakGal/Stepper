@@ -15,7 +15,6 @@ import utils.DTOFullDetailsPastRun;
 import java.util.List;
 
 public class FlowExecutionHistoryController {
-
     private BodyController mainBodyController;
     //private SystemEngineInterface systemEngine;
     @FXML
@@ -60,7 +59,6 @@ public class FlowExecutionHistoryController {
 
     public void updateListOfExecutedFlows(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
         flowExecutionTableComponentController.setTableView(flowsExecutedList);
-
     }
 
     public TopScreenController getTableFlowExecutionController() {

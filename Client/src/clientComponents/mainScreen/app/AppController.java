@@ -76,6 +76,7 @@ public class AppController {
     }
 
     public void initListener() {
+        bodyComponentController.initListener();
 
     }
     public Stage getPrimaryStage() {

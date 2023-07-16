@@ -65,6 +65,8 @@ public class FlowTreeController {
 
     }
 
+
+
     private void insertDataToTreeView() {
 
         TreeItem<String> root = new TreeItem<>(
@@ -75,7 +77,8 @@ public class FlowTreeController {
         String finalUrl = HttpUrl
                 .parse(Constants.FLOW_EXECUTION_TASK)
                 .newBuilder()
-                .addQueryParameter("flowUUID", this.tableFlowExecutionController.getChosenFlowIdProperty().getValue())
+                .addQueryParameter("flowId", this.tableFlowExecutionController.getChosenFlowIdProperty().getValue())
+                //.addQueryParameter("flowUUID", this.tableFlowExecutionController.getChosenFlowIdProperty().getValue())
                 .build()
                 .toString();
 

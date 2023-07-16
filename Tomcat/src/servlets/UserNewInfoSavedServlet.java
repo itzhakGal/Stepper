@@ -35,7 +35,7 @@ public class UserNewInfoSavedServlet extends HttpServlet {
 
         String infoDataSaved = req.getReader().lines().collect(Collectors.joining(" "));
         DTOSavaNewInfoForUser dtoSavaNewInfoForUser = new Gson().fromJson(infoDataSaved, DTOSavaNewInfoForUser.class);
-
+        dtoSavaNewInfoForUser.getListRolesToAddToTheUser().remove("Assign Roles To User");
         insertNewDataToUserInMap(systemEngine, rolesManager, userManager.getUsers(), dtoSavaNewInfoForUser);
         systemEngine.initialUserMapFlowsDefinition(dtoSavaNewInfoForUser);
 

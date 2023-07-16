@@ -43,10 +43,11 @@ public class DetailsFreeInputsServlet extends HttpServlet {
 
         String flowName = req.getParameter("flowName");
         String strContinuation = req.getParameter("strContinuation");
+        String userName = req.getParameter("userName");
         Gson gson = new Gson();
         SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
 
-        UUID flowIdRerun = systemEngine.updateOptionalExecutionWeb(flowName, strContinuation);
+        UUID flowIdRerun = systemEngine.updateOptionalExecutionWeb(flowName, strContinuation, userName);
 
         String inputs = req.getReader().lines().collect(Collectors.joining(" "));
         DTOFlowExecution dtoFlowExecution = new Gson().fromJson(inputs, DTOFlowExecution.class);

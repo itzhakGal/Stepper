@@ -16,8 +16,6 @@ import clientComponents.mainScreen.body.BodyController;
 import clientComponents.screenTwo.FlowsExecutionScreenController;
 import utilWebApp.DTOFullDetailsPastRunWeb;
 import utilWebApp.DTOStepFlowPastWeb;
-import utils.DTOFullDetailsPastRun;
-import utils.DTOStepFlowPast;
 
 import java.util.UUID;
 
@@ -65,8 +63,10 @@ public class FlowTreeController {
                     });
 
         bodyController.getFlowExecutionScreenComponentController().getContinuation().getContinuationButtonPressed().addListener((observable, oldValue, newValue) -> {
-            if (newValue)
+            if (newValue) {
                 flowTreeView.getRoot().getChildren().clear();
+                flowTreeView.setRoot(null);
+            }
         });
 
         bodyController.getFlowExecutionHistoryScreenComponentController().getFlowExecutionTableComponentController().getRerunFlowButtonProperty()
@@ -76,7 +76,11 @@ public class FlowTreeController {
                         flowTreeView.setRoot(null);
                     }
                 });
+
+
         }
+
+
 
     private void fetchData() {
 

@@ -16,7 +16,6 @@ import utils.DTOInputExecution;
 
 public class FreeInputNumberController implements CollectionInputs {
     private clientComponents.screenTwo.freeInputs.FreeInputsController mainFreeInputsController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private Label userStringLabel;
     @FXML
@@ -93,7 +92,8 @@ public class FreeInputNumberController implements CollectionInputs {
 
     public void setFreeInput(Object item)
     {
-        int value = Integer.parseInt(item.toString());
+        Double valueDouble = Double.parseDouble(item.toString());
+        Integer value = valueDouble.intValue();
         freeInputNumberSpinner.getValueFactory().setValue(value);
     }
     public void setEditableSpinner() {

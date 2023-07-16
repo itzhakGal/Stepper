@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import stepper.step.api.LoggerImpl;
 import stepper.systemEngine.SystemEngineInterface;
+import utilWebApp.DTOStepFlowPastWeb;
 import utils.DTOStepFlowPast;
 
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class StepListDetailsController {
         //inputListComponentController.setSystemEngine(systemEngine);
     }
 
-    public void updateDetailsFlowRun(DTOStepFlowPast stepDetails) {
+    public void updateDetailsFlowRun(DTOStepFlowPastWeb stepDetails) {
 
         startTime.setText(stepDetails.getStartTime());
         endTime.setText(stepDetails.getEndTime());
@@ -63,7 +64,7 @@ public class StepListDetailsController {
 
     }
 
-    public void updateLogDetailsGridPane(DTOStepFlowPast stepDetails)
+    public void updateLogDetailsGridPane(DTOStepFlowPastWeb stepDetails)
     {
         logDetailsGridPane.getChildren().clear();
         logDetailsGridPane.getRowConstraints().clear();

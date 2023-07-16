@@ -13,7 +13,7 @@ import utils.DTOFullDetailsPastRun;
 
 public class FlowExecuteDetailsController {
 
-    private clientComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController mainFlowExecutionHistoryController;
+    private FlowExecutionHistoryController mainFlowExecutionHistoryController;
     //private SystemEngineInterface systemEngine;
 
     @FXML
@@ -45,7 +45,7 @@ public class FlowExecuteDetailsController {
         //detailsGridPaneComponentController.setSystemEngine(systemEngine);
     }
 
-    public void setMainController(FlowExecutionHistoryController mainFlowExecutionHistoryController) {
+    public void setMainController(clientComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController mainFlowExecutionHistoryController) {
         this.mainFlowExecutionHistoryController = mainFlowExecutionHistoryController;
 
     }

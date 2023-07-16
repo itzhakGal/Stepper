@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Label?>
@@ -8,7 +13,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="396.0" prefWidth="551.0" stylesheets="@availableFlows.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientComponents.screenOne.screenOneLeft.availableFlows.AvailableFlowsController">
+<BorderPane prefHeight="396.0" prefWidth="551.0" stylesheets="@availableFlows.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientComponents.screenOne.screenOneLeft.availableFlows.AvailableFlowsController">
    <center>
       <Accordion fx:id="listFlowsName" maxWidth="600.0" BorderPane.alignment="CENTER">
         <panes>
@@ -28,7 +33,7 @@
       </Accordion>
    </center>
    <top>
-      <Label fx:id="availableFlowsLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="549.0" style="-fx-font-weight: bold;" text="Available Flows:" BorderPane.alignment="CENTER">
+      <Label fx:id="availableFlowsLabel" alignment="CENTER" contentDisplay="CENTER" minWidth="300.0" prefHeight="20.0" prefWidth="549.0" style="-fx-font-weight: bold;" text="Available Flows:" BorderPane.alignment="CENTER">
          <font>
             <Font size="14.0" />
          </font>

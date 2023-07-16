@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import stepper.systemEngine.SystemEngineInterface;
+import utilWebApp.DTOFullDetailsPastRunWeb;
 import utils.DTOFullDetailsPastRun;
 
 
@@ -51,7 +52,7 @@ public class FlowDetailsController {
         //this.systemEngine = systemEngine;
     }
 
-    public void updateDetailsFlowRun(DTOFullDetailsPastRun endOFlowExecution) {
+    public void updateDetailsFlowRun(DTOFullDetailsPastRunWeb endOFlowExecution) {
         flowNameProperty.set(endOFlowExecution.getFlowName());
         maimFlowExecuteDetailsController.setFlowName(endOFlowExecution.getFlowName());
         uniqueNameProperty.set(endOFlowExecution.getUniqueId().toString());

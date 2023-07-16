@@ -201,13 +201,6 @@ public class UsersManagementController implements Closeable {
         Map<String, RoleImpl> associatedRoleMap = userDataFullInfo.getUser().getAssociatedRole();
         List<String> listOfRoles = new ArrayList<>(associatedRoleMap.keySet());
 
-        /*List<String> listOfFlowAvailable = new ArrayList<>();
-        for (RoleImpl role : associatedRoleMap.values()) {
-            Set<String> allowedFlows = role.getFlowsAllowed();
-            // Add all the allowed flows to the list
-            listOfFlowAvailable.addAll(allowedFlows);
-        }*/
-
         List<String> listOfFlowAvailable = new ArrayList<>();
         Set<String> uniqueFlows = new HashSet<>(); // Use a set to store unique flow names
         for (RoleImpl role : associatedRoleMap.values()) {
@@ -224,27 +217,7 @@ public class UsersManagementController implements Closeable {
 
     }
     
-    /*public void updateLists(String userName, List<String> listOfRoles, List<String> listOfFlowAvailable, List<String> selectedAssignedRoles)
-    {
-        this.userName.setText(userName);
-        
-        ObservableList<String> itemsListRoles = this.listOfRoles.getItems();
-        itemsListRoles.clear();
-        itemsListRoles.addAll(listOfRoles);
 
-
-        ObservableList<String> itemsListOfFlowAvailable = this.listOfFlowsAvailable.getItems();
-        itemsListOfFlowAvailable.clear();
-        itemsListOfFlowAvailable.addAll(listOfFlowAvailable);
-
-        ObservableList<String> itemsTotalFlowsPreformedByUser = this.totalFlowsPerformed.getItems();
-        itemsListOfFlowAvailable.clear();
-        itemsListOfFlowAvailable.addAll(totalFlowsPreformedByUser);
-
-        ObservableList<String> itemsListSelectedAssignedRoles = this.selectRoleNameList.getItems();
-        itemsListSelectedAssignedRoles.clear();
-        itemsListSelectedAssignedRoles.addAll(selectedAssignedRoles);
-    }*/
     public void updateLists(String userName, Boolean isManager, List<String> listOfRoles, List<String> listOfFlowAvailable, List<String> selectedAssignedRoles) {
 
         this.userName.setText(userName);
@@ -285,7 +258,6 @@ public class UsersManagementController implements Closeable {
     }
 
     private List<String> createSelectedAssignedRolesCheckBoxTreeItem(List<String> selectedAssignedRoles) {
-
         List<String> listRolesToAddToTheUser = new ArrayList<>();
         CheckBoxTreeItem<String> rootItem = new  CheckBoxTreeItem<String>("Assign Roles To User");
 

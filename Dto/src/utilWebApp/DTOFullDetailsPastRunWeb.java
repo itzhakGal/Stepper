@@ -32,6 +32,7 @@ public class DTOFullDetailsPastRunWeb
     private List<DTOInputFlowPastWeb> inputs;
     private List<DTOOutPutFlowPastWeb> outputs;
     private List<DTOStepFlowPastWeb> steps;
+    private String userName;
 
     public DTOFullDetailsPastRunWeb(FlowExecution flowExecution) {
         this.flowName = flowExecution.getFlowDefinition().getName();
@@ -42,6 +43,7 @@ public class DTOFullDetailsPastRunWeb
         this.inputs = new ArrayList<>();
         this.outputs = new ArrayList<>();
         this.steps = new ArrayList<>();
+        this.userName = flowExecution.getUserExecute().getUserName();
         initialListData(flowExecution);
     }
 
@@ -118,5 +120,9 @@ public class DTOFullDetailsPastRunWeb
 
     public void setFinalResult(FlowExecutionResult finalResult) {
         this.finalResult = finalResult;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }

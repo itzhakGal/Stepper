@@ -54,7 +54,6 @@ public class SystemEngine implements SystemEngineInterface {
     private final UserManager userManager;
     private Map<User, FlowsDefinition> userFlowsDefinitionMap;
 
-
     public SystemEngine ()
     {
         this.listFlowsExecution = new FlowsExecutionImp();
@@ -637,10 +636,41 @@ public class SystemEngine implements SystemEngineInterface {
         }
 
         associatingFlowToExistingRollsInTheSystem();
+        insertDataToMapFlowDefinition();
         String result = "The file is found to be correct and fully loaded for the user.";
         validResult = new DTOString(result, true);
 
         return validResult;
+    }
+    private void insertDataToMapFlowDefinition() {
+        for(Map.Entry<User, FlowsDefinition> userMapDefinition : this.userFlowsDefinitionMap.entrySet())
+        {
+            if(userMapDefinition.getKey().isManager())
+            {
+                this.userFlowsDefinitionMap.get(userMapDefinition.getKey()).getListFlowsDefinition().clear();
+                for(FlowDefinition flowDefinition : currentFlowsDefinition.getListFlowsDefinition()) {
+                    this.userFlowsDefinitionMap.get(userMapDefinition.getKey()).getListFlowsDefinition().add(flowDefinition);
+                }
+            }
+            else{
+                Set<String> flowDefinitionNameToAdd = new HashSet<>();
+                for (FlowDefinition flowDefinition : this.userFlowsDefinitionMap.get(userMapDefinition.getKey()).getListFlowsDefinition())
+                {
+                    flowDefinitionNameToAdd.add(flowDefinition.getName());
+                }
+                for(Map.Entry<String, RoleImpl> role : userMapDefinition.getKey().getRoles().entrySet())
+                {
+                    flowDefinitionNameToAdd.addAll(role.getValue().getFlowsAllowed());
+                }
+                for(String flowDefinitionName : flowDefinitionNameToAdd)
+                {
+                    FlowDefinition  flowDefinition = getFlowDefinitionByFlowNameJavaFX(flowDefinitionName);
+                    if(!this.userFlowsDefinitionMap.get(userMapDefinition.getKey()).getListFlowsDefinition().contains(flowDefinition)) {
+                        this.userFlowsDefinitionMap.get(userMapDefinition.getKey()).getListFlowsDefinition().add(flowDefinition);
+                    }
+                }
+            }
+        }
     }
 
     public void associatingFlowToExistingRollsInTheSystem(){
@@ -652,7 +682,6 @@ public class SystemEngine implements SystemEngineInterface {
                 roles.getRoleMap().get("Read Only Flows").getFlowsAllowed().add(flowsDefinition.getName());
             }
             roles.getRoleMap().get("All Flows").getFlowsAllowed().add(flowsDefinition.getName());
-
         }
     }
 
@@ -680,7 +709,7 @@ public class SystemEngine implements SystemEngineInterface {
     }
 
     @Override
-    public void continuationToOtherFlowWeb(String currFlowId, String sourceFlowName, String targetFlowName)
+    public void continuationToOtherFlowWeb(String currFlowId, String sourceFlowName, String targetFlowName, String userName)
     {
         UUID uuidCurrFlowId = UUID.fromString(currFlowId);
         FlowExecution currFlowExecution = this.executedFlowsMap.get(uuidCurrFlowId);
@@ -702,13 +731,17 @@ public class SystemEngine implements SystemEngineInterface {
                 this.optionalFlowExecution.getFreeInputsExist().get(continuationMapping.getTargetData()).setItem(freeInputDetails.getItem());
             }
         }
+
+        this.optionalFlowExecution.setUserExecute(userManager.getUser(userName));
     }
 
     @Override
-    public UUID updateOptionalExecutionWeb(String flowName, String isContinuation) {
+    public UUID updateOptionalExecutionWeb(String flowName, String isContinuation, String userName) {
+
+        User user = userManager.getUser(userName);
         if(isContinuation.equals("false")) {
             FlowDefinition currFlowDefinition = getFlowDefinitionByFlowNameJavaFX(flowName);
-            this.optionalFlowExecution = new FlowExecutionImpl(currFlowDefinition);
+            this.optionalFlowExecution = new FlowExecutionImpl(currFlowDefinition, user);
         }
         return optionalFlowExecution.getUniqueId();
     }
@@ -756,14 +789,14 @@ public class SystemEngine implements SystemEngineInterface {
         return fullDetails;
     }
 
+    @Override
     public RolesManager getRolesManager() {
         return roles;
     }
-
+    @Override
     public UserManager getUserManager() {
         return userManager;
     }
-
     @Override
     public List<String> getListOfFlowsAvailable()
     {
@@ -773,8 +806,6 @@ public class SystemEngine implements SystemEngineInterface {
         }
         return listOfFlowsAvailable;
     }
-
-
     @Override
     public DTOListFlowsDetails readFlowsDetailsWeb(User userName)
     {
@@ -785,17 +816,16 @@ public class SystemEngine implements SystemEngineInterface {
         }
         return listFlowsDetails;
     }
-
+    @Override
     public Map<User, FlowsDefinition> getUserFlowsDefinitionMap() {
         return userFlowsDefinitionMap;
     }
-
+    @Override
     public void initialUserMapFlowsDefinition(DTOSavaNewInfoForUser dtoSavaNewInfoForUser)
     {
         String userName = dtoSavaNewInfoForUser.getUserName();
         User user = userManager.getUser(userName);
 
-        //this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().clear();
         if(dtoSavaNewInfoForUser.isManager())
         {
             this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().clear();
@@ -805,6 +835,10 @@ public class SystemEngine implements SystemEngineInterface {
         }
         else{
             Set<String> flowDefinitionNameToAdd = new HashSet<>();
+            for(Map.Entry<String, RoleImpl> mapUserRole : user.getRoles().entrySet())
+            {
+                flowDefinitionNameToAdd.addAll(mapUserRole.getValue().getFlowsAllowed());
+            }
             for(String roleName : dtoSavaNewInfoForUser.getListRolesToAddToTheUser())
             {
                 RoleImpl role = roles.getRole(roleName);
@@ -817,10 +851,13 @@ public class SystemEngine implements SystemEngineInterface {
             for(String flowDefinitionName : flowDefinitionNameToAdd)
             {
                 FlowDefinition  flowDefinition = getFlowDefinitionByFlowNameJavaFX(flowDefinitionName);
-                this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().add(flowDefinition);
+                if(!this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().contains(flowDefinition)) {
+                    this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().add(flowDefinition);
+                }
             }
         }
     }
+    @Override
     public void initialUserMapFlowsDefinitionFromUpdateRole(DTOSavaNewInfoForRole dtoSavaNewInfoForRole) {
         RoleImpl role = roles.getRole(dtoSavaNewInfoForRole.getRoleName());
         Set<String> listOfFlowsToAdd = role.getFlowsAllowed();
@@ -851,8 +888,17 @@ public class SystemEngine implements SystemEngineInterface {
             }
         }
     }
+    @Override
+    public List<DTOFullDetailsPastRunWeb> getFlowsExecutedDataDTOHistoryByUserName(String userName) {
+     User user = userManager.getUser(userName);
 
+        List<DTOFullDetailsPastRunWeb> flowsExecutedList = new ArrayList<>();
 
-
-
+        for(FlowExecutionImpl flow: listFlowsExecution.getFlowsExecutionList())
+        {
+            if(flow.getUserExecute().equals(user) || user.isManager())
+                flowsExecutedList.add(new DTOFullDetailsPastRunWeb(flow));
+        }
+        return flowsExecutedList;
+    }
 }

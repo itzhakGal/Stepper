@@ -66,6 +66,7 @@ public class ContinuationController {
                         sourceFlowName)
                 .addQueryParameter("targetFlowName",
                         targetFlowName)
+                .addQueryParameter("userName", mainTopScreenController.getMainFlowExecutionHistoryController().getMainBodyController().getMainController().currentUserNameProperty().getValue())
                 .build()
                 .toString();
 
@@ -76,6 +77,7 @@ public class ContinuationController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
+                try{
                 if (response.isSuccessful()) {
                     Platform.runLater(() -> {
                         flowsExecutionScreenController.updateDetailsFlowExecution(targetFlowName, true);
@@ -87,6 +89,8 @@ public class ContinuationController {
                         continuationButtonPressed.set(true);
                         mainTopScreenController.getRerunFlowButton().setDisable(true);
                     });
+                }}finally {
+                    response.close();
                 }
             }
         });

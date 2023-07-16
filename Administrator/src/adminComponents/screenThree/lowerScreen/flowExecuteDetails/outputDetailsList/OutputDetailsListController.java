@@ -8,6 +8,8 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.screenThree.lowerScreen.flowExecuteDetails.FlowExecuteDetailsController;
+import utilWebApp.DTOFullDetailsPastRunWeb;
+import utilWebApp.DTOOutPutFlowPastWeb;
 import utils.DTOFullDetailsPastRun;
 import utils.DTOOutPutFlowPast;
 
@@ -40,11 +42,11 @@ public class OutputDetailsListController {
         this.maimFlowExecuteDetailsController = maimFlowExecuteDetailsController;
     }
 
-    public void updateDetailsFlowRun(DTOFullDetailsPastRun endOFlowExecution) {
+    public void updateDetailsFlowRun(DTOFullDetailsPastRunWeb endOFlowExecution) {
 
         outputListAccordion.getPanes().clear();
 
-        for (DTOOutPutFlowPast output : endOFlowExecution.getOutputs()) {
+        for (DTOOutPutFlowPastWeb output : endOFlowExecution.getOutputs()) {
 
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("outputBody/outputBody.fxml"));

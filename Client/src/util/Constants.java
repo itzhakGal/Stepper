@@ -22,7 +22,9 @@ public class Constants {
     public final static String UPDATE_MANDATORY_INPUT = FULL_SERVER_PATH + "/updateMandatoryInput";
     public final static String FLOW_EXECUTION = FULL_SERVER_PATH + "/flowExecution";
     public final static String LIST_FLOWS_EXECUTION = FULL_SERVER_PATH + "/listFlowsExecution";
+    public final static String LIST_FLOWS_EXECUTION_CLIENT = FULL_SERVER_PATH + "/listFlowsExecutionClient";
     public final static String RERUN_EXECUTION = FULL_SERVER_PATH + "/inputForRerunExecution";
+
     public final static String FLOW_EXECUTION_TASK = FULL_SERVER_PATH + "/flowExecutionTask";
     public final static String LIST_CONTINUATION_FLOW_NAME = FULL_SERVER_PATH + "/listContinuationFlowName";
     public final static String FLOW_EXECUTION_RESULT = FULL_SERVER_PATH + "/flowExecutionResult";

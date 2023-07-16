@@ -7,7 +7,6 @@ import stepper.flow.definition.api.InitialInputValue;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.execution.context.DataInFlowExecution;
 import stepper.flow.execution.context.DataInFlowExecutionImp;
-import stepper.step.api.DataDefinitionDeclaration;
 import stepper.step.api.StepResult;
 import stepper.users.User;
 
@@ -27,9 +26,24 @@ public class FlowExecutionImpl  implements FlowExecution{
     private Map<String, DataInFlowExecution> dataValues;
     private Map<String, DataInFlowExecution>  freeInputsExist;
     private List<StepExecutionDataImpl> stepsData;
-
     private List<StepExecutionDataImpl> stepsDataJavaFX;
 
+
+    public FlowExecutionImpl(FlowDefinition flowDefinition, User user) {
+        this.uniqueId = UUID.randomUUID();
+        this.flowDefinition = flowDefinition;
+        this.startTime = 0;
+        this.endTime=0;
+        this.dataValues = new HashMap<>();
+        this.stepsData = new ArrayList();
+        this.freeInputsExist = new HashMap<>();
+        this.flowExecutionResult = null;
+        this.stepsDataJavaFX = new ArrayList<>();
+        this.userExecute = user;
+        initialStepsData(flowDefinition);
+        initialMapFreeInputsExists(flowDefinition.getFreeInputs());
+        updateInitialValues();
+    }
 
     public FlowExecutionImpl(FlowDefinition flowDefinition) {
         this.uniqueId = UUID.randomUUID();
@@ -41,7 +55,7 @@ public class FlowExecutionImpl  implements FlowExecution{
         this.freeInputsExist = new HashMap<>();
         this.flowExecutionResult = null;
         this.stepsDataJavaFX = new ArrayList<>();
-
+        this.userExecute = null;
         initialStepsData(flowDefinition);
         initialMapFreeInputsExists(flowDefinition.getFreeInputs());
         updateInitialValues();
@@ -98,6 +112,12 @@ public class FlowExecutionImpl  implements FlowExecution{
     public List<StepExecutionDataImpl> getStepsData() {
         return stepsData;
     }
+
+    @Override
+    public User getUserExecute() {
+        return userExecute;
+    }
+
     @Override
     public Map<String, DataInFlowExecution> getFreeInputsExist() {
         return freeInputsExist;
@@ -185,5 +205,9 @@ public class FlowExecutionImpl  implements FlowExecution{
 
     public List<StepExecutionDataImpl> getStepsDataJavaFX() {
         return stepsDataJavaFX;
+    }
+
+    public void setUserExecute(User userExecute) {
+        this.userExecute = userExecute;
     }
 }

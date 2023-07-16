@@ -46,7 +46,6 @@ import java.util.UUID;
 public class TopScreenController implements Initializable {
 
     private clientComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController mainFlowExecutionHistoryController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private TableView<clientComponents.screenThree.topScreen.ExecutionData> tableFlowExecution;
     @FXML
@@ -55,6 +54,8 @@ public class TopScreenController implements Initializable {
     private TableColumn<clientComponents.screenThree.topScreen.ExecutionData, String> startDateColumn;
     @FXML
     private TableColumn<clientComponents.screenThree.topScreen.ExecutionData, String> resultExecutionColumn;
+    @FXML
+    private TableColumn<clientComponents.screenThree.topScreen.ExecutionData, String> userNameTableColum;
 
     @FXML private ComboBox<String> resultComboBox;
     @FXML private VBox continuationComponent;
@@ -120,11 +121,6 @@ public class TopScreenController implements Initializable {
             }
         });
 
-        /*DTOFullDetailsPastRun fullDetailsPastRun = systemEngine.getFlowExecutedDataDTO((UUID.fromString(chosenFlowIdProperty.getValue())));
-        mainFlowExecutionHistoryController.getMainBodyController().getFlowExecutionScreenComponentController().getFreeInputDetailsComponentController().updateFreeInputForRerunExecution(fullDetailsPastRun.getInputs(), fullDetailsPastRun.getFlowName());
-        mainFlowExecutionHistoryController.getMainBodyController().openFlowExecutionTab();
-        rerunFlowButtonProperty.set(false);
-        rerunFlowButton.setDisable(true);*/
     }
     public void init() {
         tableFlowExecution.setOnMouseClicked(event -> {
@@ -147,9 +143,11 @@ public class TopScreenController implements Initializable {
         flowNameColumn.setCellValueFactory(new PropertyValueFactory<clientComponents.screenThree.topScreen.ExecutionData, String>("flowName"));
         startDateColumn.setCellValueFactory(new PropertyValueFactory<clientComponents.screenThree.topScreen.ExecutionData, String>("startDate"));
         resultExecutionColumn.setCellValueFactory(new PropertyValueFactory<clientComponents.screenThree.topScreen.ExecutionData, String>("resultExecutions"));
+        userNameTableColum.setCellValueFactory(new PropertyValueFactory<clientComponents.screenThree.topScreen.ExecutionData, String>("userName"));
         setRightToLeftAlignment(flowNameColumn);
         setRightToLeftAlignment(startDateColumn);
         setRightToLeftAlignment(resultExecutionColumn);
+        setRightToLeftAlignment(userNameTableColum);
         initialComboBox();
         addAnimation();
     }
@@ -234,7 +232,7 @@ public class TopScreenController implements Initializable {
                 flowResult = "The flow is still in progress";
 
             UUID flowId = flowDetails.getUniqueId();
-            clientComponents.screenThree.topScreen.ExecutionData executionData = new clientComponents.screenThree.topScreen.ExecutionData(flowDetails.getFlowName(), flowResult, activationDate, flowId);
+            clientComponents.screenThree.topScreen.ExecutionData executionData = new clientComponents.screenThree.topScreen.ExecutionData(flowDetails.getFlowName(), flowResult, activationDate, flowId, flowDetails.getUserName());
             tableFlowExecution.getItems().add(executionData);
         }
         this.flowsExecutedList = flowsExecutedList;
@@ -269,6 +267,7 @@ public class TopScreenController implements Initializable {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try{
                 if (response.isSuccessful()) {
                     DTOListContinuationFlowName listContinuationFlowName = new Gson().fromJson(response.body().string(), DTOListContinuationFlowName.class);
                     Platform.runLater(() -> {
@@ -278,16 +277,12 @@ public class TopScreenController implements Initializable {
                             continuationComponentController.updateContinuationDetails(listContinuationFlowName);
                         }
                     });
+                }}finally {
+                    response.close();
                 }
             }
         });
 
-        /*DTOListContinuationFlowName listContinuationFlowName = systemEngine.setListContinuationFlowName(flowName);
-        if(!listContinuationFlowName.getListContinuationFlowName().isEmpty()) {
-            continuationComponent.setVisible(true);
-            continuationComponentController.getFlowNameContinuationListView().getItems().clear();
-            continuationComponentController.updateContinuationDetails(listContinuationFlowName);
-        }*/
     }
 
     public FlowExecutionHistoryController getMainFlowExecutionHistoryController() {

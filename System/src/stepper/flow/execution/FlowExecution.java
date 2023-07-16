@@ -5,6 +5,7 @@ import stepper.flow.definition.api.FlowDefinition;
 import stepper.flow.definition.api.StepUsageDeclaration;
 import stepper.flow.execution.context.DataInFlowExecution;
 import stepper.step.api.StepResult;
+import stepper.users.User;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -18,6 +19,9 @@ public interface FlowExecution extends Serializable
     void initialStepsData(FlowDefinition flowDefinition);
     void initialMapFreeInputsExists(Map<String, DataInFlow> freeInputs);
     List<StepExecutionDataImpl> getStepsData();
+
+    User getUserExecute();
+
     Map<String, DataInFlowExecution> getFreeInputsExist();
     UUID getUniqueId();
     FlowDefinition getFlowDefinition();

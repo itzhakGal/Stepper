@@ -19,6 +19,7 @@ import stepper.dataDefinition.impl.mapping.MappingData;
 import stepper.dataDefinition.impl.relation.RelationData;
 import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.screenThree.lowerScreen.flowExecuteDetails.inputDetailsList.InputDetailsListController;
+import utilWebApp.DTOInputFlowPastWeb;
 import utils.DTOInputFlowPast;
 
 import java.util.List;
@@ -57,13 +58,13 @@ public class InputBodyController {
     }
 
 
-    public void setFlowData(DTOInputFlowPast input) {
+    public void setFlowData(DTOInputFlowPastWeb input) {
         typeProperty.set(input.getType());
         uniqueNameProperty.set((input.getNecessity().getDescription()));
         updateInputContent(input);
     }
 
-    private void updateInputContent(DTOInputFlowPast input) {
+    private void updateInputContent(DTOInputFlowPastWeb input) {
         if (input.getTypePresentation().equals("FileListData")) {
             FileListData listData = (FileListData) input.getValue();
             createListDataContent(listData.getItem().isEmpty(), listData.toString(), listData.getItem().size());
