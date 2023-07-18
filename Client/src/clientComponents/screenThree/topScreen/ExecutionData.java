@@ -36,4 +36,8 @@ public class ExecutionData {
     public String getUserName() {
         return userName;
     }
+
+    public void setResultExecutions(String resultExecutions) {
+        this.resultExecutions = resultExecutions;
+    }
 }

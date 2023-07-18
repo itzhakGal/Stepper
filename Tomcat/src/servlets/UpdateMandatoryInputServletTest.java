@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "UpdateMandatoryInputServletTest", urlPatterns = "/test")
+@WebServlet(name = "UpdateMandatoryInputServletTest", urlPatterns = "/updateMandatory")
 public class UpdateMandatoryInputServletTest extends HttpServlet {
 
     @Override

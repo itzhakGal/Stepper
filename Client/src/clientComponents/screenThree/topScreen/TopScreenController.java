@@ -8,6 +8,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,14 +38,17 @@ import utils.DTOStepFlowPast;
 import utilsDesktopApp.DTOListContinuationFlowName;
 import utilsDesktopApp.DTOListFlowsDetails;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.UUID;
+import java.util.*;
 
-public class TopScreenController implements Initializable {
+import static util.Constants.REFRESH_RATE;
 
+public class TopScreenController implements Initializable , Closeable {
+
+    private Timer timer;
+    private TimerTask dataRefresher;
     private clientComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController mainFlowExecutionHistoryController;
     @FXML
     private TableView<clientComponents.screenThree.topScreen.ExecutionData> tableFlowExecution;
@@ -56,7 +60,6 @@ public class TopScreenController implements Initializable {
     private TableColumn<clientComponents.screenThree.topScreen.ExecutionData, String> resultExecutionColumn;
     @FXML
     private TableColumn<clientComponents.screenThree.topScreen.ExecutionData, String> userNameTableColum;
-
     @FXML private ComboBox<String> resultComboBox;
     @FXML private VBox continuationComponent;
     @FXML private ContinuationController continuationComponentController;
@@ -66,10 +69,12 @@ public class TopScreenController implements Initializable {
     private Button rerunFlowButton;
     private SimpleStringProperty chosenFlowIdProperty;
     private SimpleStringProperty chosenFlowNameProperty;
-
     private SimpleBooleanProperty selectedNameTableView;
     private List<DTOFullDetailsPastRunWeb> flowsExecutedList ;
     private SimpleBooleanProperty rerunFlowButtonProperty;
+    private String chosenFlowId;
+    private String chosenFlowName;
+
     public TopScreenController()
     {
         chosenFlowIdProperty = new SimpleStringProperty("");
@@ -82,7 +87,6 @@ public class TopScreenController implements Initializable {
         String selectedFilter = resultComboBox.getValue();
         filterTableDataByResult(selectedFilter);
     }
-
     @FXML
     private void rerunFlowButtonAction(ActionEvent event) {
         rerunFlowButtonProperty.set(true);
@@ -132,7 +136,6 @@ public class TopScreenController implements Initializable {
                 updateContinuationDetails(selectedFlow.getFlowName());
             }
         });
-
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -151,7 +154,6 @@ public class TopScreenController implements Initializable {
         initialComboBox();
         addAnimation();
     }
-
      private void addAnimation() {
         tableFlowExecution.setRowFactory(tableView -> {
             TableRow<clientComponents.screenThree.topScreen.ExecutionData> row = new TableRow<>();
@@ -168,7 +170,6 @@ public class TopScreenController implements Initializable {
             return row;
         });
     }
-
     private void initialComboBox() {
         resultComboBox.getItems().addAll("All", FlowExecutionResult.SUCCESS.toString()
                 , FlowExecutionResult.WARNING.toString(), FlowExecutionResult.FAILURE.toString());
@@ -195,31 +196,106 @@ public class TopScreenController implements Initializable {
             }
         });
     }
-
     public void setMainController(clientComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController mainFlowExecutionHistoryController) {
         this.mainFlowExecutionHistoryController = mainFlowExecutionHistoryController;
     }
-
     public void setSystemEngine(SystemEngineInterface systemEngine) {
         //this.systemEngine = systemEngine;
         //continuationComponentController.setSystemEngine(systemEngine);
     }
-
-
     public SimpleStringProperty getChosenFlowIdProperty() {
         return chosenFlowIdProperty;
     }
-
     public SimpleStringProperty getChosenFlowNameProperty() {
         return chosenFlowNameProperty;
     }
-
     public void setTableView(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
         chosenFlowIdProperty.set("");
         setDetailsFlowExecutionHistory(flowsExecutedList);
     }
 
     public void setDetailsFlowExecutionHistory(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
+        ObservableList<clientComponents.screenThree.topScreen.ExecutionData> data = tableFlowExecution.getItems();
+
+        List<UUID> listUuid = new ArrayList<>();
+        for (clientComponents.screenThree.topScreen.ExecutionData uuidData : data) {
+            listUuid.add(uuidData.getFlowId());
+        }
+
+        List<clientComponents.screenThree.topScreen.ExecutionData> itemsToUpdate = new ArrayList<>();
+
+        for (DTOFullDetailsPastRunWeb flowDetails : flowsExecutedList) {
+            String flowResult;
+            String activationDate = flowDetails.getActivationDate();
+            if (flowDetails.getFinalResult() != null)
+                flowResult = flowDetails.getFinalResult().getDescription();
+            else
+                flowResult = "The flow is still in progress";
+
+            UUID flowId = flowDetails.getUniqueId();
+
+            if (!listUuid.contains(flowId)) {
+                clientComponents.screenThree.topScreen.ExecutionData executionData = new clientComponents.screenThree.topScreen.ExecutionData(flowDetails.getFlowName(), flowResult, activationDate, flowId, flowDetails.getUserName());
+                tableFlowExecution.getItems().add(executionData);
+            } else {
+                for (ExecutionData executionData : tableFlowExecution.getItems()) {
+                    if (executionData.getFlowId().equals(flowId) && executionData.getResultExecutions().equals("The flow is still in progress") && flowResult.equals("SUCCESS")) {
+                        executionData.setResultExecutions(flowResult);
+                        itemsToUpdate.add(executionData);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Update the modified items in the TableView
+        for (clientComponents.screenThree.topScreen.ExecutionData item : itemsToUpdate) {
+            int index = tableFlowExecution.getItems().indexOf(item);
+            if (index >= 0) {
+                tableFlowExecution.getItems().set(index, item);
+            }
+        }
+
+        this.flowsExecutedList = flowsExecutedList;
+    }
+    /*public void setDetailsFlowExecutionHistory(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
+        ObservableList<clientComponents.screenThree.topScreen.ExecutionData> data = tableFlowExecution.getItems();
+
+        List <UUID> listUuid = new ArrayList<>();
+        for(clientComponents.screenThree.topScreen.ExecutionData uuidData :data)
+        {
+            listUuid.add(uuidData.getFlowId()) ;
+        }
+        //data.clear();
+
+        for (DTOFullDetailsPastRunWeb flowDetails : flowsExecutedList) {
+            String flowResult;
+            String activationDate = flowDetails.getActivationDate();
+            if (flowDetails.getFinalResult() != null)
+                flowResult = flowDetails.getFinalResult().getDescription();
+            else
+                flowResult = "The flow is still in progress";
+
+            UUID flowId = flowDetails.getUniqueId();
+
+            if(!listUuid.contains(flowId)) {
+                clientComponents.screenThree.topScreen.ExecutionData executionData = new clientComponents.screenThree.topScreen.ExecutionData(flowDetails.getFlowName(), flowResult, activationDate, flowId, flowDetails.getUserName());
+                tableFlowExecution.getItems().add(executionData);
+            }
+
+            for(ExecutionData executionData : tableFlowExecution.getItems()){
+                if(executionData.getResultExecutions().equals("The flow is still in progress") && !flowResult.equals("The flow is still in progress"))
+                {
+                    //executionData.setResultExecutions(flowDetails.getFinalResult().getDescription());
+                    tableFlowExecution.getItems().remove(executionData);
+                    clientComponents.screenThree.topScreen.ExecutionData newExecutionData = new clientComponents.screenThree.topScreen.ExecutionData(flowDetails.getFlowName(), flowResult, activationDate, flowId, flowDetails.getUserName());
+                    tableFlowExecution.getItems().add(executionData);
+                }
+            }
+        }
+        this.flowsExecutedList = flowsExecutedList;
+    }*/
+    /*public void setDetailsFlowExecutionHistory(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
         ObservableList<clientComponents.screenThree.topScreen.ExecutionData> data = tableFlowExecution.getItems();
         data.clear();
 
@@ -236,8 +312,7 @@ public class TopScreenController implements Initializable {
             tableFlowExecution.getItems().add(executionData);
         }
         this.flowsExecutedList = flowsExecutedList;
-    }
-
+    }*/
     public void filterTableDataByResult(String selectedFilter) {
         setDetailsFlowExecutionHistory(flowsExecutedList);
         if (!selectedFilter.equals("All")) {
@@ -250,7 +325,6 @@ public class TopScreenController implements Initializable {
             tableFlowExecution.setItems(filteredList);
         }
     }
-
     public void updateContinuationDetails(String flowName) {
 
         String finalUrl = HttpUrl
@@ -284,26 +358,21 @@ public class TopScreenController implements Initializable {
         });
 
     }
-
     public FlowExecutionHistoryController getMainFlowExecutionHistoryController() {
         return mainFlowExecutionHistoryController;
     }
-
     public ContinuationController getContinuationComponentController() {
         return continuationComponentController;
     }
-
     public void clearDetails() {
         ObservableList<ExecutionData> data = tableFlowExecution.getItems();
         data.clear(); // Clear the items in the tableFlowExecution
         continuationComponentController.getFlowNameContinuationListView().getItems().clear(); // Clear the items in the flowNameContinuationListView
     }
-
     public SimpleBooleanProperty getRerunFlowButtonProperty()
     {
         return rerunFlowButtonProperty;
     }
-
     public void initListener() {
 
         mainFlowExecutionHistoryController.getMainBodyController().isExecutionsHistoryButtonProperty()
@@ -313,9 +382,50 @@ public class TopScreenController implements Initializable {
                     }
                 });
         continuationComponentController.initListener();
-    }
 
+        /*mainFlowExecutionHistoryController.getMainBodyController().getFlowExecutionScreenComponentController().getFlowTreeComponentController().getIsTaskFinished()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (newValue) {
+                        refresherDataFlowsExecution();
+                    }
+                });*/
+    }
+    private void updateUserFlowsExecution(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
+        Platform.runLater(() -> {
+            chosenFlowNameProperty.set(this.chosenFlowName);
+            //chosenFlowIdProperty.set("");
+            chosenFlowIdProperty.set(this.chosenFlowId);
+            mainFlowExecutionHistoryController.updateListOfExecutedFlows(flowsExecutedList);
+            insertData();
+        });
+    }
+    public void refresherDataFlowsExecution() {
+        this.chosenFlowId = chosenFlowIdProperty.get();
+        this.chosenFlowName = chosenFlowNameProperty.get();
+        dataRefresher = new UserFlowsExecutionRefresher(
+                mainFlowExecutionHistoryController.getMainBodyController().getMainController().currentUserNameProperty().getValue(),
+                this::updateUserFlowsExecution);
+        timer = new Timer();
+        timer.schedule(dataRefresher, REFRESH_RATE, REFRESH_RATE);
+    }
     public Button getRerunFlowButton() {
         return rerunFlowButton;
+    }
+
+
+    public void insertData()
+    {
+        mainFlowExecutionHistoryController.getFlowTreeComponentController().insertDataToTreeView();
+        mainFlowExecutionHistoryController.getTableFlowExecutionController().getContinuationComponentController().getContinueToFlowButton().setVisible(false);
+        mainFlowExecutionHistoryController.getTableFlowExecutionController().getContinuationComponentController().getFlowNameContinuationListView().getItems().clear();
+
+    }
+    @Override
+    public void close() {
+        //listOfUsers.getItems().clear();
+        if (dataRefresher != null && timer != null) {
+            dataRefresher.cancel();
+            timer.cancel();
+        }
     }
 }

@@ -1,7 +1,6 @@
 package adminComponents.screenThree.topScreen;
 
 import adminComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController;
-import adminComponents.screenThree.topScreen.continuation.ContinuationController;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,15 +13,11 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import stepper.flow.execution.FlowExecutionResult;
 import stepper.systemEngine.SystemEngineInterface;
 import utilWebApp.DTOFullDetailsPastRunWeb;
-import utils.DTOFullDetailsPastRun;
-import utilsDesktopApp.DTOListContinuationFlowName;
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -31,7 +26,6 @@ import java.util.UUID;
 public class TopScreenController implements Initializable {
 
     private FlowExecutionHistoryController mainFlowExecutionHistoryController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private TableView<ExecutionData> tableFlowExecution;
     @FXML
@@ -42,15 +36,11 @@ public class TopScreenController implements Initializable {
     private TableColumn<ExecutionData, String> resultExecutionColumn;
     @FXML
     private TableColumn<ExecutionData, String>  userNameTableColum;
-
     @FXML private ComboBox<String> resultComboBox;
     @FXML
     private Label historyFlowsLabel;
-    @FXML
-    private Button rerunFlowButton;
     private SimpleStringProperty chosenFlowIdProperty;
     private SimpleStringProperty chosenFlowNameProperty;
-
     private SimpleBooleanProperty selectedNameTableView;
     private List<DTOFullDetailsPastRunWeb> flowsExecutedList ;
     private SimpleBooleanProperty rerunFlowButtonProperty;
@@ -74,7 +64,6 @@ public class TopScreenController implements Initializable {
         //DTOFullDetailsPastRun fullDetailsPastRun = systemEngine.getFlowExecutedDataDTO((UUID.fromString(chosenFlowIdProperty.getValue())));
         mainFlowExecutionHistoryController.getMainBodyController().openFlowExecutionTab();
         rerunFlowButtonProperty.set(false);
-        rerunFlowButton.setDisable(true);
     }
     public void init() {
         tableFlowExecution.setOnMouseClicked(event -> {
@@ -82,7 +71,7 @@ public class TopScreenController implements Initializable {
             if (selectedFlow != null) {
                 chosenFlowNameProperty.set(selectedFlow.getFlowName());
                 chosenFlowIdProperty.set(selectedFlow.getFlowId().toString());
-                rerunFlowButton.setDisable(false);
+                //rerunFlowButton.setDisable(false);
                 updateContinuationDetails(selectedFlow.getFlowName());
             }
         });
@@ -230,12 +219,9 @@ public class TopScreenController implements Initializable {
         mainFlowExecutionHistoryController.getMainBodyController().isExecutionsHistoryButtonProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     if (!newValue) {
-                        rerunFlowButton.setDisable(true);
+                        //rerunFlowButton.setDisable(true);
                     }
                 });
     }
 
-    public Button getRerunFlowButton() {
-        return rerunFlowButton;
-    }
 }

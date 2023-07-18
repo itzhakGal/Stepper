@@ -14,6 +14,8 @@ import java.util.Map;
 
 public class ServletUtils {
 
+	private static boolean isAdminExists = false;
+	private static int countAdmin = 0;
 	private static final String USER_MANAGER_ATTRIBUTE_NAME = "userManager";
 	private static final String ROLE_MANAGER_ATTRIBUTE_NAME = "roleManager";
 	private static final String SYSTEM_MANAGER_ATTRIBUTE_NAME = "systemManager";
@@ -49,6 +51,22 @@ public class ServletUtils {
 			}
 		}
 		return (SystemEngineInterface) servletContext.getAttribute(SYSTEM_MANAGER_ATTRIBUTE_NAME);
+	}
+
+	public static int getCountAdmin() {
+		return countAdmin;
+	}
+
+	public static void setCountAdmin(int countAdmin) {
+		ServletUtils.countAdmin = ServletUtils.countAdmin + countAdmin;
+	}
+
+	public static boolean isAdminExists() {
+		return isAdminExists;
+	}
+
+	public static void setAdminExists(boolean adminExists) {
+		isAdminExists = adminExists;
 	}
 
 }

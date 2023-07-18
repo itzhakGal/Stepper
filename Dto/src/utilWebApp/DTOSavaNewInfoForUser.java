@@ -3,16 +3,17 @@ package utilWebApp;
 import java.util.List;
 
 public class DTOSavaNewInfoForUser {
-
     private String userName;
     private boolean isManager;
     private List<String> listRolesToAddToTheUser;
+    private List<String> listRolesToRemoveFromTheUser;
 
 
-    public DTOSavaNewInfoForUser(String userName, List<String> listRolesToAddToTheUser, boolean isManager)
+    public DTOSavaNewInfoForUser(String userName, List<String> listRolesToAddToTheUser,List<String> listRolesToRemoveFromTheUser, boolean isManager)
     {
         this.userName = userName;
         this.listRolesToAddToTheUser = listRolesToAddToTheUser;
+        this.listRolesToRemoveFromTheUser = listRolesToRemoveFromTheUser;
         this.isManager = isManager;
     }
 
@@ -35,5 +36,9 @@ public class DTOSavaNewInfoForUser {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public List<String> getListRolesToRemoveFromTheUser() {
+        return listRolesToRemoveFromTheUser;
     }
 }

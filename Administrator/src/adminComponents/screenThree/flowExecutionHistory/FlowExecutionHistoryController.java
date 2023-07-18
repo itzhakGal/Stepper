@@ -5,19 +5,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.mainScreen.body.BodyController;
 import adminComponents.screenThree.lowerScreen.flowTree.FlowTreeController;
 import adminComponents.screenThree.topScreen.TopScreenController;
 import utilWebApp.DTOFullDetailsPastRunWeb;
-import utils.DTOFullDetailsPastRun;
-
 import java.util.List;
 
 public class FlowExecutionHistoryController {
 
     private BodyController mainBodyController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private GridPane flowExecutionTableComponent;
     @FXML
@@ -28,7 +24,6 @@ public class FlowExecutionHistoryController {
     private FlowTreeController flowTreeComponentController;
 
     private ExecutedDataController executedDataController = new ExecutedDataController();
-
     @FXML
     private AnchorPane vboxDetails;
 
@@ -38,13 +33,6 @@ public class FlowExecutionHistoryController {
             flowExecutionTableComponentController.setMainController(this);
             flowTreeComponentController.setMainController(this);
         }
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //flowExecutionTableComponentController.setSystemEngine(systemEngine);
-        //flowTreeComponentController.setSystemEngine(systemEngine);
-        //executedDataController.setSystemEngine(systemEngine);
     }
 
     public void setMainController(BodyController mainBodyController) {

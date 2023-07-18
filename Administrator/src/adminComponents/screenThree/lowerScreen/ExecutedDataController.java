@@ -6,6 +6,7 @@ import adminComponents.screenThree.lowerScreen.stepListDetails.StepListDetailsCo
 import com.google.gson.Gson;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;
@@ -73,7 +74,9 @@ public class ExecutedDataController {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure((e.getMessage()));
+                });
             }
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -144,5 +147,11 @@ public class ExecutedDataController {
     public void setSystemEngine(SystemEngineInterface systemEngine) {
         //this.systemEngine = systemEngine;
     }
-
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
+    }
 }

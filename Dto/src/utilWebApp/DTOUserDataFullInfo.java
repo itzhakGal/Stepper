@@ -14,9 +14,9 @@ public class DTOUserDataFullInfo {
     List<String> allRoleInSystem;
 
 
-    public DTOUserDataFullInfo(User userData,  List<String> allRoleInSystem)
+    public DTOUserDataFullInfo(User userData,  List<String> allRoleInSystem,List<String> totalFlowPreformedByUser)
     {
-        this.totalFlowPreformedByUser = new ArrayList<>();
+        this.totalFlowPreformedByUser = totalFlowPreformedByUser;
         this.allRoleInSystem = allRoleInSystem;
         this.userData = userData;
     }

@@ -2,6 +2,7 @@ package util.http;
 
 import okhttp3.*;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 public class HttpClientUtil {
@@ -31,6 +32,15 @@ public class HttpClientUtil {
         call.enqueue(callback);
     }
 
+    public static void runSync(String finalUrl, Callback callback) throws IOException, IOException {
+        Request request = new Request.Builder()
+                .url(finalUrl)
+                .build();
+
+        Call call = HttpClientUtil.HTTP_CLIENT.newCall(request);
+
+        call.execute(); // Execute the request synchronously
+    }
     public static void runAsyncPost(String finalUrl, RequestBody body, Callback callback) {
         Request request = (new Request.Builder()).url(finalUrl).post(body).build();
         Call call = HTTP_CLIENT.newCall(request);

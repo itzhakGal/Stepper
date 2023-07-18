@@ -25,7 +25,6 @@ import java.util.ResourceBundle;
 public class StatisticsStepTableController implements Initializable {
 
     private StatisticMainController mainStatisticController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private TableView<StatisticsData> tableStepStatistic;
 
@@ -95,9 +94,6 @@ public class StatisticsStepTableController implements Initializable {
     }
     public void setMainController(StatisticMainController mainStatisticController) {
         this.mainStatisticController = mainStatisticController;
-    }
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
     }
 
     public void setTableView(DTOStatistics statistics)

@@ -33,19 +33,14 @@ import java.util.UUID;
 
 public class FlowTreeController {
     public clientComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController mainFlowExecutionHistoryController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private TreeView<String> flowTreeView;
-
     private TopScreenController tableFlowExecutionController;
-
     private SimpleObjectProperty<TreeItem<String>> selectedItem;
-
     public FlowTreeController() {
         this.selectedItem = new SimpleObjectProperty<>();
     }
-
-      public void init() {
+    public void init() {
 
         flowTreeView.setOnMouseClicked(event -> selectedItem.set(flowTreeView.getSelectionModel().getSelectedItem()));
 
@@ -62,12 +57,8 @@ public class FlowTreeController {
                         }
                     }
                 });
-
     }
-
-
-
-    private void insertDataToTreeView() {
+    public void insertDataToTreeView() {
 
         TreeItem<String> root = new TreeItem<>(
                 this.tableFlowExecutionController.getChosenFlowNameProperty().getValue()
@@ -108,7 +99,6 @@ public class FlowTreeController {
         //addExecutedFlowData(systemEngine.getFlowExecutedDataDTO(UUID.fromString(this.tableFlowExecutionController.getChosenFlowIdProperty().getValue())));
         //this.flowTreeView.getRoot().setExpanded(true);
     }
-
     private void addExecutedFlowData(DTOFullDetailsPastRunWeb executedData) {
         boolean found;
         for (DTOStepFlowPastWeb step : executedData.getSteps()) {
@@ -141,7 +131,6 @@ public class FlowTreeController {
         text.setStyle("-fx-font-family: Georgia");
         return text;
     }
-
     private Color getColorForResult(String result) {
         switch (result) {
             case "SUCCESS":
@@ -154,20 +143,16 @@ public class FlowTreeController {
                 return Color.BLACK;
         }
     }
-
     public void setMainController(FlowExecutionHistoryController mainFlowExecutionHistoryController) {
         this.mainFlowExecutionHistoryController = mainFlowExecutionHistoryController;
         this.tableFlowExecutionController = mainFlowExecutionHistoryController.getTableFlowExecutionController();
     }
-
     public void setSystemEngine(SystemEngineInterface systemEngine) {
         //this.systemEngine = systemEngine;
     }
-
     public SimpleObjectProperty<TreeItem<String>> getSelectedItem() {
         return this.selectedItem;
     }
-
     public void clearDetails() {
         if(flowTreeView.getRoot()!=null) {
             flowTreeView.getRoot().getChildren().clear(); // Clear the children of the root TreeItem

@@ -389,7 +389,7 @@ public class FreeInputsController {
 
 
         String finalUrl = HttpUrl
-                .parse(Constants.TEST)
+                .parse(Constants.UPDATE_MANDATORY)
                 .newBuilder()
                 .build()
                 .toString();

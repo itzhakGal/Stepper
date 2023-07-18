@@ -76,14 +76,14 @@ public class TopManagementController implements Closeable {
                 cleanListsData();
                 handleRoleSelection();
             }
-
         });
-
     }
     public void cleanListsData()
     {
         allowedFlowsList.getItems().clear();
         listOfUsersConnected.getItems().clear();
+        labelMassage.setText("");
+
     }
     public SimpleStringProperty getChosenRoleFromListProperty() {
         return this.chosenRoleFromListProperty;
@@ -101,7 +101,9 @@ public class TopManagementController implements Closeable {
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -280,6 +282,9 @@ public class TopManagementController implements Closeable {
         HttpClientUtil.runAsyncPost(finalUrl, body, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                   handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -358,5 +363,13 @@ public class TopManagementController implements Closeable {
             roleListRefresher.cancel();
             timer.cancel();
         }
+    }
+
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
     }
 }

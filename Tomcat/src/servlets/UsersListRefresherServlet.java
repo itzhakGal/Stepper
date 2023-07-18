@@ -27,7 +27,6 @@ public class UsersListRefresherServlet extends HttpServlet {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
-            //UserManager userManager = ServletUtils.getUserManager(getServletContext());
 
             SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
             UserManager userManager = systemEngine.getUserManager();

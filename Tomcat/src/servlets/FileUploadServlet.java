@@ -103,12 +103,9 @@ public class FileUploadServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/plain");
-        //Part part = request.getPart("xmlFile");
         boolean isFirstUpload = Boolean.parseBoolean(request.getParameter("isFirstUpload"));
 
-
         Collection<Part> parts = request.getParts();
-
         StringBuilder fileContent = new StringBuilder();
 
         for (Part part : parts) {
@@ -123,7 +120,6 @@ public class FileUploadServlet extends HttpServlet {
         SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
         String contentString = fileContent.toString();
 
-        //if (!part.getSubmittedFileName().endsWith(".xml"))
         if (contentString.endsWith(".xml")) {
             isValid = "false";
             writeDataToDTO(dtoFileUpload, isValid, "Invalid file type. The file must be an XML file.");
@@ -150,7 +146,6 @@ public class FileUploadServlet extends HttpServlet {
         catch (RuntimeException e) {
             isValid = "false";
             writeDataToDTO(dtoFileUpload, isValid, e.getMessage());
-            //response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getClass().getName());
             String dtoFileUploadJAVA = gson.toJson(dtoFileUpload);
             response.getWriter().write(dtoFileUploadJAVA);
         }

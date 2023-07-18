@@ -23,5 +23,7 @@ public class Constants {
     public final static String FLOW_EXECUTION_TASK = FULL_SERVER_PATH + "/flowExecutionTask";
     public final static String LIST_FLOWS_EXECUTION = FULL_SERVER_PATH + "/listFlowsExecution";
     public static final String STATISTICS_DATA  = FULL_SERVER_PATH + "/statisticsData";
+    public static final String ADMIN_LOGIN  = FULL_SERVER_PATH + "/adminLogin";
+    public static final String LOG_OUT_ADMIN  = FULL_SERVER_PATH + "/adminLogOut";
     public final static Gson GSON_INSTANCE = new Gson();
 }

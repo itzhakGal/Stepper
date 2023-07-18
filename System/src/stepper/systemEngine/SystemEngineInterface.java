@@ -134,5 +134,11 @@ public interface SystemEngineInterface extends Serializable {
     void initialUserMapFlowsDefinitionFromUpdateRole(DTOSavaNewInfoForRole dtoSavaNewInfoForRole);
 
     List<DTOFullDetailsPastRunWeb> getFlowsExecutedDataDTOHistoryByUserName(String userName);
+
+    String getAdminName();
+    void setAdminName(String username);
+
+    void addUser(String username, boolean isManager);
+    List<String> getFlowsExecutedNameByUserName(User user);
 }
 

@@ -1,36 +1,32 @@
 package adminComponents.screenOne;
 
 import adminComponents.mainScreen.body.BodyController;
+import adminComponents.screenThree.topScreen.TopScreenController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import okhttp3.*;
-import org.controlsfx.control.CheckTreeView;
+import org.controlsfx.control.ListSelectionView;
 import org.jetbrains.annotations.NotNull;
-import stepper.role.Role;
 import stepper.role.RoleImpl;
 import util.Constants;
 import util.http.HttpClientUtil;
 import utilWebApp.DTOSavaNewInfoForUser;
 import utilWebApp.DTOUserDataFullInfo;
-import utilsDesktopApp.DTOInputDetailsConnectedToStep;
-import utilsDesktopApp.DTOStepDefinitionJavaFX;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static util.Constants.REFRESH_RATE;
 
@@ -56,36 +52,49 @@ public class UsersManagementController implements Closeable {
     @FXML
     private AnchorPane assignRolesAnchor;
     @FXML
+    private AnchorPane buttonRolesAnchor;
+    @FXML
     private Button savaChangeButton;
     @FXML
     private Button autoUpdatesButton;
     @FXML
     private Label labelMassage;
+    @FXML
+    private TextField countListFlowsAvailable;
+    @FXML
+    private TextField countFlowsPerformed;
     private List<String> listRolesToAddToTheUser;
+    private List<String> listRolesToRemoveFromTheUser;
     private String userSelected;
     private SimpleBooleanProperty checkboxIsManagerProperty;
     private SimpleStringProperty chosenUserFromListProperty;
     private SimpleStringProperty chosenRoleFromListProperty;
+    @FXML
+    private GridPane availableAndSelectedRolesComponent;
+    @FXML
+    private AvailableAndSelectedRolesController availableAndSelectedRolesComponentController;
 
     public void initialize() {
         chosenUserFromListProperty = new SimpleStringProperty();
         chosenRoleFromListProperty = new SimpleStringProperty();
+        listRolesToRemoveFromTheUser = new ArrayList<>();
+        listRolesToAddToTheUser = new ArrayList<>();
+
+        if (availableAndSelectedRolesComponentController != null ) {
+            availableAndSelectedRolesComponentController.setMainController(this);
+        }
         setupCheckboxBinding();
     }
-
     private void setupCheckboxBinding() {
         checkboxIsManagerProperty = new SimpleBooleanProperty();
         checkboxIsManagerProperty.bind(isManager.selectedProperty());
     }
-
     public SimpleStringProperty getChosenUserFromListProperty() {
         return this.chosenUserFromListProperty;
     }
-
     public SimpleStringProperty getChosenRoleFromListProperty() {
         return this.chosenRoleFromListProperty;
     }
-
     public SimpleBooleanProperty getCheckboxIsManagerProperty() {
         return this.checkboxIsManagerProperty;
     }
@@ -106,6 +115,8 @@ public class UsersManagementController implements Closeable {
                     handleUserSelection();
                 }
         });
+
+        availableAndSelectedRolesComponentController.initListener();
 
 
         /*listOfRoles.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -143,6 +154,9 @@ public class UsersManagementController implements Closeable {
         listOfRoles.getItems().clear();
         listOfFlowsAvailable.getItems().clear();
         totalFlowsPerformed.getItems().clear();
+        labelMassage.setText("");
+        countListFlowsAvailable.setText("");
+        countFlowsPerformed.setText("");
     }
     public void handleUserSelection() {
 
@@ -159,7 +173,9 @@ public class UsersManagementController implements Closeable {
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure((e.getMessage()));
+                });
             }
 
             @Override
@@ -179,7 +195,6 @@ public class UsersManagementController implements Closeable {
             }
         });
     }
-
     public void updateUserFullData(DTOUserDataFullInfo userDataFullInfo) {
 
         if(userDataFullInfo.getUser() == null)
@@ -196,7 +211,7 @@ public class UsersManagementController implements Closeable {
             }
         }
 
-        //List<String> totalFlowsPreformedByUser = userDataFullInfo.getTotalFlowPreformedByUser();   // לא מאותל כראוי
+        List<String> totalFlowsPreformedByUser = userDataFullInfo.getTotalFlowPreformedByUser();   // לא מאותל כראוי
 
         Map<String, RoleImpl> associatedRoleMap = userDataFullInfo.getUser().getAssociatedRole();
         List<String> listOfRoles = new ArrayList<>(associatedRoleMap.keySet());
@@ -213,12 +228,10 @@ public class UsersManagementController implements Closeable {
         listOfFlowAvailable.addAll(uniqueFlows);
 
 
-        updateLists(userDataFullInfo.getUser().getUserName(), userDataFullInfo.getUser().getIsManager(), listOfRoles , listOfFlowAvailable, selectedAssignedRoles);
+        updateLists(userDataFullInfo.getUser().getUserName(), userDataFullInfo.getUser().getIsManager(), listOfRoles , listOfFlowAvailable, selectedAssignedRoles, totalFlowsPreformedByUser);
 
     }
-    
-
-    public void updateLists(String userName, Boolean isManager, List<String> listOfRoles, List<String> listOfFlowAvailable, List<String> selectedAssignedRoles) {
+    public void updateLists(String userName, Boolean isManager, List<String> listOfRoles, List<String> listOfFlowAvailable, List<String> selectedAssignedRoles, List<String> totalFlowsPreformedByUser) {
 
         this.userName.setText(userName);
 
@@ -242,6 +255,9 @@ public class UsersManagementController implements Closeable {
         itemsListOfFlowAvailable.clear();
         itemsListOfFlowAvailable.addAll(listOfFlowAvailable);
 
+        int countFlows = listOfFlowAvailable.size();
+        countListFlowsAvailable.setText(String.valueOf(countFlows));
+
 
          /*for (String flow : listOfFlowAvailable) {
             if (!itemsListOfFlowAvailable.contains(flow)) {
@@ -249,15 +265,65 @@ public class UsersManagementController implements Closeable {
             }*/
 
 
-        /*ObservableList<String> itemsTotalFlowsPreformedByUser = this.totalFlowsPerformed.getItems();
+        ObservableList<String> itemsTotalFlowsPreformedByUser = this.totalFlowsPerformed.getItems();
         itemsTotalFlowsPreformedByUser.clear();
-        itemsTotalFlowsPreformedByUser.addAll(totalFlowsPreformedByUser);*/
+        itemsTotalFlowsPreformedByUser.addAll(totalFlowsPreformedByUser);
 
-        this.listRolesToAddToTheUser = createSelectedAssignedRolesCheckBoxTreeItem(selectedAssignedRoles);
+        int countFlowsPreformed = totalFlowsPreformedByUser.size();
+        countFlowsPerformed.setText(String.valueOf(countFlowsPreformed));
+
+        createSelectedAssignedRolesCheckBoxTreeItem(selectedAssignedRoles, listOfRoles);
 
     }
 
-    private List<String> createSelectedAssignedRolesCheckBoxTreeItem(List<String> selectedAssignedRoles) {
+    /*private List<String> createSelectedAssignedRolesCheckBoxTreeItem(List<String> selectedAssignedRoles, List<String> listOfRoles) {
+        List<String> listRolesToAddToTheUser = new ArrayList<>();
+
+        ListSelectionView<String> listSelectionView = new ListSelectionView<>();
+
+        // Create a sample list of items
+        ObservableList<String> sourceItems = FXCollections.observableArrayList(selectedAssignedRoles);
+        ObservableList<String> targetItems = FXCollections.observableArrayList(listOfRoles);
+
+        // Set the source and target items for the ListSelectionView
+        listSelectionView.getSourceItems().addAll(sourceItems);
+        listSelectionView.getTargetItems().addAll(targetItems);
+
+        assignRolesAnchor.getChildren().clear();
+        assignRolesAnchor.getChildren().add(listSelectionView);
+
+        // Set the position of the ListSelectionView within the AnchorPane
+        AnchorPane.setTopAnchor(listSelectionView, 5.0);
+        AnchorPane.setLeftAnchor(listSelectionView, 5.0);
+        AnchorPane.setRightAnchor(listSelectionView, 5.0);
+        AnchorPane.setBottomAnchor(listSelectionView, 5.0);
+
+        Button button = new Button("Selected Items");
+        button.setOnAction(e -> {
+            ObservableList<String> selectedItems = listSelectionView.getTargetItems();
+
+            // Clear the listRolesToAddToTheUser and add only the selected items from TargetItems
+            listRolesToAddToTheUser.clear();
+            listRolesToAddToTheUser.addAll(selectedItems);
+        });
+
+        // Set the position of the button within the AnchorPane
+        buttonRolesAnchor.getChildren().add(button);
+        AnchorPane.setTopAnchor(button, 0.0);
+        AnchorPane.setLeftAnchor(button, 0.0);
+        AnchorPane.setRightAnchor(button, 0.0);
+        AnchorPane.setBottomAnchor(button, 0.0);
+
+        // Listener to update listRolesToAddToTheUser when the selection changes
+        listSelectionView.getTargetItems().addListener((ListChangeListener<String>) change -> {
+            listRolesToAddToTheUser.clear();
+            listRolesToAddToTheUser.addAll(listSelectionView.getTargetItems());
+        });
+
+        return listRolesToAddToTheUser;
+    }*/
+
+    /*private List<String> createSelectedAssignedRolesCheckBoxTreeItem(List<String> selectedAssignedRoles) {
         List<String> listRolesToAddToTheUser = new ArrayList<>();
         CheckBoxTreeItem<String> rootItem = new  CheckBoxTreeItem<String>("Assign Roles To User");
 
@@ -297,7 +363,44 @@ public class UsersManagementController implements Closeable {
         assignRolesAnchor.getChildren().add(checkTreeView);
 
         return listRolesToAddToTheUser;
+    }*/
+
+    /*private List<String> createSelectedAssignedRolesCheckBoxTreeItem(List<String> selectedAssignedRoles, List<String> listOfRoles) {
+        List<String> sourceItems = new ArrayList<>();
+        sourceItems.add("Item 1");
+        sourceItems.add("Item 2");
+        sourceItems.add("Item 3");
+        sourceItems.add("Item 4");
+        sourceItems.add("Item 5");
+
+        List<String> targetItems = new ArrayList<>();
+        targetItems.add("Item 6");
+        targetItems.add("Item 7");
+
+        ObservableList<String> finalTargetItems = FXCollections.observableArrayList();
+
+        ListSelectionView<String> listSelectionView = new ListSelectionView<>();
+        listSelectionView.getSourceItems().setAll(sourceItems);
+        listSelectionView.getTargetItems().setAll(targetItems);
+        listSelectionView.setPrefSize(400, 300);
+
+        Button saveButton = new Button("Save");
+        saveButton.setOnAction(event -> {
+            finalTargetItems.setAll(listSelectionView.getTargetItems());
+
+        });
+
+    }*/
+
+    private void createSelectedAssignedRolesCheckBoxTreeItem(List<String> selectedAssignedRoles, List<String> listOfRoles) {
+        //לבדוק ניקוי של list שנמצאים במחלקה
+
+        availableAndSelectedRolesComponent.setVisible(true);
+
+        availableAndSelectedRolesComponentController.insertItemsIntoSourceListView(selectedAssignedRoles, listOfRoles);
     }
+
+
 
     private void updateUsersList(List<String> usersNames) {
         Platform.runLater(() -> {
@@ -315,7 +418,7 @@ public class UsersManagementController implements Closeable {
     @FXML
     void savaChangeButtonAction(ActionEvent event) {
 
-        DTOSavaNewInfoForUser dtoSavaNewInfoForUser = new DTOSavaNewInfoForUser(this.userSelected , this.listRolesToAddToTheUser,  this.isManager.isSelected());
+        DTOSavaNewInfoForUser dtoSavaNewInfoForUser = new DTOSavaNewInfoForUser(this.userSelected , this.listRolesToAddToTheUser,this.listRolesToRemoveFromTheUser,  this.isManager.isSelected());
 
         String finalUrl = HttpUrl
                 .parse(Constants.SAVA_NEW_DATA_USER)
@@ -328,6 +431,9 @@ public class UsersManagementController implements Closeable {
         HttpClientUtil.runAsyncPost(finalUrl, body, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    handleFailure((e.getMessage()));
+                });
             }
 
             @Override
@@ -359,7 +465,9 @@ public class UsersManagementController implements Closeable {
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure((e.getMessage()));
+                });
             }
 
             @Override
@@ -413,5 +521,19 @@ public class UsersManagementController implements Closeable {
         }
     }
 
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
+    }
 
+    public List<String> getListRolesToAddToTheUser() {
+        return listRolesToAddToTheUser;
+    }
+
+    public List<String> getListRolesToRemoveFromTheUser() {
+        return listRolesToRemoveFromTheUser;
+    }
 }

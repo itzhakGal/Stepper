@@ -5,10 +5,10 @@ import com.google.gson.Gson;
 
 public class Constants {
     // Server resources locations
-    //public final static int REFRESH_RATE = 2000;
+    //public final static int REFRESH_RATE = 10000;
 
     public final static int REFRESH_RATE1 = 1000;
-    public final static int REFRESH_RATE = 10000;
+    public final static int REFRESH_RATE = 2000;
     public final static String BASE_DOMAIN = "localhost";
     private final static String BASE_URL = "http://" + BASE_DOMAIN + ":8080";
     private final static String CONTEXT_PATH = "/Tomcat_Web_exploded";;
@@ -30,13 +30,7 @@ public class Constants {
     public final static String FLOW_EXECUTION_RESULT = FULL_SERVER_PATH + "/flowExecutionResult";
     public final static String FLOW_DEFINITION_REFRESHER = FULL_SERVER_PATH + "/flowDefinitionRefresher";
     public final static String USER_DATA_REFRESHER = FULL_SERVER_PATH + "/userDataRefresher";
-
-    public final static String TEST = FULL_SERVER_PATH + "/test";
-
-
-
-
-
+    public final static String UPDATE_MANDATORY = FULL_SERVER_PATH + "/updateMandatory";
 
     // GSON instance
     public final static Gson GSON_INSTANCE = new Gson();

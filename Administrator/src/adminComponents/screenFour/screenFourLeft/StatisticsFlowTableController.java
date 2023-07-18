@@ -23,7 +23,6 @@ import java.util.ResourceBundle;
 
 public class StatisticsFlowTableController implements Initializable {
     private StatisticMainController mainStatisticController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private TableView<StatisticsData> tableFlowStatistic;
     @FXML
@@ -90,9 +89,6 @@ public class StatisticsFlowTableController implements Initializable {
 
     public void setMainController(StatisticMainController mainStatisticController) {
         this.mainStatisticController = mainStatisticController;
-    }
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
     }
 
     public void setTableView(DTOStatistics statistics)

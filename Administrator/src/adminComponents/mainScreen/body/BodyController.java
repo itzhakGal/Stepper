@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -18,14 +19,12 @@ import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
-import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.screenFour.statisticScreen.StatisticMainController;
 import util.Constants;
 import util.http.HttpClientUtil;
 import utilWebApp.DTOFullDetailsPastRunWeb;
 import utilWebApp.DTOListFullDetailsPastRunWeb;
 import utils.DTOStatistics;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -33,7 +32,6 @@ import java.util.List;
 public class BodyController {
 
     private AppController mainController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private UsersManagementController usersManagementComponentController;
     @FXML
@@ -110,14 +108,6 @@ public class BodyController {
         this.mainController = mainController;
     }
 
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //usersManagementComponentController.setSystemEngine(systemEngine);
-        //statisticsScreenComponentController.setSystemEngine(systemEngine);
-        //flowExecutionScreenComponentController.setSystemEngine(systemEngine);
-        //flowExecutionHistoryScreenComponentController.setSystemEngine(systemEngine);
-    }
-
     @FXML
     void rolesManagementButtonAction(Event event) {
 
@@ -160,7 +150,9 @@ public class BodyController {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -182,8 +174,6 @@ public class BodyController {
         //List<DTOFullDetailsPastRun> flowsExecutedList = systemEngine.getFlowsExecutedDataDTOHistory();
         //flowExecutionHistoryScreenComponentController.updateListOfExecutedFlows(flowsExecutedList);
     }
-
-
 
     @FXML
     void flowDefinitionButtonAction(Event event) {
@@ -208,7 +198,9 @@ public class BodyController {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -231,8 +223,6 @@ public class BodyController {
         if (statistics != null)
             statisticsScreenComponentController.setTableView(statistics);*/
     }
-
-
     public void openTabUserManager() {
         // Open the Tab of flowDefinition
         optionsTabPane.getSelectionModel().select(usersManagementButton);
@@ -342,10 +332,17 @@ public class BodyController {
         rolesManagementComponentController.init(this);
         //flowExecutionHistoryScreenComponentController.init(this);
         //statisticsScreenComponentController.init(this);
-
     }
 
     public HBox getStatisticsScreenComponent() {
         return statisticsScreenComponent;
+    }
+
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
     }
 }

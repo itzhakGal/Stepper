@@ -44,9 +44,9 @@ public class UserDataInfoRefresherAdminServlet extends HttpServlet {
         Map<String, DTORole> roles = rolesManager.getRoles();
         List<String> assignedRoles = new ArrayList<>(roles.keySet());
 
-        //List<String> totalFlowsPreformedBySpecificUser - צריך להוסיף את הרשימה של הפלואו שהורצו ע"י יוזר ספציפי
+        List<String> totalFlowsPreformedBySpecificUser  = systemEngine.getFlowsExecutedNameByUserName(specificUser);
 
-        DTOUserDataFullInfo dtoUserDataFullInfo = new DTOUserDataFullInfo(specificUser, assignedRoles);
+        DTOUserDataFullInfo dtoUserDataFullInfo = new DTOUserDataFullInfo(specificUser, assignedRoles,totalFlowsPreformedBySpecificUser);
         String dtoUserDataFullInfoToJSON = new Gson().toJson(dtoUserDataFullInfo, new TypeToken<DTOUserDataFullInfo>(){}.getType());
         response.getWriter().write(dtoUserDataFullInfoToJSON);
         response.setStatus(HttpServletResponse.SC_OK);

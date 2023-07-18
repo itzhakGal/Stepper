@@ -41,15 +41,4 @@ public class UserManager {
         return this.adminName;
     }
 
-    /*public void updateUser(UserDTO user) {
-        Map<String, Role> roles = new HashMap<>();
-        for (Map.Entry<String, RoleDTO> role : user.getRoles().entrySet()) {
-            roles.put(role.getKey(), new RoleImpl(role.getValue().getName(), role.getValue().getDescription(), role.getValue().getAllowedFlows()));
-        }
-
-        User userToUpdate = this.getUser(user.getName());
-        userToUpdate.setIsManager(user.getIsManager());
-        userToUpdate.setRoles(roles);
-    }*/
-
 }

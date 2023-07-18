@@ -1,23 +1,19 @@
 package adminComponents.screenOne;
 
 import com.google.gson.Gson;
+import javafx.scene.control.Alert;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
-import stepper.users.User;
 import util.Constants;
 import util.http.HttpClientUtil;
 import utilWebApp.DTOUserDataFullInfo;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.TimerTask;
 import java.util.function.Consumer;
-
-import static util.Constants.GSON_INSTANCE;
 
 public class UserInfoRefresher extends TimerTask {
     private final Consumer<DTOUserDataFullInfo> userDataFullInfo;
@@ -41,7 +37,7 @@ public class UserInfoRefresher extends TimerTask {
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                handleFailure(e.getMessage());
             }
 
             @Override
@@ -58,5 +54,13 @@ public class UserInfoRefresher extends TimerTask {
                 }
             }
         });
+    }
+
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
     }
 }

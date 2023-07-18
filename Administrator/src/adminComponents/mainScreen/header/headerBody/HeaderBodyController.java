@@ -38,12 +38,11 @@ public class HeaderBodyController {
 
     private boolean isFirstFile = true;
 
+
     public HeaderBodyController() {
      loadFileButtonProperty = new SimpleBooleanProperty(false);
      isFileCorrectProperty = new SimpleBooleanProperty(false);
     }
-
-
     public void setMainController(HeaderController mainController) {
         this.mainHeaderController = mainController;
     }
@@ -169,7 +168,6 @@ public class HeaderBodyController {
         RequestBody body =
                 new MultipartBody.Builder()
                         .addFormDataPart("xmlFile", selectedFile.getName(), RequestBody.create(selectedFile, MediaType.parse("text/plain")))
-                        //.addFormDataPart("key1", "value1") // you can add multiple, different parts as needed
                         .build();
 
 

@@ -12,7 +12,6 @@ import utils.DTOStatistics;
 public class StatisticMainController {
 
     private BodyController mainBodyController;
-   //private SystemEngineInterface systemEngine;
     @FXML
     private ScrollPane statisticsStepTableComponent;
     @FXML
@@ -31,13 +30,6 @@ public class StatisticMainController {
             statisticsFlowTableComponentController.setMainController(this);
             statisticsStepTableComponentController.setMainController(this);
         }
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //statisticsStepTableComponentController.setSystemEngine(systemEngine);
-        //statisticsFlowTableComponentController.setSystemEngine(systemEngine);
-
     }
 
     public void setMainController(BodyController mainBodyController) {

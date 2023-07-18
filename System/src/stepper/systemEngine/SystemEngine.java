@@ -901,4 +901,32 @@ public class SystemEngine implements SystemEngineInterface {
         }
         return flowsExecutedList;
     }
+
+    @Override
+    public List<String> getFlowsExecutedNameByUserName(User user) {
+
+        List<String> flowsExecutedListName = new ArrayList<>();
+
+        for(FlowExecutionImpl flow: listFlowsExecution.getFlowsExecutionList())
+        {
+            if(flow.getUserExecute().equals(user))
+                flowsExecutedListName.add(flow.getFlowDefinition().getName());
+        }
+        return flowsExecutedListName;
+    }
+
+    @Override
+    public String getAdminName() {
+        return this.userManager.getAdminName();
+    }
+
+    @Override
+    public void setAdminName(String username) {
+        this.userManager.setAdminName(username);
+    }
+
+    @Override
+    public void addUser(String username, boolean isManager) {
+        this.userManager.addUser(username, isManager);
+    }
 }

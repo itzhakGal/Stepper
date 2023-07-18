@@ -111,7 +111,9 @@ public class BodyController {
     @FXML
     void executionsHistoryButtonAction(Event event) {
 
-        String finalUrl = HttpUrl
+        flowExecutionHistoryScreenComponentController.getTableFlowExecutionController().refresherDataFlowsExecution();
+
+        /*String finalUrl = HttpUrl
                 .parse(Constants.LIST_FLOWS_EXECUTION_CLIENT)
                 .newBuilder()
                 .addQueryParameter("userName", mainController.currentUserNameProperty().getValue())
@@ -136,7 +138,7 @@ public class BodyController {
                     });
                 }
             }
-        });
+        });*/
 
         //List<DTOFullDetailsPastRun> flowsExecutedList = systemEngine.getFlowsExecutedDataDTOHistory();
         //flowExecutionHistoryScreenComponentController.updateListOfExecutedFlows(flowsExecutedList);
@@ -211,7 +213,7 @@ public class BodyController {
     public void initListener() {
        // flowDefinitionScreenComponentController.initListener();
         flowExecutionScreenComponentController.initListener();
-       // flowExecutionHistoryScreenComponentController.initListener();
+        flowExecutionHistoryScreenComponentController.initListener();
     }
 
     public FlowExecutionHistoryController getFlowExecutionHistoryScreenComponentController() {

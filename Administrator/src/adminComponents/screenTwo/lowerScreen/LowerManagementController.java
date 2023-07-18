@@ -76,6 +76,9 @@ public class LowerManagementController {
         HttpClientUtil.runAsyncPost(finalUrl, body, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    handleFailure((e.getMessage()));
+                });
             }
 
             @Override
@@ -110,7 +113,9 @@ public class LowerManagementController {
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure((e.getMessage()));
+                });
             }
 
             @Override
@@ -203,6 +208,14 @@ public class LowerManagementController {
         selectFlowAssignedAnchor.getChildren().add(checkTreeView);
 
         return saveListOfFlowConnectedToRole;
+    }
+
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
     }
 
 }

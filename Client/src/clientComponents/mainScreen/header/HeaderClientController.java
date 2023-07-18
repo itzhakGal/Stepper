@@ -18,8 +18,6 @@ import java.util.*;
 import static util.Constants.REFRESH_RATE;
 
 public class HeaderClientController implements Closeable {
-    //private SystemEngineInterface systemEngine;
-
     private Timer timer;
     private TimerTask dataUserRefresher;
     private AppController mainController;

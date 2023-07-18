@@ -1,6 +1,8 @@
 package clientComponents.screenOne.screenOneLeft.availableFlows;
 
 import com.google.gson.Gson;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import util.Constants;
@@ -36,7 +38,9 @@ public class FlowDefinitionRefresher extends TimerTask {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
 
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -51,6 +55,14 @@ public class FlowDefinitionRefresher extends TimerTask {
                 }
             }
         });
+    }
+
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
     }
 }
 

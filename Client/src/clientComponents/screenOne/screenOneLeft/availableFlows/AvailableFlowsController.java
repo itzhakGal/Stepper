@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
@@ -28,6 +29,7 @@ import utilsDesktopApp.DTOListFlowsDetails;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -94,7 +96,9 @@ public class AvailableFlowsController implements Closeable {
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -114,9 +118,9 @@ public class AvailableFlowsController implements Closeable {
 
     }
     public void initListFlowsFromDTOResponse(DTOListFlowsDetails listFlowsDetails) {
-        //DTOListFlowsDetails listFlowsDetails = systemEngine.readFlowsDetails();
+
         availableFlowsLabel.setVisible(true);
-        listFlowsName.getPanes().clear();
+        /*listFlowsName.getPanes().clear();
 
         if (listFlowsDetails != null)
         {
@@ -140,7 +144,67 @@ public class AvailableFlowsController implements Closeable {
                     e.printStackTrace();
                 }
             }
+        }*/
+
+        if (listFlowsDetails != null)
+        {
+            List<String> paneNames = extractPaneNames(listFlowsName);
+            List<String> flowsName =  extractListNamesFromDTO(listFlowsDetails);
+
+            for (DTOFlowDetails flowDetails : listFlowsDetails.getDtoFlowDetailsList()) {
+
+                if(!paneNames.contains(flowDetails.getName()))
+                {
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("flowDefinitionDetails/flowDefinitionDetails.fxml"));
+                        HBox contentPane = fxmlLoader.load();
+
+                        FlowDefinitionDetailsController controller = fxmlLoader.getController();
+                        controller.setMainController(this);
+                        //controller.setSystemEngine(systemEngine);
+
+                        TitledPane titledPane = new TitledPane(flowDetails.getName(), contentPane);
+                        titledPane.getProperties().put("controller", controller);
+
+                        controller.setFlowData(flowDetails);
+
+                        listFlowsName.getPanes().add(titledPane);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            List<TitledPane> panesToRemove = new ArrayList<>();
+
+            for (TitledPane pane : listFlowsName.getPanes()) {
+                if (!flowsName.contains(pane.getText())) {
+                    panesToRemove.add(pane);
+                }
+            }
+
+            listFlowsName.getPanes().removeAll(panesToRemove);
+        }
     }
+
+    private List<String> extractPaneNames(Accordion accordion) {
+        List<String> paneNames = new ArrayList<>();
+
+        for (TitledPane pane : accordion.getPanes()) {
+            paneNames.add(pane.getText());
+        }
+
+        return paneNames;
+    }
+
+    private List<String> extractListNamesFromDTO(DTOListFlowsDetails listFlowsDetails) {
+        List<String> flowsNames = new ArrayList<>();
+
+        for (DTOFlowDetails flowDetails : listFlowsDetails.getDtoFlowDetailsList())
+        {
+            flowsNames.add(flowDetails.getName());
+        }
+        return flowsNames;
     }
     public void setMainController(FlowDefinitionScreenController flowDefinitionController) {
         this.mainFlowDefinitionController = flowDefinitionController;
@@ -176,5 +240,13 @@ public class AvailableFlowsController implements Closeable {
             timer.cancel();
         }
     }
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
+    }
+
 
 }

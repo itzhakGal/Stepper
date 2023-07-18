@@ -6,6 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import adminComponents.mainScreen.app.AppController;
+import javafx.stage.WindowEvent;
+
+import java.io.IOException;
 import java.net.URL;
 
 public class Main extends Application {
@@ -24,10 +27,20 @@ public class Main extends Application {
         AppController appController = fxmlLoader.getController();
 
         // Pass the primaryStage to the AppController
+        appController.checkIfAdminExists();
         appController.setPrimaryStage(primaryStage);
 
         Scene scene  = new Scene(root, 1000, 700);
         primaryStage.setScene(scene);
+
+        primaryStage.setOnCloseRequest((WindowEvent event) -> {
+            try {
+                appController.ServerUpdateAdminApplicationHasBeenClosed();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         primaryStage.show();
     }
 
