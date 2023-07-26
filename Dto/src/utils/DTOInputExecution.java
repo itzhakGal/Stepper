@@ -11,6 +11,7 @@ public class DTOInputExecution {
     private String originalName;
     private String type;
     private boolean isFile;
+    private String enumeratorType;
 
     DTOInputExecution (DataInFlow data)
     {
@@ -20,6 +21,7 @@ public class DTOInputExecution {
         this.originalName = data.getName();
         this.isFile = data.isFile();
         this.type= data.getDataType();
+        this.enumeratorType = data.getEnumeratorType();
     }
     public String getOriginalName() {
         return originalName;
@@ -38,5 +40,8 @@ public class DTOInputExecution {
     }
     public boolean isFile() {
         return isFile;
+    }
+    public String getEnumeratorType() {
+        return enumeratorType;
     }
 }

@@ -7,14 +7,16 @@ public class DataDefinitionDeclarationImpl implements DataDefinitionDeclaration 
     private final DataNecessity necessity;
     private final String userString;
     private final DataDefinition dataDefinition;
-
     private boolean isFile;
-    public DataDefinitionDeclarationImpl(String name, DataNecessity necessity, String userString, DataDefinition dataDefinition, boolean isFile) {
+
+    private String enumeratorType;
+    public DataDefinitionDeclarationImpl(String name, DataNecessity necessity, String userString, DataDefinition dataDefinition, boolean isFile,String EnumeratorType) {
         this.name = name;
         this.necessity = necessity;
         this.userString = userString;
         this.dataDefinition = dataDefinition;
         this.isFile = isFile;
+        this.enumeratorType = EnumeratorType;
     }
 
     @Override
@@ -40,5 +42,9 @@ public class DataDefinitionDeclarationImpl implements DataDefinitionDeclaration 
     @Override
     public boolean isFile() {
         return isFile;
+    }
+    @Override
+    public String getEnumeratorType() {
+        return enumeratorType;
     }
 }

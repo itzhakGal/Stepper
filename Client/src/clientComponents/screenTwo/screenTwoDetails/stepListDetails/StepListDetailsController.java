@@ -21,7 +21,6 @@ import utils.DTOStepFlowPast;
 public class StepListDetailsController {
 
    private clientComponents.screenTwo.FlowsExecutionScreenController mainFlowsExecutionScreenController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private BorderPane outputListComponent;
     @FXML
@@ -50,12 +49,6 @@ public class StepListDetailsController {
 
     public void setMainController(FlowsExecutionScreenController mainFlowsExecutionScreenController) {
         this.mainFlowsExecutionScreenController = mainFlowsExecutionScreenController;
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //outputListComponentController.setSystemEngine(systemEngine);
-        //inputListComponentController.setSystemEngine(systemEngine);
     }
 
     public void updateDetailsFlowRun(DTOStepFlowPastWeb stepDetails) {

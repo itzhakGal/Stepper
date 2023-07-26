@@ -17,8 +17,8 @@ public class DataInFlowImp implements DataInFlow {
     private String dataType;
     private DataKind dataKind;
     private List<String> relatedSteps;
-
     private boolean isFile;
+    private String enumeratorType;
 
     public DataInFlowImp(String finalName, DataDefinitionDeclaration dataDefinitionDeclaration,DataKind dataKind)
     {
@@ -31,6 +31,7 @@ public class DataInFlowImp implements DataInFlow {
         this.dataKind = dataKind;
         this.relatedSteps = new ArrayList<>();
         this.isFile = dataDefinitionDeclaration.isFile();
+        this.enumeratorType = dataDefinitionDeclaration.getEnumeratorType();
     }
     @Override
     public String getFinalName() {
@@ -86,5 +87,9 @@ public class DataInFlowImp implements DataInFlow {
     @Override
     public boolean isFile() {
         return isFile;
+    }
+    @Override
+    public String getEnumeratorType() {
+        return enumeratorType;
     }
 }

@@ -12,6 +12,7 @@
           <element id="library" level="project" name="lib" />
           <element id="library" level="project" name="okHttp" />
           <element id="library" level="project" name="google-gson-2" />
+          <element id="library" level="project" name="jayson path" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="Tomcat/web/Web" />

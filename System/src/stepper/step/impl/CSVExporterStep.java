@@ -20,10 +20,10 @@ public class CSVExporterStep extends AbstractStepDefinition {
         super("CSV Exporter", true);
 
         // step inputs
-        addInput(new DataDefinitionDeclarationImpl("SOURCE", DataNecessity.MANDATORY, "Source data", DataDefinitionRegistry.RELATION, false));
+        addInput(new DataDefinitionDeclarationImpl("SOURCE", DataNecessity.MANDATORY, "Source data", DataDefinitionRegistry.RELATION, false,""));
 
         // step outputs
-        addOutput(new DataDefinitionDeclarationImpl("RESULT", DataNecessity.NA, "CSV export result", DataDefinitionRegistry.STRING, false));
+        addOutput(new DataDefinitionDeclarationImpl("RESULT", DataNecessity.NA, "CSV export result", DataDefinitionRegistry.STRING, false,""));
     }
 
     @Override

@@ -20,7 +20,6 @@ import java.io.IOException;
 public class StepListDetailsController {
 
    private clientComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController mainFlowExecutionHistoryController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private BorderPane outputListComponent;
     @FXML
@@ -46,12 +45,6 @@ public class StepListDetailsController {
         this.mainFlowExecutionHistoryController = mainFlowExecutionHistoryController;
     }
 
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //outputListComponentController.setSystemEngine(systemEngine);
-        //inputListComponentController.setSystemEngine(systemEngine);
-    }
-
     public void updateDetailsFlowRun(DTOStepFlowPastWeb stepDetails) {
 
         startTime.setText(stepDetails.getStartTime());
@@ -61,7 +54,6 @@ public class StepListDetailsController {
         updateLogDetailsGridPane(stepDetails);
         outputListComponentController.updateOutputsStepDetails(stepDetails.getDtoOutputDetails());
         inputListComponentController.updateInputsStepDetails(stepDetails.getDtoInputsDetails());
-
     }
 
     public void updateLogDetailsGridPane(DTOStepFlowPastWeb stepDetails)

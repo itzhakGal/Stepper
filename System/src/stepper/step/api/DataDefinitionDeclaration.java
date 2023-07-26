@@ -11,4 +11,5 @@ public interface DataDefinitionDeclaration extends Serializable
     String userString();
     DataDefinition dataDefinition();
     boolean isFile();
+    String getEnumeratorType();
 }

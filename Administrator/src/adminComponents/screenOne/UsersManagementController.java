@@ -1,14 +1,11 @@
 package adminComponents.screenOne;
 
 import adminComponents.mainScreen.body.BodyController;
-import adminComponents.screenThree.topScreen.TopScreenController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,20 +13,16 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import okhttp3.*;
-import org.controlsfx.control.ListSelectionView;
 import org.jetbrains.annotations.NotNull;
 import stepper.role.RoleImpl;
 import util.Constants;
 import util.http.HttpClientUtil;
 import utilWebApp.DTOSavaNewInfoForUser;
 import utilWebApp.DTOUserDataFullInfo;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.*;
-
 import static util.Constants.REFRESH_RATE;
-
 
 public class UsersManagementController implements Closeable {
 
@@ -51,8 +44,6 @@ public class UsersManagementController implements Closeable {
     private CheckBox isManager;
     @FXML
     private AnchorPane assignRolesAnchor;
-    @FXML
-    private AnchorPane buttonRolesAnchor;
     @FXML
     private Button savaChangeButton;
     @FXML
@@ -117,50 +108,21 @@ public class UsersManagementController implements Closeable {
         });
 
         availableAndSelectedRolesComponentController.initListener();
-
-
-        /*listOfRoles.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(isFirstTime) {
-                chosenUserFromListProperty.set(newValue);
-                isFirstTime = false;
-            }
-            else if(newValue == null) //הבחירה שלי נעלמה כתוצאה מהריפרשר?
-            {
-                chosenUserFromListProperty.set(oldValue);
-            }
-            else //יש ערך בישן וגם בחדש ניקח את החדש
-                chosenUserFromListProperty.set(newValue);
-        });*/
-
-        //listOfUsers.setOnMouseClicked(event -> handleUserSelection());
-
     }
-
-    //דטה עם ריפרשר
-    /*private void handleUserSelection() {
-
-        String selectedUser = listOfUsers.getSelectionModel().getSelectedItem();
-
-        userDataInfoRefresher = new UserInfoRefresher(
-                selectedUser,
-                this::updateUserFullData);
-        timer = new Timer();
-        timer.schedule(userDataInfoRefresher, REFRESH_RATE, REFRESH_RATE);
-
-    }*/
 
     public void cleanListsData()
     {
+        userName.setText("");
+        isManager.setSelected(false);
         listOfRoles.getItems().clear();
         listOfFlowsAvailable.getItems().clear();
         totalFlowsPerformed.getItems().clear();
         labelMassage.setText("");
         countListFlowsAvailable.setText("");
         countFlowsPerformed.setText("");
+        availableAndSelectedRolesComponentController.cleanData();
     }
     public void handleUserSelection() {
-
-        //String selectedUser = listOfUsers.getSelectionModel().getSelectedItem();
 
         String finalUrl = HttpUrl
                 .parse(Constants.USER_DATA_INFO_IN_ADMIN)
@@ -183,7 +145,6 @@ public class UsersManagementController implements Closeable {
                 try{
                     if (response.isSuccessful()) {
                         String res = response.body().string();
-                        //DTOUserDataFullInfo dtoUserDataFullInfo = new Gson().fromJson(res, DTOUserDataFullInfo.class);
                         DTOUserDataFullInfo dtoUserDataFullInfo = new Gson().fromJson(res, new TypeToken<DTOUserDataFullInfo>(){}.getType());
                         Platform.runLater(() -> {
                             updateUserFullData(dtoUserDataFullInfo);
@@ -200,7 +161,7 @@ public class UsersManagementController implements Closeable {
         if(userDataFullInfo.getUser() == null)
             return;
 
-        // תוסיף רק את הרולים שאין ליוזר שיבחר מהם עוד להוספה???
+        // תוסיף רק את הרולים שאין ליוזר שיבחר מהם עוד להוספה
         List<String> selectedAssignedRoles = new ArrayList<>();
 
         for(String role : userDataFullInfo.getAllRoleInSystem())
@@ -227,7 +188,6 @@ public class UsersManagementController implements Closeable {
         // Add the unique flow names from the set to the list
         listOfFlowAvailable.addAll(uniqueFlows);
 
-
         updateLists(userDataFullInfo.getUser().getUserName(), userDataFullInfo.getUser().getIsManager(), listOfRoles , listOfFlowAvailable, selectedAssignedRoles, totalFlowsPreformedByUser);
 
     }
@@ -245,25 +205,12 @@ public class UsersManagementController implements Closeable {
         itemsListRoles.clear();
         itemsListRoles.addAll(listOfRoles);
 
-    //להוסיף רק מה שלא נמצא כבר לא מוריד את מה שכבר קיין ונבחר להורדה אז לא מספיק טוב
-    /*for (String role : listOfRoles) {
-            if (!itemsListRoles.contains(role)) {
-                itemsListRoles.add(role);
-            }*/
-
         ObservableList<String> itemsListOfFlowAvailable = this.listOfFlowsAvailable.getItems();
         itemsListOfFlowAvailable.clear();
         itemsListOfFlowAvailable.addAll(listOfFlowAvailable);
 
         int countFlows = listOfFlowAvailable.size();
         countListFlowsAvailable.setText(String.valueOf(countFlows));
-
-
-         /*for (String flow : listOfFlowAvailable) {
-            if (!itemsListOfFlowAvailable.contains(flow)) {
-                itemsListOfFlowAvailable.add(flow);
-            }*/
-
 
         ObservableList<String> itemsTotalFlowsPreformedByUser = this.totalFlowsPerformed.getItems();
         itemsTotalFlowsPreformedByUser.clear();
@@ -276,139 +223,27 @@ public class UsersManagementController implements Closeable {
 
     }
 
-    /*private List<String> createSelectedAssignedRolesCheckBoxTreeItem(List<String> selectedAssignedRoles, List<String> listOfRoles) {
-        List<String> listRolesToAddToTheUser = new ArrayList<>();
-
-        ListSelectionView<String> listSelectionView = new ListSelectionView<>();
-
-        // Create a sample list of items
-        ObservableList<String> sourceItems = FXCollections.observableArrayList(selectedAssignedRoles);
-        ObservableList<String> targetItems = FXCollections.observableArrayList(listOfRoles);
-
-        // Set the source and target items for the ListSelectionView
-        listSelectionView.getSourceItems().addAll(sourceItems);
-        listSelectionView.getTargetItems().addAll(targetItems);
-
-        assignRolesAnchor.getChildren().clear();
-        assignRolesAnchor.getChildren().add(listSelectionView);
-
-        // Set the position of the ListSelectionView within the AnchorPane
-        AnchorPane.setTopAnchor(listSelectionView, 5.0);
-        AnchorPane.setLeftAnchor(listSelectionView, 5.0);
-        AnchorPane.setRightAnchor(listSelectionView, 5.0);
-        AnchorPane.setBottomAnchor(listSelectionView, 5.0);
-
-        Button button = new Button("Selected Items");
-        button.setOnAction(e -> {
-            ObservableList<String> selectedItems = listSelectionView.getTargetItems();
-
-            // Clear the listRolesToAddToTheUser and add only the selected items from TargetItems
-            listRolesToAddToTheUser.clear();
-            listRolesToAddToTheUser.addAll(selectedItems);
-        });
-
-        // Set the position of the button within the AnchorPane
-        buttonRolesAnchor.getChildren().add(button);
-        AnchorPane.setTopAnchor(button, 0.0);
-        AnchorPane.setLeftAnchor(button, 0.0);
-        AnchorPane.setRightAnchor(button, 0.0);
-        AnchorPane.setBottomAnchor(button, 0.0);
-
-        // Listener to update listRolesToAddToTheUser when the selection changes
-        listSelectionView.getTargetItems().addListener((ListChangeListener<String>) change -> {
-            listRolesToAddToTheUser.clear();
-            listRolesToAddToTheUser.addAll(listSelectionView.getTargetItems());
-        });
-
-        return listRolesToAddToTheUser;
-    }*/
-
-    /*private List<String> createSelectedAssignedRolesCheckBoxTreeItem(List<String> selectedAssignedRoles) {
-        List<String> listRolesToAddToTheUser = new ArrayList<>();
-        CheckBoxTreeItem<String> rootItem = new  CheckBoxTreeItem<String>("Assign Roles To User");
-
-        for(String roleName : selectedAssignedRoles) {
-            CheckBoxTreeItem<String> role = new CheckBoxTreeItem<String>(roleName);
-            rootItem.getChildren().add(role);
-        }
-
-        CheckTreeView<String> checkTreeView = new CheckTreeView<>(rootItem);
-
-        checkTreeView.getCheckModel().getCheckedItems().addListener(new ListChangeListener<TreeItem<String>>() {
-            @Override
-            public void onChanged(Change<? extends TreeItem<String>> c) {
-                //checkTreeView.getCheckModel().getCheckedItems();
-                while (c.next()) {
-                    if (c.wasAdded()) {
-                        listRolesToAddToTheUser.addAll(
-                                c.getAddedSubList()
-                                        .stream()
-                                        .map(TreeItem::getValue)
-                                        .collect(Collectors.toList())
-                        );
-                    }
-                    if (c.wasRemoved()) {
-                        listRolesToAddToTheUser.removeAll(
-                                c.getRemoved()
-                                        .stream()
-                                        .map(TreeItem::getValue)
-                                        .collect(Collectors.toList())
-                        );
-                    }
-                }
-            }
-        });
-
-        assignRolesAnchor.getChildren().clear();
-        assignRolesAnchor.getChildren().add(checkTreeView);
-
-        return listRolesToAddToTheUser;
-    }*/
-
-    /*private List<String> createSelectedAssignedRolesCheckBoxTreeItem(List<String> selectedAssignedRoles, List<String> listOfRoles) {
-        List<String> sourceItems = new ArrayList<>();
-        sourceItems.add("Item 1");
-        sourceItems.add("Item 2");
-        sourceItems.add("Item 3");
-        sourceItems.add("Item 4");
-        sourceItems.add("Item 5");
-
-        List<String> targetItems = new ArrayList<>();
-        targetItems.add("Item 6");
-        targetItems.add("Item 7");
-
-        ObservableList<String> finalTargetItems = FXCollections.observableArrayList();
-
-        ListSelectionView<String> listSelectionView = new ListSelectionView<>();
-        listSelectionView.getSourceItems().setAll(sourceItems);
-        listSelectionView.getTargetItems().setAll(targetItems);
-        listSelectionView.setPrefSize(400, 300);
-
-        Button saveButton = new Button("Save");
-        saveButton.setOnAction(event -> {
-            finalTargetItems.setAll(listSelectionView.getTargetItems());
-
-        });
-
-    }*/
-
     private void createSelectedAssignedRolesCheckBoxTreeItem(List<String> selectedAssignedRoles, List<String> listOfRoles) {
-        //לבדוק ניקוי של list שנמצאים במחלקה
 
         availableAndSelectedRolesComponent.setVisible(true);
 
         availableAndSelectedRolesComponentController.insertItemsIntoSourceListView(selectedAssignedRoles, listOfRoles);
     }
 
-
-
     private void updateUsersList(List<String> usersNames) {
         Platform.runLater(() -> {
             ObservableList<String> items = listOfUsers.getItems();
             items.clear();
             items.addAll(usersNames);
+            cleanRightScreen();
         });
     }
+
+    private void cleanRightScreen() {
+        if(!listOfUsers.getItems().contains(userName.getText()))
+            cleanListsData();
+    }
+
     public void startUserListRefresher() {
         listRefresher = new UserListRefresher(
                 this::updateUsersList);
@@ -431,7 +266,7 @@ public class UsersManagementController implements Closeable {
         HttpClientUtil.runAsyncPost(finalUrl, body, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> {
+               Platform.runLater(() -> {
                     handleFailure((e.getMessage()));
                 });
             }
@@ -475,7 +310,6 @@ public class UsersManagementController implements Closeable {
                 try{
                     if (response.isSuccessful()) {
                         String res = response.body().string();
-                        //DTOUserDataFullInfo dtoUserDataFullInfo = new Gson().fromJson(res, DTOUserDataFullInfo.class);
                         DTOUserDataFullInfo dtoUserDataFullInfo = new Gson().fromJson(res, new TypeToken<DTOUserDataFullInfo>(){}.getType());
                         Platform.runLater(() -> {
                             updateUserFullData(dtoUserDataFullInfo);

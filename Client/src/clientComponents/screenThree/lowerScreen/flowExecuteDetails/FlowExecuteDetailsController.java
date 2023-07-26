@@ -9,13 +9,10 @@ import clientComponents.screenThree.lowerScreen.flowExecuteDetails.flowDetails.F
 import clientComponents.screenThree.lowerScreen.flowExecuteDetails.inputDetailsList.InputDetailsListController;
 import clientComponents.screenThree.lowerScreen.flowExecuteDetails.outputDetailsList.OutputDetailsListController;
 import utilWebApp.DTOFullDetailsPastRunWeb;
-import utils.DTOFullDetailsPastRun;
 
 public class FlowExecuteDetailsController {
 
     private FlowExecutionHistoryController mainFlowExecutionHistoryController;
-    //private SystemEngineInterface systemEngine;
-
     @FXML
     private GridPane  detailsGridPaneComponent;
     @FXML
@@ -38,16 +35,8 @@ public class FlowExecuteDetailsController {
         }
     }
 
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //outputDetailsComponentController.setSystemEngine(systemEngine);
-        //inputsDetailsComponentController.setSystemEngine(systemEngine);
-        //detailsGridPaneComponentController.setSystemEngine(systemEngine);
-    }
-
     public void setMainController(clientComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController mainFlowExecutionHistoryController) {
         this.mainFlowExecutionHistoryController = mainFlowExecutionHistoryController;
-
     }
 
     public void setFlowName(String flowName) {

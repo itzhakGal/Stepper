@@ -16,8 +16,6 @@ import java.util.List;
 public class OutputDetailsController {
 
     private clientComponents.screenOne.screenOneRight.SelectedFlowDetailsController mainSelectedFlowDetailsController;
-
-    //private SystemEngineInterface systemEngine;
     @FXML
     private Label finalNameOutputLabel;
 
@@ -42,10 +40,6 @@ public class OutputDetailsController {
 
     public void setMainController(SelectedFlowDetailsController mainSelectedFlowDetailsController) {
         this.mainSelectedFlowDetailsController = mainSelectedFlowDetailsController;
-    }
-
-    public void setSystemEngine(SystemEngineInterface engineManager) {
-        //this.systemEngine = engineManager;
     }
 
     public void setOutputOfFlowSelected(DTOFlowDefinition dtoFlowDefinition)

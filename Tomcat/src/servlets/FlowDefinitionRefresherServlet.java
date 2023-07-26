@@ -25,6 +25,9 @@ public class FlowDefinitionRefresherServlet extends HttpServlet {
                 Gson gson = new Gson();
                 SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
 
+                if(userName == null)
+                    return;
+
                 User user = systemEngine.getUserManager().getUser(userName);
                 DTOListFlowsDetails listFlowsDetails = systemEngine.readFlowsDetailsWeb(user);
                 String listFlowsDetailsJSON = gson.toJson(listFlowsDetails);

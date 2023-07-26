@@ -60,7 +60,6 @@ public class BodyController {
     private Tab usersManagementButton;
     @FXML
     private TabPane optionsTabPane;
-
     private SimpleBooleanProperty statisticsButtonProperty;
     private SimpleBooleanProperty executionsHistoryButtonProperty;
     private SimpleBooleanProperty rolesManagementButtonProperty;
@@ -73,7 +72,6 @@ public class BodyController {
         rolesManagementButtonProperty =  new SimpleBooleanProperty(false);
         usersManagementButtonProperty =  new SimpleBooleanProperty(true);
     }
-
 
     @FXML
     public void initialize() {
@@ -124,7 +122,6 @@ public class BodyController {
         statisticsButton.setDisable(false);
         executionsHistoryButton.setDisable(false);
         usersManagementComponentController.startUserListRefresher();
-        //flowDefinitionScreenComponentController.setListFlowsDetails();
     }
     public void updateButtons()
     {
@@ -136,7 +133,6 @@ public class BodyController {
     public void updateExecuteFlowButton(String flowName)
     {
         rolesManagementButton.setDisable(false);
-        //flowExecutionScreenComponentController.updateDetailsFlowExecution(flowName, false);
     }
     @FXML
     void executionsHistoryButtonAction(Event event) {
@@ -151,7 +147,7 @@ public class BodyController {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(() -> {
-                    handleFailure(e.getMessage());
+                    handleFailure((e.getMessage()));
                 });
             }
 
@@ -171,19 +167,6 @@ public class BodyController {
                 }
             }
         });
-        //List<DTOFullDetailsPastRun> flowsExecutedList = systemEngine.getFlowsExecutedDataDTOHistory();
-        //flowExecutionHistoryScreenComponentController.updateListOfExecutedFlows(flowsExecutedList);
-    }
-
-    @FXML
-    void flowDefinitionButtonAction(Event event) {
-        //flowDefinitionScreenComponentController.setListFlowsDetails();
-        //flowDefinitionScreenComponentController.getSelectedFlowDetailsComponent().setVisible(false);
-    }
-
-    @FXML
-    void flowsExecutionButtonAction(Event event) {
-
     }
 
     @FXML
@@ -199,7 +182,7 @@ public class BodyController {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(() -> {
-                    handleFailure(e.getMessage());
+                    handleFailure((e.getMessage()));
                 });
             }
 
@@ -218,10 +201,6 @@ public class BodyController {
                 }
             }
         });
-
-       /* DTOStatistics statistics = systemEngine.readStatistics();
-        if (statistics != null)
-            statisticsScreenComponentController.setTableView(statistics);*/
     }
     public void openTabUserManager() {
         // Open the Tab of flowDefinition
@@ -280,11 +259,8 @@ public class BodyController {
         return statisticsButtonProperty;
     }
 
-
     public void initListener() {
-        //usersManagementComponentController.initListener();
         statisticsScreenComponentController.initListener();
-        //flowExecutionScreenComponentController.initListener();
         flowExecutionHistoryScreenComponentController.initListener();
 
         this.getMainController().getHeaderComponentController().getHeaderBodyComponentController().getIsFileCorrectProperty()
@@ -307,8 +283,6 @@ public class BodyController {
         this.mainController.getHeaderComponentController().getHeaderBodyComponentController().getLoadFileButtonProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue) {
-                        //שונה
-                        //rolesManagementButton.setDisable(true);
                         executionsHistoryButton.setDisable(true);
                         statisticsButton.setDisable(true);
                         flowExecutionHistoryScreenComponentController.clearDetails();
@@ -330,8 +304,6 @@ public class BodyController {
     public void init() {
         usersManagementComponentController.init(this);
         rolesManagementComponentController.init(this);
-        //flowExecutionHistoryScreenComponentController.init(this);
-        //statisticsScreenComponentController.init(this);
     }
 
     public HBox getStatisticsScreenComponent() {

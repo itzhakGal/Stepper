@@ -1,8 +1,5 @@
 package stepper.step.impl;
 
-
-import com.sun.deploy.cache.JarSigningData;
-import com.sun.deploy.net.HttpResponse;
 import stepper.dataDefinition.impl.DataDefinitionRegistry;
 import stepper.dataDefinition.impl.Enumerator.EnumeratorData;
 import stepper.dataDefinition.impl.json.JsonData;
@@ -16,29 +13,25 @@ import stepper.step.api.AbstractStepDefinition;
 import stepper.step.api.DataDefinitionDeclarationImpl;
 import stepper.step.api.DataNecessity;
 import stepper.step.api.StepResult;
-import sun.net.www.http.HttpClient;
-
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalTime;
 
-
 public class HTTPCall extends AbstractStepDefinition {
     public HTTPCall() {
         super("HTTP Call", false);
         // step inputs
-        addInput(new DataDefinitionDeclarationImpl("RESOURCE", DataNecessity.MANDATORY, "Resource Name (include query parameters)", DataDefinitionRegistry.STRING, false));
-        addInput(new DataDefinitionDeclarationImpl("ADDRESS", DataNecessity.MANDATORY, "Domain:Port", DataDefinitionRegistry.STRING, false));
-        addInput(new DataDefinitionDeclarationImpl("PROTOCOL", DataNecessity.MANDATORY, "protocol", DataDefinitionRegistry.ENUMERATOR, false));
-        addInput(new DataDefinitionDeclarationImpl("METHOD", DataNecessity.OPTIONAL, "Method", DataDefinitionRegistry.ENUMERATOR, false));
-        addInput(new DataDefinitionDeclarationImpl("BODY", DataNecessity.OPTIONAL, "Request Body", DataDefinitionRegistry.JSON, false));
+        addInput(new DataDefinitionDeclarationImpl("RESOURCE", DataNecessity.MANDATORY, "Resource Name (include query parameters)", DataDefinitionRegistry.STRING, false,""));
+        addInput(new DataDefinitionDeclarationImpl("ADDRESS", DataNecessity.MANDATORY, "Domain:Port", DataDefinitionRegistry.STRING, false,""));
+        addInput(new DataDefinitionDeclarationImpl("PROTOCOL", DataNecessity.MANDATORY, "protocol", DataDefinitionRegistry.ENUMERATOR, false,"Protocol"));
+        addInput(new DataDefinitionDeclarationImpl("METHOD", DataNecessity.OPTIONAL, "Method", DataDefinitionRegistry.ENUMERATOR, false, "Method"));
+        addInput(new DataDefinitionDeclarationImpl("BODY", DataNecessity.OPTIONAL, "Request Body", DataDefinitionRegistry.JSON, false, ""));
 
         //step outputs
-        addOutput(new DataDefinitionDeclarationImpl("CODE", DataNecessity.NA, "Response code", DataDefinitionRegistry.NUMBER, false));
-        addOutput(new DataDefinitionDeclarationImpl("RESPONSE_BODY", DataNecessity.NA, "Response body", DataDefinitionRegistry.STRING, false));
+        addOutput(new DataDefinitionDeclarationImpl("CODE", DataNecessity.NA, "Response code", DataDefinitionRegistry.NUMBER, false, ""));
+        addOutput(new DataDefinitionDeclarationImpl("RESPONSE_BODY", DataNecessity.NA, "Response body", DataDefinitionRegistry.STRING, false, ""));
     }
 
     @Override
@@ -57,13 +50,9 @@ public class HTTPCall extends AbstractStepDefinition {
         long startTime = System.nanoTime();
         LocalTime localStartTime = LocalTime.now();
 
-        context.storeLogsData("About to invoke http request <request details: \n" +
-                PROTOCOL + METHOD + ADDRESS + RESOURCE + "\n");
-
         stepResult = sendHttpRequest(context, RESOURCE, ADDRESS, PROTOCOL, METHOD, BODY, CODE, RESPONSE_BODY);
 
         context.storeLogsData("Received Response. Status code: \n" + CODE);
-        //Received Response. Status code: <status code>
 
         LocalTime localEndTime = LocalTime.now();
         context.storeTotalTimeStep(localStartTime, localEndTime, startTime);
@@ -73,8 +62,6 @@ public class HTTPCall extends AbstractStepDefinition {
 
         DataInFlowExecution outputExecution2 = createDataInFlowExecution(context,"RESPONSE_BODY", RESPONSE_BODY.getValue());
         context.storeDataValue("RESPONSE_BODY", outputExecution2);
-
-
 
         context.updateStatusStep(stepResult);
         return stepResult;
@@ -91,32 +78,39 @@ public class HTTPCall extends AbstractStepDefinition {
     }
 
     public static StepResult sendHttpRequest(ExecutionContextInterface context, String RESOURCE, String ADDRESS, EnumeratorData PROTOCOL, EnumeratorData METHOD, JsonData BODY, IntWrapper CODE, StringWrapper RESPONSE_BODY) {
-
         StepResult stepResult;
 
         try {
-
-            String urlString = PROTOCOL.getEnumerator().toString() + "://" + ADDRESS + "/" + RESOURCE;
+            String urlString;
+            if(!RESOURCE.startsWith("/")){
+                context.storeLogsData("About to invoke http request <request details: \n" +
+                        PROTOCOL  + "://" + METHOD + "/" + ADDRESS + "/" + RESOURCE + "\n");
+                urlString = PROTOCOL.getAllMembers() + "://" + ADDRESS + "/" + RESOURCE;
+                }
+            else {
+                context.storeLogsData("About to invoke http request <request details: \n" +
+                        PROTOCOL  + "://" + METHOD + "/" + ADDRESS + RESOURCE + "\n");
+                urlString = PROTOCOL.getAllMembers() + "://" + ADDRESS + RESOURCE;
+            }
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod(METHOD.getEnumerator().toString());
+            connection.setRequestMethod(METHOD.getAllMembers());
 
-            if (METHOD.equals("POST") || METHOD.equals("PUT")) {
+            if (METHOD.getAllMembers().equals("POST") || METHOD.getAllMembers().equals("PUT")) {
                 connection.setDoOutput(true);
-                //connection.getOutputStream().write(BODY.getBytes("UTF-8"));
-                connection.getOutputStream().write(BODY.getJson().getBytes("UTF-8"));
+                // Convert JsonElement to JSON string
+                String jsonBody = BODY.toString();
+                connection.getOutputStream().write(jsonBody.getBytes("UTF-8"));
             }
-
             int responseCode = connection.getResponseCode();
 
             BufferedReader reader;
             if (responseCode >= 200 && responseCode < 400) {
                 reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 stepResult = StepResult.SUCCESS;
-
             } else {
                 reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-                stepResult = StepResult.SUCCESS;
+                stepResult = StepResult.FAILURE;
             }
 
             StringBuilder responseBody = new StringBuilder();
@@ -129,15 +123,13 @@ public class HTTPCall extends AbstractStepDefinition {
             CODE.setValue(responseCode);
             RESPONSE_BODY.setValue(responseBody.toString());
 
-
         } catch (Exception e) {
-
             CODE.setValue(-1);
             RESPONSE_BODY.setValue(e.getMessage());
             stepResult = StepResult.FAILURE;
             context.updateLogDataAndSummeryLine("The request could not be sent.");
-
         }
+
         return stepResult;
     }
 

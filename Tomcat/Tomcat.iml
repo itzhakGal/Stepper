@@ -24,5 +24,6 @@
     <orderEntry type="module" module-name="System" />
     <orderEntry type="module" module-name="Dto" />
     <orderEntry type="library" name="google-gson-2" level="project" />
+    <orderEntry type="library" name="jayson path" level="project" />
   </component>
 </module>

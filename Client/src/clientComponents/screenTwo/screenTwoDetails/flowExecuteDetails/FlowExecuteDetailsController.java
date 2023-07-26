@@ -14,7 +14,6 @@ import utils.DTOFullDetailsPastRun;
 public class FlowExecuteDetailsController {
 
     private clientComponents.screenTwo.FlowsExecutionScreenController mainFlowsExecutionScreenController;
-    //private SystemEngineInterface systemEngine;
 
     @FXML
     private GridPane  detailsGridPaneComponent;
@@ -36,13 +35,6 @@ public class FlowExecuteDetailsController {
             inputsDetailsComponentController.setMainController(this);
             detailsGridPaneComponentController.setMainController(this);
         }
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //outputDetailsComponentController.setSystemEngine(systemEngine);
-        //inputsDetailsComponentController.setSystemEngine(systemEngine);
-        //detailsGridPaneComponentController.setSystemEngine(systemEngine);
     }
 
     public void setMainController(FlowsExecutionScreenController mainFlowsExecutionScreenController) {

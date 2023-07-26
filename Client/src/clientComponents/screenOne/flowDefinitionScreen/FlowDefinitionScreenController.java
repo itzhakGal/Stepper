@@ -11,15 +11,12 @@ import clientComponents.screenOne.screenOneRight.SelectedFlowDetailsController;
 
 public class FlowDefinitionScreenController {
     private BodyController mainBodyController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private BorderPane availableFlowsComponent;
     @FXML private AvailableFlowsController availableFlowsComponentController;
     @FXML
     private GridPane selectedFlowDetailsComponent;
     @FXML private SelectedFlowDetailsController selectedFlowDetailsComponentController;
-
-
     @FXML
     public void initialize() {
         if (availableFlowsComponentController != null && selectedFlowDetailsComponentController != null) {
@@ -33,20 +30,12 @@ public class FlowDefinitionScreenController {
         mainBodyController.updateExecuteFlowButton(flowName);
     }
 
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //this.availableFlowsComponentController.setSystemEngine(systemEngine);
-        //this.selectedFlowDetailsComponentController.setSystemEngine(systemEngine);
-
-    }
     public void setMainController(BodyController mainBodyController) {
         this.mainBodyController = mainBodyController;
     }
 
     public void setListFlowsDetails()
     {
-        //availableFlowsComponentController.initListFlows();
-        //אמור לרענן את המידע כל איקס זמן
         availableFlowsComponentController.startListRefresher();
     }
 
@@ -76,9 +65,7 @@ public class FlowDefinitionScreenController {
     public void initListener() {
         availableFlowsComponentController.initListener();
         selectedFlowDetailsComponentController.initListener();
-
     }
-
     public AvailableFlowsController getAvailableFlowsComponentController() {
         return availableFlowsComponentController;
     }

@@ -49,7 +49,6 @@ public class UserNewInfoSavedServlet extends HttpServlet {
         for (Map.Entry<String, User> entry : usersMap.entrySet()) {
             if(entry.getKey().equals(dtoSavaNewInfoForUser.getUserName()))
             {
-                //updateRolesInMapUser(rolesManager, entry.getValue().getAssociatedRole(), dtoSavaNewInfoForUser);
                 updateRolesInMapUser(rolesManager, entry.getValue(), dtoSavaNewInfoForUser);
                 entry.getValue().setIsManager(dtoSavaNewInfoForUser.isManager());
                 // יוזר מנהל
@@ -90,6 +89,15 @@ public class UserNewInfoSavedServlet extends HttpServlet {
             if (!user.getAssociatedRole().containsKey(roleName)) {
                 RoleImpl role = rolesManager.getRole(roleName);
                 user.getAssociatedRole().put(roleName, role);
+            }
+            if(roleName.equals("All Flows"))
+                user.setAllFlowExistsFromManager(false);
+        }
+
+        for(String roleName : dtoSavaNewInfoForUser.getListRolesToRemoveFromTheUser()) {
+            if (user.getAssociatedRole().containsKey(roleName)) {
+                RoleImpl role = rolesManager.getRole(roleName);
+                user.getAssociatedRole().remove(roleName, role);
             }
             if(roleName.equals("All Flows"))
                 user.setAllFlowExistsFromManager(false);

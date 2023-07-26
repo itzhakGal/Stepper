@@ -1,6 +1,8 @@
 package clientComponents.screenThree.topScreen;
 
 import com.google.gson.Gson;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -10,16 +12,13 @@ import util.Constants;
 import util.http.HttpClientUtil;
 import utilWebApp.DTOFullDetailsPastRunWeb;
 import utilWebApp.DTOListFullDetailsPastRunWeb;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.function.Consumer;
 
-
 public class UserFlowsExecutionRefresher extends TimerTask {
     private final Consumer<List<DTOFullDetailsPastRunWeb>> dataUserFlowsExecutionConsumer;
-
     private final String userName;
 
     public UserFlowsExecutionRefresher(String userName, Consumer<List<DTOFullDetailsPastRunWeb>> dataUserFlowsExecutionConsumer) {
@@ -40,7 +39,9 @@ public class UserFlowsExecutionRefresher extends TimerTask {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -57,5 +58,13 @@ public class UserFlowsExecutionRefresher extends TimerTask {
                 }
             }
         });
+    }
+
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
     }
 }

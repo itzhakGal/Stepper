@@ -1,6 +1,7 @@
 package adminComponents.screenTwo.topScreen;
 
 import adminComponents.mainScreen.body.BodyController;
+import adminComponents.screenOne.AvailableAndSelectedRolesController;
 import adminComponents.screenTwo.RolesManagementController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -12,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import okhttp3.*;
 import org.controlsfx.control.CheckTreeView;
 import org.jetbrains.annotations.NotNull;
@@ -55,13 +57,36 @@ public class TopManagementController implements Closeable {
     @FXML
     private Label labelMassage;
     private String roleSelected;
-    private List<String> listFlowsToAddToTheRole;
-    private List<String> listUserToAddToTheRole;
     private List<String> allFlowsInTheSystem;
     private SimpleStringProperty chosenRoleFromListProperty;
+    @FXML
+    private GridPane availableAndSelectedUsersComponent;
+    @FXML
+    private AvailableAndSelectedUserController availableAndSelectedUsersComponentController;
+    @FXML
+    private GridPane availableAndSelectedFlowsComponent;
+    @FXML
+    private AvailableAndSelectedFlowsController availableAndSelectedFlowsComponentController;
+
+    private List<String> listUsersToAddToTheRole;
+    private List<String> listUsersToRemoveFromTheRole;
+
+    private List<String> listFlowsToAddToTheRole;
+    private List<String> listFlowsToRemoveFromTheRole;
+
     public void initialize() {
         chosenRoleFromListProperty = new SimpleStringProperty();
         this.allFlowsInTheSystem = new ArrayList<>();
+
+        listUsersToAddToTheRole = new ArrayList<>();
+        listUsersToRemoveFromTheRole = new ArrayList<>();
+        listFlowsToAddToTheRole = new ArrayList<>();
+        listFlowsToRemoveFromTheRole = new ArrayList<>();
+
+        if (availableAndSelectedUsersComponentController != null && availableAndSelectedFlowsComponentController != null) {
+            availableAndSelectedUsersComponentController.setMainController(this);
+            availableAndSelectedFlowsComponentController.setMainController(this);
+        }
     }
     public void init(BodyController bodyController) {
 
@@ -77,6 +102,9 @@ public class TopManagementController implements Closeable {
                 handleRoleSelection();
             }
         });
+
+        availableAndSelectedFlowsComponentController.initListener();
+        availableAndSelectedUsersComponentController.initListener();
     }
     public void cleanListsData()
     {
@@ -102,7 +130,7 @@ public class TopManagementController implements Closeable {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(() -> {
-                    handleFailure(e.getMessage());
+                    handleFailure((e.getMessage()));
                 });
             }
 
@@ -162,114 +190,33 @@ public class TopManagementController implements Closeable {
         itemsFlowsList.clear();
         itemsFlowsList.addAll(roleDataFullInfo.getRoleData().getAllowedFlows());
 
-        /*for (String flow : roleDataFullInfo.getRoleData().getAllowedFlows()) {
-            if (!itemsFlowsList.contains(flow)) {
-                itemsFlowsList.add(flow);
-            }
-        }*/
 
         ObservableList<String> itemsListOfUserConnected = this.listOfUsersConnected.getItems();
         itemsListOfUserConnected.clear();
         itemsListOfUserConnected.addAll(roleDataFullInfo.getAllUserConnectedToRole());
 
-        /*for (String user : roleDataFullInfo.getAllUserConnectedToRole()) {
-            if (!itemsListOfUserConnected.contains(user)) {
-                itemsListOfUserConnected.add(user);
-            }
-        }*/
-
-        this.listFlowsToAddToTheRole = createSelectedAssignedFlowsCheckBoxTreeItem(selectedAssignedFlowToRole);
-        this.listUserToAddToTheRole = createSelectedAssignedUsersCheckBoxTreeItem(selectedAssignedUserToRole);
+        createSelectedAssignedFlowsCheckBoxTreeItem(selectedAssignedFlowToRole, roleDataFullInfo.getRoleData().getAllowedFlows());
+        createSelectedAssignedUsersCheckBoxTreeItem(selectedAssignedUserToRole, roleDataFullInfo.getAllUserConnectedToRole());
 
     }
-    public List<String> createSelectedAssignedUsersCheckBoxTreeItem(List<String> selectedAssignedUserToRole) {
 
-        List<String> listUserToAddToTheRole = new ArrayList<>();
-        CheckBoxTreeItem<String> rootItem = new  CheckBoxTreeItem<String>("Assign User To Roles");
+    private void createSelectedAssignedFlowsCheckBoxTreeItem(List<String> selectedAssignedFlowToRole, Set<String> SetAllowedFlows) {
 
-        for(String userName : selectedAssignedUserToRole) {
-            CheckBoxTreeItem<String> role = new CheckBoxTreeItem<String>(userName);
-            rootItem.getChildren().add(role);
-        }
+        availableAndSelectedFlowsComponent.setVisible(true);
+        List<String> listAllowedFlows = new ArrayList<>(SetAllowedFlows);
 
-        CheckTreeView<String> checkTreeView = new CheckTreeView<>(rootItem);
-
-        checkTreeView.getCheckModel().getCheckedItems().addListener(new ListChangeListener<TreeItem<String>>() {
-            @Override
-            public void onChanged(Change<? extends TreeItem<String>> c) {
-                //checkTreeView.getCheckModel().getCheckedItems();
-                while (c.next()) {
-                    if (c.wasAdded()) {
-                        listUserToAddToTheRole.addAll(
-                                c.getAddedSubList()
-                                        .stream()
-                                        .map(TreeItem::getValue)
-                                        .collect(Collectors.toList())
-                        );
-                    }
-                    if (c.wasRemoved()) {
-                        listUserToAddToTheRole.removeAll(
-                                c.getRemoved()
-                                        .stream()
-                                        .map(TreeItem::getValue)
-                                        .collect(Collectors.toList())
-                        );
-                    }
-                }
-            }
-        });
-
-        assignUserAnchor.getChildren().clear();
-        assignUserAnchor.getChildren().add(checkTreeView);
-
-        return listUserToAddToTheRole;
-
+        availableAndSelectedFlowsComponentController.insertItemsIntoSourceListView(selectedAssignedFlowToRole, listAllowedFlows);
     }
-    public List<String> createSelectedAssignedFlowsCheckBoxTreeItem(List<String> selectedAssignedFlowToRole) {
 
-        List<String> listFlowsToAddToTheRole = new ArrayList<>();
-        CheckBoxTreeItem<String> rootItem = new  CheckBoxTreeItem<String>("Assign Flows To Role");
+    private void createSelectedAssignedUsersCheckBoxTreeItem(List<String> selectedAssignedUserToRole, List<String> listUserConnectedToRole) {
 
-        for(String flowName : selectedAssignedFlowToRole) {
-            CheckBoxTreeItem<String> role = new CheckBoxTreeItem<String>(flowName);
-            rootItem.getChildren().add(role);
-        }
+        availableAndSelectedUsersComponent.setVisible(true);
 
-        CheckTreeView<String> checkTreeView = new CheckTreeView<>(rootItem);
-
-        checkTreeView.getCheckModel().getCheckedItems().addListener(new ListChangeListener<TreeItem<String>>() {
-            @Override
-            public void onChanged(Change<? extends TreeItem<String>> c) {
-                //checkTreeView.getCheckModel().getCheckedItems();
-                while (c.next()) {
-                    if (c.wasAdded()) {
-                        listFlowsToAddToTheRole.addAll(
-                                c.getAddedSubList()
-                                        .stream()
-                                        .map(TreeItem::getValue)
-                                        .collect(Collectors.toList())
-                        );
-                    }
-                    if (c.wasRemoved()) {
-                        listFlowsToAddToTheRole.removeAll(
-                                c.getRemoved()
-                                        .stream()
-                                        .map(TreeItem::getValue)
-                                        .collect(Collectors.toList())
-                        );
-                    }
-                }
-            }
-        });
-
-        assignFlowsAnchor.getChildren().clear();
-        assignFlowsAnchor.getChildren().add(checkTreeView);
-
-        return listFlowsToAddToTheRole;
+        availableAndSelectedUsersComponentController.insertItemsIntoSourceListView(selectedAssignedUserToRole, listUserConnectedToRole);
     }
     @FXML
     void savaChangeButtonAction(ActionEvent event) {
-        DTOSavaNewInfoForRole dtoSavaNewInfoForRole = new DTOSavaNewInfoForRole(this.roleSelected , this.listFlowsToAddToTheRole, this.listUserToAddToTheRole);
+        DTOSavaNewInfoForRole dtoSavaNewInfoForRole = new DTOSavaNewInfoForRole(this.roleSelected , this.listFlowsToAddToTheRole, this.listFlowsToRemoveFromTheRole, this.listUsersToAddToTheRole, this.listUsersToRemoveFromTheRole);
 
         String finalUrl = HttpUrl
                 .parse(Constants.SAVA_NEW_DATA_ROLE)
@@ -283,7 +230,7 @@ public class TopManagementController implements Closeable {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(() -> {
-                   handleFailure(e.getMessage());
+                    handleFailure((e.getMessage()));
                 });
             }
 
@@ -318,7 +265,6 @@ public class TopManagementController implements Closeable {
     void newRoleButtonActivate(ActionEvent event) {
         newRoleButton.setDisable(true);
         mainRolesManagementController.getLowerManagementComponent().setVisible(true);
-        //mainRolesManagementController.getLowerManagementComponentController().createNewRole();
         mainRolesManagementController.getLowerManagementComponentController().updateListOfFlowInSystemFromServer();
     }
     @FXML
@@ -363,6 +309,22 @@ public class TopManagementController implements Closeable {
             roleListRefresher.cancel();
             timer.cancel();
         }
+    }
+
+    public List<String> getListUsersToAddToTheRole() {
+        return listUsersToAddToTheRole;
+    }
+
+    public List<String> getListUsersToRemoveFromTheRole() {
+        return listUsersToRemoveFromTheRole;
+    }
+
+    public List<String> getListFlowsToAddToTheRole() {
+        return listFlowsToAddToTheRole;
+    }
+
+    public List<String> getListFlowsToRemoveFromTheRole() {
+        return listFlowsToRemoveFromTheRole;
     }
 
     public void handleFailure(String errorMessage){

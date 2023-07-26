@@ -21,6 +21,10 @@ public class IntroducingFlowDefinitionServlet extends HttpServlet {
         Gson gson = new Gson();
         String flowName = req.getParameter("flowName");
 
+        if (flowName == null) {
+            return;
+        }
+
         DTOFlowDefinition dtoFlowDefinition = systemEngine.introducingFlowDefinitionJavaFX(flowName);
 
         String dtoFlowDefinitionToJSON = gson.toJson(dtoFlowDefinition);

@@ -1,6 +1,4 @@
 package clientComponents.screenThree.lowerScreen.flowTree;
-
-
 import clientComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController;
 import com.google.gson.Gson;
 import javafx.animation.FadeTransition;
@@ -8,6 +6,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.paint.Color;
@@ -24,12 +23,7 @@ import util.Constants;
 import util.http.HttpClientUtil;
 import utilWebApp.DTOFullDetailsPastRunWeb;
 import utilWebApp.DTOStepFlowPastWeb;
-import utils.DTOFullDetailsPastRun;
-import utils.DTOStepFlowPast;
-import utilsDesktopApp.DTOListFlowsDetails;
-
 import java.io.IOException;
-import java.util.UUID;
 
 public class FlowTreeController {
     public clientComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController mainFlowExecutionHistoryController;
@@ -46,19 +40,23 @@ public class FlowTreeController {
 
         mainFlowExecutionHistoryController.getTableFlowExecutionController().getChosenFlowIdProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if (!newValue.equals("")) {
+                    if (!newValue.equals("") && !newValue.equals(oldValue)) {
                         insertDataToTreeView();
                         mainFlowExecutionHistoryController.getTableFlowExecutionController().getContinuationComponentController().getContinueToFlowButton().setVisible(false);
                         mainFlowExecutionHistoryController.getTableFlowExecutionController().getContinuationComponentController().getFlowNameContinuationListView().getItems().clear();
-                    } else {
+                    }
+                    /*else {
                         if(flowTreeView.getRoot() != null) {
                             flowTreeView.getRoot().getChildren().clear();
                             flowTreeView.setRoot(null);
                         }
-                    }
+                    }*/
                 });
     }
     public void insertDataToTreeView() {
+
+        if(this.tableFlowExecutionController.getChosenFlowIdProperty().getValue().equals(""))
+            return;
 
         TreeItem<String> root = new TreeItem<>(
                 this.tableFlowExecutionController.getChosenFlowNameProperty().getValue()
@@ -69,14 +67,15 @@ public class FlowTreeController {
                 .parse(Constants.FLOW_EXECUTION_TASK)
                 .newBuilder()
                 .addQueryParameter("flowId", this.tableFlowExecutionController.getChosenFlowIdProperty().getValue())
-                //.addQueryParameter("flowUUID", this.tableFlowExecutionController.getChosenFlowIdProperty().getValue())
                 .build()
                 .toString();
 
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -95,9 +94,7 @@ public class FlowTreeController {
 
             }
         });
-        
-        //addExecutedFlowData(systemEngine.getFlowExecutedDataDTO(UUID.fromString(this.tableFlowExecutionController.getChosenFlowIdProperty().getValue())));
-        //this.flowTreeView.getRoot().setExpanded(true);
+
     }
     private void addExecutedFlowData(DTOFullDetailsPastRunWeb executedData) {
         boolean found;
@@ -158,6 +155,13 @@ public class FlowTreeController {
             flowTreeView.getRoot().getChildren().clear(); // Clear the children of the root TreeItem
             flowTreeView.setRoot(null); // Set the root of the TreeView to null
         }
+    }
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
     }
 }
 

@@ -22,16 +22,10 @@ public class AppController {
     @FXML private BodyController bodyComponentController;
     @FXML private ScrollPane mainComponent;
     private StringProperty currentUserName;
-
     private Stage primaryStage;
-
-    //private SystemEngineInterface systemEngine = new SystemEngine();
 
     @FXML
     public void initialize() {
-
-        //currentUserName.bind(Bindings.concat(headerComponentController.getClientName().textProperty()));
-        //headerComponentController.getClientName().textProperty().bind(Bindings.concat(currentUserName));
 
         if (headerComponentController != null && bodyComponentController != null) {
             headerComponentController.setMainController(this);
@@ -64,8 +58,6 @@ public class AppController {
     public StringProperty currentUserNameProperty() {
         return currentUserName;
     }
-
-    // המתודה הזאת תתחיל את הקריאות!! אחרי הלוגין תיקרא
 
     public void updatePushTabButtons()
     {

@@ -19,12 +19,12 @@
          <children>
             <AnchorPane GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                <children>
-                  <fx:include fx:id="topManagementComponent" source="topScreen/TopScreenManagement.fxml" />
+                  <fx:include fx:id="topManagementComponent" source="topScreen/TopScreenManagement.fxml" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                </children>
             </AnchorPane>
             <AnchorPane GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                <children>
-                  <fx:include fx:id="lowerManagementComponent" source="lowerScreen/lowerScreenManagement.fxml" />
+                  <fx:include fx:id="lowerManagementComponent" source="lowerScreen/lowerScreenManagement.fxml" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                </children>
             </AnchorPane>
          </children>

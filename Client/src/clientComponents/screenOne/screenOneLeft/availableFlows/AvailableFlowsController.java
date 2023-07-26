@@ -120,31 +120,6 @@ public class AvailableFlowsController implements Closeable {
     public void initListFlowsFromDTOResponse(DTOListFlowsDetails listFlowsDetails) {
 
         availableFlowsLabel.setVisible(true);
-        /*listFlowsName.getPanes().clear();
-
-        if (listFlowsDetails != null)
-        {
-            for (DTOFlowDetails flowDetails : listFlowsDetails.getDtoFlowDetailsList()) {
-
-                try {
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("flowDefinitionDetails/flowDefinitionDetails.fxml"));
-                    HBox contentPane = fxmlLoader.load();
-
-                    FlowDefinitionDetailsController controller = fxmlLoader.getController();
-                    controller.setMainController(this);
-                    //controller.setSystemEngine(systemEngine);
-
-                    TitledPane titledPane = new TitledPane(flowDetails.getName(), contentPane);
-                    titledPane.getProperties().put("controller", controller);
-
-                    controller.setFlowData(flowDetails);
-
-                    listFlowsName.getPanes().add(titledPane);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
 
         if (listFlowsDetails != null)
         {

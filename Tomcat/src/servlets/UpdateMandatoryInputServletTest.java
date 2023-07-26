@@ -44,6 +44,9 @@ public class UpdateMandatoryInputServletTest extends HttpServlet {
                 else  if (dtoMandatoryInputsWeb.getType().equals("EnumeratorData"))
                 {
                     systemEngine.updateMandatoryInputEnumerator(dtoMandatoryInputsWeb.getLabelValue(), dtoMandatoryInputsWeb.getValue());
+                }else  if (dtoMandatoryInputsWeb.getType().equals("JsonData"))
+                {
+                    systemEngine.updateMandatoryInputJson(dtoMandatoryInputsWeb.getLabelValue(), dtoMandatoryInputsWeb.getValue());
                 }
                 else {
                     systemEngine.updateMandatoryInput(dtoMandatoryInputsWeb.getLabelValue(), dtoMandatoryInputsWeb.getValue());

@@ -12,7 +12,6 @@ import utils.DTOFullDetailsPastRun;
 public class FlowDetailsController {
 
     private clientComponents.screenTwo.screenTwoDetails.flowExecuteDetails.FlowExecuteDetailsController maimFlowExecuteDetailsController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private Label flowName;
     @FXML
@@ -45,10 +44,6 @@ public class FlowDetailsController {
 
     public void setMainController(FlowExecuteDetailsController maimFlowExecuteDetailsController) {
         this.maimFlowExecuteDetailsController = maimFlowExecuteDetailsController;
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
     }
 
     public void updateDetailsFlowRun(DTOFullDetailsPastRunWeb endOFlowExecution) {

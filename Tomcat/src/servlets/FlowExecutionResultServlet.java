@@ -22,6 +22,9 @@ public class FlowExecutionResultServlet extends HttpServlet {
 
         String flowUUID = req.getParameter("flowUUID");
 
+        if(flowUUID.equals(""))
+            return;
+
         SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
         Gson gson = new Gson();
 

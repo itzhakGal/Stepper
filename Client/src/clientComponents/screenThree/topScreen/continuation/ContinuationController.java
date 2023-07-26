@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -30,7 +31,6 @@ import java.util.UUID;
 public class ContinuationController {
 
     private clientComponents.screenThree.topScreen.TopScreenController mainTopScreenController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private Button continueToFlowButton;
     @FXML
@@ -73,6 +73,9 @@ public class ContinuationController {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -94,25 +97,12 @@ public class ContinuationController {
                 }
             }
         });
-
-       /*systemEngine.continuationToOtherFlow(UUID.fromString(mainTopScreenController.getChosenFlowIdProperty().getValue()),sourceFlowName, targetFlowName);
-        flowsExecutionScreenController.updateDetailsFlowExecution(targetFlowName, true);
-        flowsExecutionScreenController.setVisibleDetails(false);
-        flowsExecutionScreenController.setVisibleContinuation();
-        flowNameContinuationListView.getItems().clear();
-        continueToFlowButton.setVisible(false);
-        mainTopScreenController.getMainFlowExecutionHistoryController().getMainBodyController().openFlowExecutionTab();
-        continuationButtonPressed.set(true);
-        mainTopScreenController.getRerunFlowButton().setDisable(true);*/
     }
 
     public void setMainController(TopScreenController mainTopScreenController) {
         this.mainTopScreenController = mainTopScreenController;
     }
 
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-    }
     public void updateContinuationDetails(DTOListContinuationFlowName listContinuationFlowName)
    {
        flowNameContinuationListView.getItems().remove(0,flowNameContinuationListView.getItems().size());
@@ -172,5 +162,12 @@ public class ContinuationController {
                 });
     }
 
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
+    }
 
 }

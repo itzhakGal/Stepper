@@ -7,11 +7,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import stepper.systemEngine.SystemEngineInterface;
 
 public class HeaderController {
 
-    //private SystemEngineInterface systemEngine;
     private AppController mainController;
     @FXML
     private HeaderBodyController headerBodyComponentController;
@@ -33,11 +31,6 @@ public class HeaderController {
 
     public void setMainController(AppController mainController) {
         this.mainController = mainController;
-    }
-
-    public void setSystemEngine(SystemEngineInterface engineManager) {
-        //this.systemEngine = engineManager;
-        //this.headerBodyComponentController.setSystemEngine(engineManager);
     }
 
     public void updatePushTabButtons() {

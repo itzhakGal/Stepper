@@ -19,9 +19,6 @@ import java.util.List;
 public class FreeInputDetailsController {
 
     private clientComponents.screenOne.screenOneRight.SelectedFlowDetailsController mainSelectedFlowDetailsController;
-
-    //private SystemEngineInterface systemEngine;
-
     @FXML
     private SplitMenuButton relatedStepButton;
 
@@ -58,10 +55,6 @@ public class FreeInputDetailsController {
 
     public void setMainController(SelectedFlowDetailsController mainSelectedFlowDetailsController) {
         this.mainSelectedFlowDetailsController = mainSelectedFlowDetailsController;
-    }
-
-    public void setSystemEngine(SystemEngineInterface engineManager) {
-        //this.systemEngine = engineManager;
     }
 
     public void setFreeInputOfFlowSelected(DTOFlowDefinition dtoFlowDefinition)

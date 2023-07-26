@@ -1,12 +1,12 @@
 package clientComponents.screenTwo.screenTwoDetails;
 
-
 import clientComponents.mainScreen.body.BodyController;
 import clientComponents.screenTwo.screenTwoDetails.flowExecuteDetails.FlowExecuteDetailsController;
 import com.google.gson.Gson;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.HBox;
 import okhttp3.Call;
@@ -15,27 +15,19 @@ import okhttp3.HttpUrl;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 import stepper.step.api.StepResult;
-import stepper.systemEngine.SystemEngineInterface;
 import clientComponents.screenTwo.screenTwoDetails.stepListDetails.StepListDetailsController;
 import util.Constants;
 import util.http.HttpClientUtil;
 import utilWebApp.DTOFullDetailsPastRunWeb;
 import utilWebApp.DTOStepFlowPastWeb;
 import utils.DTOFullDetailsPastRun;
-import utils.DTOStepFlowPast;
-import utilsDesktopApp.DTOListFlowsDetails;
-
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 
 public class ExecutedFlowDataController {
-    //private SystemEngineInterface systemEngine;
-
     private clientComponents.mainScreen.body.BodyController bodyController;
     private final SimpleBooleanProperty isTaskFinished;
-    private boolean isActive;
 
     public ExecutedFlowDataController() {
         this.isTaskFinished = new SimpleBooleanProperty(false);
@@ -101,7 +93,9 @@ public class ExecutedFlowDataController {
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -155,49 +149,6 @@ public class ExecutedFlowDataController {
             }
         });
 
-
-        /*executedData = systemEngine.getFlowExecutedDataDTO(
-                UUID.fromString(bodyController.getFlowExecutionScreenComponentController().getExecutedFlowID().getValue()));
-        boolean isRootSelected = (selectedTreeItemItem != null && selectedTreeItemItem.getParent() == null);
-
-
-        if (isRootSelected) {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("flowExecuteDetails/flowExecuteDetails.fxml"));
-                HBox contentPane = fxmlLoader.load();
-                FlowExecuteDetailsController controller = fxmlLoader.getController();
-                controller.setMainController(bodyController.getFlowExecutionScreenComponentController());
-                //controller.setSystemEngine(systemEngine);
-
-                bodyController.getFlowExecutionScreenComponentController().getDetailsAnchorPane().getChildren().add(contentPane);
-
-                // Store the controller in the TitledPane's properties
-                //controller.setFlowData(executedData);
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-        }
-        else {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("stepListDetails/stepListDetails.fxml"));
-                HBox contentPane = fxmlLoader.load();
-
-                StepListDetailsController    controller = fxmlLoader.getController();
-                controller.setMainController(bodyController.getFlowExecutionScreenComponentController());
-                //controller.setSystemEngine(systemEngine);
-
-                bodyController.getFlowExecutionScreenComponentController().getDetailsAnchorPane().getChildren().add(contentPane);
-
-                // Store the controller in the TitledPane's properties
-                //DTOStepFlowPast stepDetails = getStepDetails(selectedTreeItemItem.getValue().toString(), executedData.getSteps());
-               //controller.updateDetailsFlowRun(stepDetails);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
     }
     public DTOStepFlowPastWeb getStepDetails(String currentSelected, List<DTOStepFlowPastWeb> steps )
     {
@@ -209,8 +160,12 @@ public class ExecutedFlowDataController {
         return null;
     }
 
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
     }
 
 }

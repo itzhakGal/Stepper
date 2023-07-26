@@ -61,7 +61,6 @@ public class TopScreenController implements Initializable {
     private void rerunFlowButtonAction(ActionEvent event) {
         rerunFlowButtonProperty.set(true);
         mainFlowExecutionHistoryController.getMainBodyController().updateExecuteFlowButton(chosenFlowNameProperty.getValue());
-        //DTOFullDetailsPastRun fullDetailsPastRun = systemEngine.getFlowExecutedDataDTO((UUID.fromString(chosenFlowIdProperty.getValue())));
         mainFlowExecutionHistoryController.getMainBodyController().openFlowExecutionTab();
         rerunFlowButtonProperty.set(false);
     }
@@ -71,7 +70,6 @@ public class TopScreenController implements Initializable {
             if (selectedFlow != null) {
                 chosenFlowNameProperty.set(selectedFlow.getFlowName());
                 chosenFlowIdProperty.set(selectedFlow.getFlowId().toString());
-                //rerunFlowButton.setDisable(false);
                 updateContinuationDetails(selectedFlow.getFlowName());
             }
         });
@@ -140,12 +138,6 @@ public class TopScreenController implements Initializable {
         this.mainFlowExecutionHistoryController = mainFlowExecutionHistoryController;
     }
 
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //continuationComponentController.setSystemEngine(systemEngine);
-    }
-
-
     public SimpleStringProperty getChosenFlowIdProperty() {
         return chosenFlowIdProperty;
     }
@@ -192,12 +184,7 @@ public class TopScreenController implements Initializable {
     }
 
     public void updateContinuationDetails(String flowName) {
-        /*DTOListContinuationFlowName listContinuationFlowName = systemEngine.setListContinuationFlowName(flowName);
-        if(!listContinuationFlowName.getListContinuationFlowName().isEmpty()) {
-            continuationComponent.setVisible(true);
-            continuationComponentController.getFlowNameContinuationListView().getItems().clear();
-            continuationComponentController.updateContinuationDetails(listContinuationFlowName);
-        }*/
+
     }
 
     public FlowExecutionHistoryController getMainFlowExecutionHistoryController() {

@@ -18,7 +18,6 @@ import java.io.IOException;
 public class OutputDetailsListController {
 
     private clientComponents.screenThree.lowerScreen.flowExecuteDetails.FlowExecuteDetailsController maimFlowExecuteDetailsController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private HBox outputDetailsComponent;
     @FXML
@@ -31,11 +30,6 @@ public class OutputDetailsListController {
         if (outputDetailsComponentController != null) {
             outputDetailsComponentController.setMainController(this);
         }
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //outputDetailsComponentController.setSystemEngine(systemEngine);
     }
 
     public void setMainController(FlowExecuteDetailsController maimFlowExecuteDetailsController) {

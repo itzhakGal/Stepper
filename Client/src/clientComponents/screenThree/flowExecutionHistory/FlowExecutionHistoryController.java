@@ -16,7 +16,6 @@ import java.util.List;
 
 public class FlowExecutionHistoryController {
     private BodyController mainBodyController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private GridPane flowExecutionTableComponent;
     @FXML
@@ -37,13 +36,6 @@ public class FlowExecutionHistoryController {
             flowExecutionTableComponentController.setMainController(this);
             flowTreeComponentController.setMainController(this);
         }
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //flowExecutionTableComponentController.setSystemEngine(systemEngine);
-        //flowTreeComponentController.setSystemEngine(systemEngine);
-        //executedDataController.setSystemEngine(systemEngine);
     }
 
     public void setMainController(BodyController mainBodyController) {

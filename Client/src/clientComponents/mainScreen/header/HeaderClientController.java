@@ -39,9 +39,6 @@ public class HeaderClientController implements Closeable {
         this.mainController = mainController;
     }
 
-    public void setSystemEngine(SystemEngineInterface engineManager) {
-        //this.systemEngine = engineManager;
-    }
     @FXML
     void assignedRolesListActivate(ActionEvent event) {
 
@@ -80,8 +77,6 @@ public class HeaderClientController implements Closeable {
     @Override
     public void close() {
         assignedRolesList.getItems().clear();
-        //clientName ??
-        //isManager ??
         if (dataUserRefresher != null && timer != null) {
             dataUserRefresher.cancel();
             timer.cancel();
@@ -94,5 +89,9 @@ public class HeaderClientController implements Closeable {
 
     public void setClientName(Label clientName) {
         this.clientName = clientName;
+    }
+
+    public Label getIsManager() {
+        return isManager;
     }
 }

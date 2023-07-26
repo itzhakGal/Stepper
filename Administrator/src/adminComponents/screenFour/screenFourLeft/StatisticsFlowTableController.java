@@ -12,11 +12,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.screenFour.StatisticsData;
 import adminComponents.screenFour.statisticScreen.StatisticMainController;
 import utils.DTOStatistics;
-
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;

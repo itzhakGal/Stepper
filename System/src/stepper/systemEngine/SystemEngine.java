@@ -1,6 +1,10 @@
 package stepper.systemEngine;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import stepper.dataDefinition.impl.Enumerator.EnumeratorData;
+import stepper.dataDefinition.impl.json.JsonData;
 import stepper.exception.*;
 import stepper.flow.definition.api.*;
 import stepper.flow.execution.FlowExecution;
@@ -54,8 +58,7 @@ public class SystemEngine implements SystemEngineInterface {
     private final UserManager userManager;
     private Map<User, FlowsDefinition> userFlowsDefinitionMap;
 
-    public SystemEngine ()
-    {
+    public SystemEngine() {
         this.listFlowsExecution = new FlowsExecutionImp();
         this.currentFlowsDefinition = new FlowsDefinitionImpl();
         this.statisticsData = new StatisticsDataImpl();
@@ -72,7 +75,7 @@ public class SystemEngine implements SystemEngineInterface {
     }
 
     @Override
-    public DTOString readingSystemInformationFromFile(File file)  {
+    public DTOString readingSystemInformationFromFile(File file) {
 
         DTOString validResult;
         FlowsDefinition optionalFlowsDefinition = new FlowsDefinitionImpl();
@@ -84,24 +87,25 @@ public class SystemEngine implements SystemEngineInterface {
         transferringDataFromTheXMLClassesToOurClasses(stepper, optionalFlowsDefinition);
 
         checkValidXMLFile(stepper, optionalFlowsDefinition);
-        this.currentFlowsDefinition =  optionalFlowsDefinition;
+        this.currentFlowsDefinition = optionalFlowsDefinition;
 
         String result = "The file is found to be correct and fully loaded for the user.";
         validResult = new DTOString(result, true);
         return validResult;
     }
+
     @Override
-    public void checkValidXMLFile(STStepper stepper, FlowsDefinition  optionalFlowsDefinition)
-    {
-         for(FlowDefinition oneFlow : optionalFlowsDefinition.getListFlowsDefinition()) {
-              oneFlow.validateFlowStructure();
-         }
+    public void checkValidXMLFile(STStepper stepper, FlowsDefinition optionalFlowsDefinition) {
+        for (FlowDefinition oneFlow : optionalFlowsDefinition.getListFlowsDefinition()) {
+            oneFlow.validateFlowStructure();
+        }
     }
+
     @Override
-    public void checkIfTheStepNamesExist( STStepper stepper)  {
+    public void checkIfTheStepNamesExist(STStepper stepper) {
         StepsNamesImpl stepName = new StepsNamesImpl();
 
-        for(STFlow flow : stepper.getSTFlows().getSTFlow()) {
+        for (STFlow flow : stepper.getSTFlows().getSTFlow()) {
             for (STStepInFlow step : flow.getSTStepsInFlow().getSTStepInFlow()) {
                 if (!(stepName.getNames().contains(step.getName()))) {
                     throw new StepNotExistException(flow.getName(), step.getName());
@@ -109,27 +113,28 @@ public class SystemEngine implements SystemEngineInterface {
             }
         }
     }
+
     @Override
-    public void checkDuplicateNames(STStepper stepper){
+    public void checkDuplicateNames(STStepper stepper) {
         List<String> namesList = new ArrayList<>();
 
-        for(STFlow flow : stepper.getSTFlows().getSTFlow())
+        for (STFlow flow : stepper.getSTFlows().getSTFlow())
             namesList.add(flow.getName());
 
         Set<String> namesSet = new HashSet<String>(namesList);
         if (namesSet.size() < namesList.size())
             throw new DuplicateFlowNameException();
     }
+
     @Override
     public DTOFlowDefinition introducingFlowDefinition(int choice) {
 
-        DTOFlowDefinition flowDefinition=  new DTOFlowDefinition(currentFlowsDefinition.getListFlowsDefinition().get(choice-1));
+        DTOFlowDefinition flowDefinition = new DTOFlowDefinition(currentFlowsDefinition.getListFlowsDefinition().get(choice - 1));
         return flowDefinition;
     }
 
     @Override
-    public DTOEndOFlowExecution flowActivationAndExecution(int choice)
-    {
+    public DTOEndOFlowExecution flowActivationAndExecution(int choice) {
         FlowExecutorConsoleUI fLowExecutor = new FlowExecutorConsoleUI();
         ExecutionContextInterface context = new ExecutionContextImpl(this.optionalFlowExecution);
         initialDataValuesFlowExecution(context);
@@ -137,66 +142,70 @@ public class SystemEngine implements SystemEngineInterface {
         fLowExecutor.executeFlow(context, statisticsData); // לחזור לזהההה
 
         listFlowsExecution.getFlowsExecutionList().add(this.optionalFlowExecution);
-        DTOEndOFlowExecution endOFlowExecution =  new DTOEndOFlowExecution(this.optionalFlowExecution);
+        DTOEndOFlowExecution endOFlowExecution = new DTOEndOFlowExecution(this.optionalFlowExecution);
         return endOFlowExecution;
     }
+
     @Override
-    public void initialDataValuesFlowExecution( ExecutionContextInterface context)
-    {
+    public void initialDataValuesFlowExecution(ExecutionContextInterface context) {
         Set<Map.Entry<String, DataInFlowExecution>> entries = optionalFlowExecution.getFreeInputsExist().entrySet();
         for (Map.Entry<String, DataInFlowExecution> entry : entries) {
-            if(entry.getValue().getItem() != null)
+            if (entry.getValue().getItem() != null)
                 context.storeDataValue(entry.getValue().getDataDefinitionInFlow().getName(), entry.getValue());
         }
     }
+
     @Override
-    public DTOFullDetailsPastRun displayFullDetailsOfPastActivation(int choice)
-    {
+    public DTOFullDetailsPastRun displayFullDetailsOfPastActivation(int choice) {
         int length = listFlowsExecution.getFlowsExecutionList().size();
-        DTOFullDetailsPastRun fullDetailsPastRun= new DTOFullDetailsPastRun(listFlowsExecution.getFlowsExecutionList().get(length-choice));
+        DTOFullDetailsPastRun fullDetailsPastRun = new DTOFullDetailsPastRun(listFlowsExecution.getFlowsExecutionList().get(length - choice));
         return fullDetailsPastRun;
     }
+
     @Override
-    public DTOStatistics readStatistics(){
-        DTOStatistics statistics= new DTOStatistics(statisticsData.getStatisticsStep(), statisticsData.getStatisticsFlow());
+    public DTOStatistics readStatistics() {
+        DTOStatistics statistics = new DTOStatistics(statisticsData.getStatisticsStep(), statisticsData.getStatisticsFlow());
         return statistics;
     }
+
     @Override
-    public void logOffFromSystem(){
+    public void logOffFromSystem() {
 
     }
+
     @Override
-    public DTOFlowsNames readFlowName()
-    {
-        DTOFlowsNames flowNames= new DTOFlowsNames();
-        for(FlowDefinition flowName : currentFlowsDefinition.getListFlowsDefinition()) {
+    public DTOFlowsNames readFlowName() {
+        DTOFlowsNames flowNames = new DTOFlowsNames();
+        for (FlowDefinition flowName : currentFlowsDefinition.getListFlowsDefinition()) {
             flowNames.getFlowNames().add(flowName.getName());
         }
         return flowNames;
     }
+
     @Override
-    public DTOListFlowsDetails readFlowsDetails()
-    {
-        DTOListFlowsDetails listFlowsDetails= new DTOListFlowsDetails();
-        for(FlowDefinition flowDefinition : currentFlowsDefinition.getListFlowsDefinition()) {
+    public DTOListFlowsDetails readFlowsDetails() {
+        DTOListFlowsDetails listFlowsDetails = new DTOListFlowsDetails();
+        for (FlowDefinition flowDefinition : currentFlowsDefinition.getListFlowsDefinition()) {
             listFlowsDetails.getDtoFlowDetailsList().add(new DTOFlowDetails(flowDefinition));
         }
         return listFlowsDetails;
     }
+
     @Override
-    public DTOFlowExecution readInputs(int choice)
-    {
-        DTOFlowExecution flowExecution=  new DTOFlowExecution(currentFlowsDefinition.getListFlowsDefinition().get(choice-1));
+    public DTOFlowExecution readInputs(int choice) {
+        DTOFlowExecution flowExecution = new DTOFlowExecution(currentFlowsDefinition.getListFlowsDefinition().get(choice - 1));
         return flowExecution;
     }
+
     @Override
     public DTOFlowsPastInformation readFlowsPast() {
 
         DTOFlowsPastInformation flowsPastInformation = new DTOFlowsPastInformation(listFlowsExecution);
         return flowsPastInformation;
     }
+
     @Override
-    public void transferringDataFromTheXMLClassesToOurClasses(STStepper stepperData,  FlowsDefinition  optionalFlowsDefinition)  {
+    public void transferringDataFromTheXMLClassesToOurClasses(STStepper stepperData, FlowsDefinition optionalFlowsDefinition) {
         for (STFlow flow : stepperData.getSTFlows().getSTFlow()) {
             optionalFlowsDefinition.getListFlowsDefinition().add(new FlowDefinitionImpl(flow));
         }
@@ -204,42 +213,42 @@ public class SystemEngine implements SystemEngineInterface {
 
     @Override
     public void initialOptionalFlowExecution(int selectionFlow) {
-       this.optionalFlowExecution = new FlowExecutionImpl(currentFlowsDefinition.getListFlowsDefinition().get(selectionFlow-1));
+        this.optionalFlowExecution = new FlowExecutionImpl(currentFlowsDefinition.getListFlowsDefinition().get(selectionFlow - 1));
     }
 
     @Override
-    public DTOMandatoryInputs checkMandatoryExist()
-    {
+    public DTOMandatoryInputs checkMandatoryExist() {
         DTOMandatoryInputs dtoMandatoryInputs;
         for (Map.Entry<String, DataInFlowExecution> entry : optionalFlowExecution.getFreeInputsExist().entrySet()) {
-           if (entry.getValue().getItem() == null && entry.getValue().getDataDefinitionInFlow().getNecessity()== DataNecessity.MANDATORY ) {
-               dtoMandatoryInputs = new DTOMandatoryInputs(false);
-               return dtoMandatoryInputs;
-           }
+            if (entry.getValue().getItem() == null && entry.getValue().getDataDefinitionInFlow().getNecessity() == DataNecessity.MANDATORY) {
+                dtoMandatoryInputs = new DTOMandatoryInputs(false);
+                return dtoMandatoryInputs;
+            }
         }
         dtoMandatoryInputs = new DTOMandatoryInputs(true);
         return dtoMandatoryInputs;
     }
+
     @Override
-    public void updateMandatoryInput(String selectionInput,Object value)
-    {
+    public void updateMandatoryInput(String selectionInput, Object value) {
         optionalFlowExecution.getFreeInputsExist().get(selectionInput).setItem(value);
     }
 
     @Override
     public void saveToFile(String path) throws IOException {
-        try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get(path)))){
+        try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get(path)))) {
             out.writeObject(currentFlowsDefinition);
             out.writeObject(listFlowsExecution);
             out.writeObject(statisticsData);
         }
     }
+
     @Override
     public void loadFromFile(String path) throws IOException, ClassNotFoundException {
-        try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(Paths.get(path)))){
-            currentFlowsDefinition = (FlowsDefinition)in.readObject();
-            listFlowsExecution = (FlowsExecution)in.readObject();
-            statisticsData = (StatisticsDataImpl)in.readObject();
+        try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(Paths.get(path)))) {
+            currentFlowsDefinition = (FlowsDefinition) in.readObject();
+            listFlowsExecution = (FlowsExecution) in.readObject();
+            statisticsData = (StatisticsDataImpl) in.readObject();
         }
 
     }
@@ -248,17 +257,16 @@ public class SystemEngine implements SystemEngineInterface {
     public DTOFlowDefinition introducingFlowDefinitionJavaFX(String flowName) {
 
         DTOFlowDefinition dtoFlowDefinition = null;
-        for(FlowDefinition flowDefinition: currentFlowsDefinition.getListFlowsDefinition())
-        {
-            if(flowDefinition.getName().equals(flowName))
-                dtoFlowDefinition=  new DTOFlowDefinition(flowDefinition);
+        for (FlowDefinition flowDefinition : currentFlowsDefinition.getListFlowsDefinition()) {
+            if (flowDefinition.getName().equals(flowName))
+                dtoFlowDefinition = new DTOFlowDefinition(flowDefinition);
         }
 
         return dtoFlowDefinition;
     }
 
     @Override
-    public DTOString readingSystemInformationFromFileJavaFX(File file)  {
+    public DTOString readingSystemInformationFromFileJavaFX(File file) {
 
         clearData();
         DTOString validResult;
@@ -274,7 +282,7 @@ public class SystemEngine implements SystemEngineInterface {
 
         checkValidXMLFileJavaFX(stepper, optionalFlowsDefinition);
         validContinuationCorrectData(optionalFlowsDefinition);
-        this.currentFlowsDefinition =  optionalFlowsDefinition;
+        this.currentFlowsDefinition = optionalFlowsDefinition;
         this.threadPoolExecutor = Executors.newFixedThreadPool(this.currentFlowsDefinition.getThreadPoolSize());
 
         String result = "The file is found to be correct and fully loaded for the user.";
@@ -290,17 +298,18 @@ public class SystemEngine implements SystemEngineInterface {
     }
 
     @Override
-    public void transferringDataFromTheXMLClassesToOurClassesJavaFX(xmlReaderJavaFX.schema.generated.STStepper stepperData, FlowsDefinition  optionalFlowsDefinition)  {
+    public void transferringDataFromTheXMLClassesToOurClassesJavaFX(xmlReaderJavaFX.schema.generated.STStepper stepperData, FlowsDefinition optionalFlowsDefinition) {
         for (xmlReaderJavaFX.schema.generated.STFlow flow : stepperData.getSTFlows().getSTFlow()) {
             optionalFlowsDefinition.getListFlowsDefinition().add(new FlowDefinitionImpl(flow));
         }
         optionalFlowsDefinition.setThreadPoolSize(stepperData.getSTThreadPool());
     }
+
     @Override
-    public void checkIfTheStepNamesExistJavaFX(xmlReaderJavaFX.schema.generated.STStepper stepper)  {
+    public void checkIfTheStepNamesExistJavaFX(xmlReaderJavaFX.schema.generated.STStepper stepper) {
         StepsNamesImpl stepName = new StepsNamesImpl();
 
-        for(xmlReaderJavaFX.schema.generated.STFlow flow : stepper.getSTFlows().getSTFlow()) {
+        for (xmlReaderJavaFX.schema.generated.STFlow flow : stepper.getSTFlows().getSTFlow()) {
             for (xmlReaderJavaFX.schema.generated.STStepInFlow step : flow.getSTStepsInFlow().getSTStepInFlow()) {
                 if (!(stepName.getNames().contains(step.getName()))) {
                     throw new StepNotExistException(flow.getName(), step.getName());
@@ -310,16 +319,14 @@ public class SystemEngine implements SystemEngineInterface {
     }
 
     @Override
-    public void validContinuationFlowNameExist(xmlReaderJavaFX.schema.generated.STStepper stepper)
-    {
+    public void validContinuationFlowNameExist(xmlReaderJavaFX.schema.generated.STStepper stepper) {
         List<String> namesList = new ArrayList<>();
 
-        for(xmlReaderJavaFX.schema.generated.STFlow flow : stepper.getSTFlows().getSTFlow())
+        for (xmlReaderJavaFX.schema.generated.STFlow flow : stepper.getSTFlows().getSTFlow())
             namesList.add(flow.getName());
 
-        for(xmlReaderJavaFX.schema.generated.STFlow flow : stepper.getSTFlows().getSTFlow())
-        {
-            if(flow.getSTContinuations() != null) {
+        for (xmlReaderJavaFX.schema.generated.STFlow flow : stepper.getSTFlows().getSTFlow()) {
+            if (flow.getSTContinuations() != null) {
                 for (STContinuation stContinuation : flow.getSTContinuations().getSTContinuation()) {
                     if (!namesList.contains(stContinuation.getTargetFlow()))
                         throw new ContinuationFlowNameException(flow.getName(), stContinuation.getTargetFlow());
@@ -330,16 +337,14 @@ public class SystemEngine implements SystemEngineInterface {
 
 
     @Override
-    public void validContinuationFlowNameExistWeb(xmlReaderJavaFX.schema.generated.STStepper stepper)
-    {
+    public void validContinuationFlowNameExistWeb(xmlReaderJavaFX.schema.generated.STStepper stepper) {
         List<String> namesList = new ArrayList<>();
 
-        for(xmlReaderJavaFX.schema.generated.STFlow flow : stepper.getSTFlows().getSTFlow())
+        for (xmlReaderJavaFX.schema.generated.STFlow flow : stepper.getSTFlows().getSTFlow())
             namesList.add(flow.getName());
 
-        for(xmlReaderJavaFX.schema.generated.STFlow flow : stepper.getSTFlows().getSTFlow())
-        {
-            if(flow.getSTContinuations() != null) {
+        for (xmlReaderJavaFX.schema.generated.STFlow flow : stepper.getSTFlows().getSTFlow()) {
+            if (flow.getSTContinuations() != null) {
                 checkIfFlowExistsInlistNamesAndInCurrentFlowsExecution(namesList, flow);
             }
         }
@@ -350,27 +355,24 @@ public class SystemEngine implements SystemEngineInterface {
         for (STContinuation stContinuation : flow.getSTContinuations().getSTContinuation()) {
             boolean isContinuationInCurr = false;
             boolean isContinuationInList = true;
-            if (!namesList.contains(stContinuation.getTargetFlow()))
-            {
+            if (!namesList.contains(stContinuation.getTargetFlow())) {
                 isContinuationInList = false;
             }
-            for(FlowDefinition flowDefinition : currentFlowsDefinition.getListFlowsDefinition())
-            {
-                if(flowDefinition.getName().equals(stContinuation.getTargetFlow()))
-                {
+            for (FlowDefinition flowDefinition : currentFlowsDefinition.getListFlowsDefinition()) {
+                if (flowDefinition.getName().equals(stContinuation.getTargetFlow())) {
                     isContinuationInCurr = true;
                 }
             }
-            if(!(isContinuationInCurr || isContinuationInList))
+            if (!(isContinuationInCurr || isContinuationInList))
                 throw new ContinuationFlowNameException(flow.getName(), stContinuation.getTargetFlow());
         }
     }
 
     @Override
-    public void checkDuplicateNamesJavaFX(xmlReaderJavaFX.schema.generated.STStepper stepper){
+    public void checkDuplicateNamesJavaFX(xmlReaderJavaFX.schema.generated.STStepper stepper) {
         List<String> namesList = new ArrayList<>();
 
-        for(xmlReaderJavaFX.schema.generated.STFlow flow : stepper.getSTFlows().getSTFlow())
+        for (xmlReaderJavaFX.schema.generated.STFlow flow : stepper.getSTFlows().getSTFlow())
             namesList.add(flow.getName());
 
         Set<String> namesSet = new HashSet<String>(namesList);
@@ -379,26 +381,24 @@ public class SystemEngine implements SystemEngineInterface {
     }
 
     @Override
-    public void checkValidXMLFileJavaFX(xmlReaderJavaFX.schema.generated.STStepper stepper, FlowsDefinition optionalFlowsDefinition)
-    {
-        for(FlowDefinition oneFlow : optionalFlowsDefinition.getListFlowsDefinition()) {
+    public void checkValidXMLFileJavaFX(xmlReaderJavaFX.schema.generated.STStepper stepper, FlowsDefinition optionalFlowsDefinition) {
+        for (FlowDefinition oneFlow : optionalFlowsDefinition.getListFlowsDefinition()) {
             oneFlow.validateFlowStructure();
         }
     }
+
     @Override
-    public DTOFlowExecution readInputsJavaFX(String flowName)
-    {
+    public DTOFlowExecution readInputsJavaFX(String flowName) {
         FlowDefinition currFlowDefinition = getFlowDefinitionByFlowNameJavaFX(flowName);
-        DTOFlowExecution flowExecution=  new DTOFlowExecution(currFlowDefinition);
+        DTOFlowExecution flowExecution = new DTOFlowExecution(currFlowDefinition);
         return flowExecution;
     }
 
     @Override
     public FlowDefinition getFlowDefinitionByFlowNameJavaFX(String flowName) {
 
-        for(FlowDefinition flowDefinition: currentFlowsDefinition.getListFlowsDefinition())
-        {
-            if(flowDefinition.getName().equals(flowName))
+        for (FlowDefinition flowDefinition : currentFlowsDefinition.getListFlowsDefinition()) {
+            if (flowDefinition.getName().equals(flowName))
                 return flowDefinition;
         }
 
@@ -407,25 +407,24 @@ public class SystemEngine implements SystemEngineInterface {
 
     @Override
     public UUID updateOptionalExecution(String flowName, boolean isContinuation) {
-        if(!isContinuation) {
+        if (!isContinuation) {
             FlowDefinition currFlowDefinition = getFlowDefinitionByFlowNameJavaFX(flowName);
             this.optionalFlowExecution = new FlowExecutionImpl(currFlowDefinition);
         }
         return optionalFlowExecution.getUniqueId();
     }
+
     @Override
-    public void removeInitialFreeInputFromDTO(DTOFlowExecution dtoFlowExecution)
-    {
-        for(InitialInputValue inputValue :optionalFlowExecution.getFlowDefinition().getInitialInputValuesList())
-        {
+    public void removeInitialFreeInputFromDTO(DTOFlowExecution dtoFlowExecution) {
+        for (InitialInputValue inputValue : optionalFlowExecution.getFlowDefinition().getInitialInputValuesList()) {
             removeFreeInputFromDTO(dtoFlowExecution.getInputsExecution(), inputValue.getInputName());
         }
     }
+
     @Override
     public void removeFreeInputFromDTO(List<DTOInputExecution> inputsExecution, String inputName) {
-        for(DTOInputExecution inputExecution : inputsExecution)
-        {
-            if(inputExecution.getFinalName().equals(inputName)) {
+        for (DTOInputExecution inputExecution : inputsExecution) {
+            if (inputExecution.getFinalName().equals(inputName)) {
                 inputsExecution.remove(inputExecution);
                 return;
             }
@@ -433,20 +432,17 @@ public class SystemEngine implements SystemEngineInterface {
     }
 
     @Override
-    public boolean checkIfInputIsInitialValue(String inputName)
-    {
+    public boolean checkIfInputIsInitialValue(String inputName) {
         boolean flag = false;
-        for(InitialInputValue inputValue :optionalFlowExecution.getFlowDefinition().getInitialInputValuesList())
-        {
-            if(inputValue.getInputName().equals(inputName))
+        for (InitialInputValue inputValue : optionalFlowExecution.getFlowDefinition().getInitialInputValuesList()) {
+            if (inputValue.getInputName().equals(inputName))
                 flag = true;
         }
         return flag;
     }
 
     @Override
-    public DTOFullDetailsPastRun flowActivationAndExecutionJavaFX(String flowName)
-    {
+    public DTOFullDetailsPastRun flowActivationAndExecutionJavaFX(String flowName) {
         ExecutionContextInterface context = new ExecutionContextImpl(this.optionalFlowExecution);
         initialDataValuesFlowExecution(context);
 
@@ -454,71 +450,80 @@ public class SystemEngine implements SystemEngineInterface {
         threadPoolExecutor.execute(new FLowExecutor(context, statisticsData));
 
         listFlowsExecution.getFlowsExecutionList().add(context.getFlowExecution());
-        DTOFullDetailsPastRun fullDetails  =  new DTOFullDetailsPastRun(context.getFlowExecution());
+        DTOFullDetailsPastRun fullDetails = new DTOFullDetailsPastRun(context.getFlowExecution());
 
         return fullDetails;
     }
 
     @Override
-    public DTOFullDetailsPastRun displayFullDetailsOfPastActivationJavaFX(String flowName)
-    {
+    public DTOFullDetailsPastRun displayFullDetailsOfPastActivationJavaFX(String flowName) {
         FlowExecutionImpl currFlowExecution = getFlowExecutionByFlowNameJavaFX(flowName);
-        DTOFullDetailsPastRun fullDetailsPastRun= new DTOFullDetailsPastRun(currFlowExecution);
+        DTOFullDetailsPastRun fullDetailsPastRun = new DTOFullDetailsPastRun(currFlowExecution);
         return fullDetailsPastRun;
     }
 
     @Override
     public FlowExecutionImpl getFlowExecutionByFlowNameJavaFX(String flowName) {
 
-        for(FlowExecutionImpl flowsExecution: listFlowsExecution.getFlowsExecutionList())
-        {
-            if(flowsExecution.getFlowDefinition().getName().equals(flowName))
+        for (FlowExecutionImpl flowsExecution : listFlowsExecution.getFlowsExecutionList()) {
+            if (flowsExecution.getFlowDefinition().getName().equals(flowName))
                 return flowsExecution;
         }
 
         return null;
     }
+
     @Override
-    public void continuationToOtherFlow(UUID currFlowId, String sourceFlowName, String targetFlowName)
-    {
+    public void continuationToOtherFlow(UUID currFlowId, String sourceFlowName, String targetFlowName) {
         FlowExecution currFlowExecution = this.executedFlowsMap.get(currFlowId);
         Continuation currContinuation = currFlowExecution.getFlowDefinition().getContinuationByTargetFlowName(targetFlowName);
 
         updateOptionalExecution(targetFlowName, false);
 
-            for (Map.Entry<String, DataInFlowExecution> freeInputData : currFlowExecution.getFreeInputsExist().entrySet()) {
-                String sourceDataName = freeInputData.getValue().getDataDefinitionInFlow().getFinalName();
-                if (this.optionalFlowExecution.getFreeInputsExist().get(sourceDataName) != null) {
-                    if (this.optionalFlowExecution.getFreeInputsExist().get(sourceDataName).getItem() == null) {
-                        this.optionalFlowExecution.getFreeInputsExist().get(sourceDataName).setItem(freeInputData.getValue().getItem());
-                    }
+        for (Map.Entry<String, DataInFlowExecution> freeInputData : currFlowExecution.getFreeInputsExist().entrySet()) {
+            String sourceDataName = freeInputData.getValue().getDataDefinitionInFlow().getFinalName();
+            if (this.optionalFlowExecution.getFreeInputsExist().get(sourceDataName) != null) {
+                if (this.optionalFlowExecution.getFreeInputsExist().get(sourceDataName).getItem() == null) {
+                    this.optionalFlowExecution.getFreeInputsExist().get(sourceDataName).setItem(freeInputData.getValue().getItem());
                 }
             }
-            for (ContinuationMapping continuationMapping : currContinuation.getContinuationMapping()) {
-                DataInFlowExecution freeInputDetails = findFreeInputDetails(currFlowExecution, continuationMapping.getSourceData());
-                if (this.optionalFlowExecution.getFreeInputsExist().get(continuationMapping.getTargetData()).getItem() == null) {
-                    this.optionalFlowExecution.getFreeInputsExist().get(continuationMapping.getTargetData()).setItem(freeInputDetails.getItem());
-                }
+        }
+        for (ContinuationMapping continuationMapping : currContinuation.getContinuationMapping()) {
+            DataInFlowExecution freeInputDetails = findFreeInputDetails(currFlowExecution, continuationMapping.getSourceData());
+            if (this.optionalFlowExecution.getFreeInputsExist().get(continuationMapping.getTargetData()).getItem() == null) {
+                this.optionalFlowExecution.getFreeInputsExist().get(continuationMapping.getTargetData()).setItem(freeInputDetails.getItem());
             }
+        }
 
     }
 
-    public DataInFlowExecution findFreeInputDetails (FlowExecution currFlowExecution, String sourceData)
-    {
-        for(Map.Entry<String, DataInFlowExecution> freeInputData : currFlowExecution.getDataValues().entrySet())
-        {
-            if(freeInputData.getValue().getDataDefinitionInFlow().getFinalName().equals(sourceData))
+    public DataInFlowExecution findFreeInputDetails(FlowExecution currFlowExecution, String sourceData) {
+        for (Map.Entry<String, DataInFlowExecution> freeInputData : currFlowExecution.getDataValues().entrySet()) {
+            if (freeInputData.getValue().getDataDefinitionInFlow().getFinalName().equals(sourceData))
                 return freeInputData.getValue();
         }
         return null;
     }
 
-    public void validContinuationCorrectData(FlowsDefinition optionalFlowsDefinition)
-    {
-        for(FlowDefinition flowDefinition : optionalFlowsDefinition.getListFlowsDefinition()) {
+    public void validContinuationCorrectData(FlowsDefinition optionalFlowsDefinition) {
+        for (FlowDefinition flowDefinition : optionalFlowsDefinition.getListFlowsDefinition()) {
             if (flowDefinition.getContinuationsList() != null) {
                 for (Continuation continuation : flowDefinition.getContinuationsList()) {
                     FlowDefinition targetFlowDefinition = getFlowDefinitionByFlowNameAndOptionalFlowsJavaFX(optionalFlowsDefinition, continuation.getTargetFlow());
+                    for (ContinuationMapping continuationMapping : continuation.getContinuationMapping()) {
+                        checkIfContinuationDataCorrect(continuationMapping.getSourceData(), flowDefinition);
+                        checkIfContinuationDataCorrect(continuationMapping.getTargetData(), targetFlowDefinition);
+                    }
+                }
+            }
+        }
+    }
+
+    public void validContinuationCorrectDataWeb(FlowsDefinition optionalFlowsDefinition) {
+        for (FlowDefinition flowDefinition : optionalFlowsDefinition.getListFlowsDefinition()) {
+            if (flowDefinition.getContinuationsList() != null) {
+                for (Continuation continuation : flowDefinition.getContinuationsList()) {
+                    FlowDefinition targetFlowDefinition = getFlowDefinitionByFlowNameAndOptionalFlowsWeb(optionalFlowsDefinition, continuation.getTargetFlow());
                     for (ContinuationMapping continuationMapping : continuation.getContinuationMapping()) {
                         checkIfContinuationDataCorrect(continuationMapping.getSourceData(), flowDefinition);
                         checkIfContinuationDataCorrect(continuationMapping.getTargetData(), targetFlowDefinition);
@@ -542,16 +547,15 @@ public class SystemEngine implements SystemEngineInterface {
                     flag = true;
             }
         }
-        if(!flag)
+        if (!flag)
             throw new InvalidDataInContinuation(flowDefinition.getName(), data);
     }
 
     @Override
     public FlowDefinition getFlowDefinitionByFlowNameAndOptionalFlowsJavaFX(FlowsDefinition optionalFlowsDefinition, String flowName) {
 
-        for(FlowDefinition flowDefinition: optionalFlowsDefinition.getListFlowsDefinition())
-        {
-            if(flowDefinition.getName().equals(flowName))
+        for (FlowDefinition flowDefinition : optionalFlowsDefinition.getListFlowsDefinition()) {
+            if (flowDefinition.getName().equals(flowName))
                 return flowDefinition;
         }
 
@@ -559,23 +563,32 @@ public class SystemEngine implements SystemEngineInterface {
     }
 
     @Override
-    public DTOListContinuationFlowName setListContinuationFlowName(String flowName)
-    {
+    public DTOListContinuationFlowName setListContinuationFlowName(String flowName) {
         DTOListContinuationFlowName listContinuationFlowName = new DTOListContinuationFlowName();
         FlowDefinition currFlowDefinition = getFlowDefinitionByFlowNameJavaFX(flowName);
-        for(Continuation continuation :currFlowDefinition.getContinuationsList())
-        {
+        for (Continuation continuation : currFlowDefinition.getContinuationsList()) {
             listContinuationFlowName.getListContinuationFlowName().add(continuation.getTargetFlow());
         }
         return listContinuationFlowName;
     }
+
     @Override
-    public void updateMandatoryInputEnumerator(String labelValue, String textAreaValue)
-    {
+    public void updateMandatoryInputEnumerator(String labelValue, String textAreaValue) {
         EnumeratorData enumeratorData = new EnumeratorData();
         enumeratorData.add(textAreaValue);
         optionalFlowExecution.getFreeInputsExist().get(labelValue).setItem(enumeratorData);
     }
+
+    @Override
+    public void updateMandatoryInputJson(String labelValue, String value)
+    {
+        JsonData jasonData = new JsonData();
+        //Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        //jasonData.setJson(gson.toJsonTree(value));
+        jasonData.setJson(new Gson().fromJson((String) value, JsonElement.class));
+        optionalFlowExecution.getFreeInputsExist().get(labelValue).setItem(jasonData);
+    }
+
 
     @Override
     public DataInFlowExecution findValueOfFreeInput(String flowName, String inputName)
@@ -625,13 +638,14 @@ public class SystemEngine implements SystemEngineInterface {
         transferringDataFromTheXMLClassesToOurClassesJavaFX(stepper, optionalFlowsDefinition);
 
         checkValidXMLFileJavaFX(stepper, optionalFlowsDefinition);
-        validContinuationCorrectData(optionalFlowsDefinition);
 
-        if(isFirstUpload) {
+        if(isFirstUpload || this.currentFlowsDefinition.getListFlowsDefinition().isEmpty()){
+            validContinuationCorrectData(optionalFlowsDefinition);
             this.currentFlowsDefinition =  optionalFlowsDefinition;
             this.threadPoolExecutor = Executors.newFixedThreadPool(this.currentFlowsDefinition.getThreadPoolSize());
         }
         else{
+            validContinuationCorrectDataWeb(optionalFlowsDefinition);
             insertMoreFlowsFromXML(optionalFlowsDefinition);
         }
 
@@ -844,6 +858,23 @@ public class SystemEngine implements SystemEngineInterface {
                 RoleImpl role = roles.getRole(roleName);
                 flowDefinitionNameToAdd.addAll(role.getFlowsAllowed());
             }
+            // הוספתי אחרי השינוי של הUI
+            for(String roleName : dtoSavaNewInfoForUser.getListRolesToRemoveFromTheUser())
+            {
+                RoleImpl role = roles.getRole(roleName);
+                for(String flowName : role.getFlowsAllowed())
+                {
+                    boolean isExists = checkIfFlowExistsInAnotherRole(user, flowName);
+                    if(!isExists) //לא קיים אצל מישהו אחר אז חייב להוריד אותו מהרשימה של הפלואים המותרים
+                    {
+                        FlowDefinition flowDefinition = getFlowDefinitionByFlowNameJavaFX(flowName);
+                        if(this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().contains(flowDefinition)) {
+                            this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().remove(flowDefinition);
+                        }
+                    }
+                }
+            }
+
             if(user.isAllFlowExistsFromManager())
             {
                 this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().clear();
@@ -857,6 +888,17 @@ public class SystemEngine implements SystemEngineInterface {
             }
         }
     }
+
+    private boolean checkIfFlowExistsInAnotherRole(User user, String flowName) {
+
+        for(Map.Entry<String, RoleImpl> userRoles : user.getAssociatedRole().entrySet())
+        {
+            if(userRoles.getValue().getFlowsAllowed().contains(flowName))
+                return true;
+        }
+        return false;
+    }
+
     @Override
     public void initialUserMapFlowsDefinitionFromUpdateRole(DTOSavaNewInfoForRole dtoSavaNewInfoForRole) {
         RoleImpl role = roles.getRole(dtoSavaNewInfoForRole.getRoleName());
@@ -873,9 +915,9 @@ public class SystemEngine implements SystemEngineInterface {
             }
         }
 
-        //הרול קיים אצל היוזר אז צריך להוסיף לו את הפלואים שלא היו בעבר
         for (Map.Entry<User, FlowsDefinition> userMapDefinition : this.userFlowsDefinitionMap.entrySet())
         {
+            //הרול קיים אצל היוזר אז צריך להוסיף לו את הפלואים שלא היו בעבר
             if(userMapDefinition.getKey().getAssociatedRole().containsKey(role.getName()))
             {
                 for(String flowName : dtoSavaNewInfoForRole.getListFlowsToAddToTheRole())
@@ -883,6 +925,41 @@ public class SystemEngine implements SystemEngineInterface {
                     FlowDefinition flowDefinition = getFlowDefinitionByFlowNameJavaFX(flowName);
                     if (!this.userFlowsDefinitionMap.get(userMapDefinition.getKey()).getListFlowsDefinition().contains(flowDefinition)) {
                         this.userFlowsDefinitionMap.get(userMapDefinition.getKey()).getListFlowsDefinition().add(flowDefinition);
+                    }
+                }
+            }
+        }
+
+        //הרול היה קיים אצל היוזר בעבר ולכן צריך לבדוק עבור כל יוזר שיורד עם הפלואים ששיכים לאותו רול שיורד
+        // שייכים לרולים אחרים אם לא צריך להוריד אותו מרשימת הפלואי המותרים
+
+        for (String userName : dtoSavaNewInfoForRole.getListUsersToRemoveFromTheRole()) {
+            User user = userManager.getUser(userName);
+            // כל הפלואים המותרים במסגרת הרול שמורידים ליוזר
+            for(String flowName : role.getFlowsAllowed())
+            {
+                boolean isExists = checkIfFlowExistsInAnotherRole(user, flowName);
+                if(!isExists) //לא קיים אצל מישהו אחר אז חייב להוריד אותו מהרשימה של הפלואים המותרים
+                {
+                    FlowDefinition flowDefinition = getFlowDefinitionByFlowNameJavaFX(flowName);
+                    if(this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().contains(flowDefinition)) {
+                        this.userFlowsDefinitionMap.get(user).getListFlowsDefinition().remove(flowDefinition);
+                    }
+                }
+            }
+        }
+
+        // אם הרול היה קים אצל יוזר וירד לו פלואים צריך להוריד אותם מהאפשרויות שלו בהצגה
+        for (Map.Entry<User, FlowsDefinition> userMapDefinition : this.userFlowsDefinitionMap.entrySet())
+        {
+            //הרול קיים אצל היוזר אז צריך להוריד לו את הפלואים שהיו בעבר
+            if(userMapDefinition.getKey().getAssociatedRole().containsKey(role.getName()))
+            {
+                for(String flowName : dtoSavaNewInfoForRole.getListFlowsToRemoveFromTheRole())
+                {
+                    FlowDefinition flowDefinition = getFlowDefinitionByFlowNameJavaFX(flowName);
+                    if (this.userFlowsDefinitionMap.get(userMapDefinition.getKey()).getListFlowsDefinition().contains(flowDefinition)) {
+                        this.userFlowsDefinitionMap.get(userMapDefinition.getKey()).getListFlowsDefinition().remove(flowDefinition);
                     }
                 }
             }
@@ -896,9 +973,12 @@ public class SystemEngine implements SystemEngineInterface {
 
         for(FlowExecutionImpl flow: listFlowsExecution.getFlowsExecutionList())
         {
-            if(flow.getUserExecute().equals(user) || user.isManager())
+            if(user.isManager())
+                flowsExecutedList.add(new DTOFullDetailsPastRunWeb(flow));
+            else if(flow.getUserExecute().getUserName().equals(user.getUserName()))
                 flowsExecutedList.add(new DTOFullDetailsPastRunWeb(flow));
         }
+
         return flowsExecutedList;
     }
 
@@ -916,6 +996,37 @@ public class SystemEngine implements SystemEngineInterface {
     }
 
     @Override
+    public void removeUserFromTheUserManager(String userName) {
+
+        this.userManager.removeUser(userName);
+
+        // צריך למחוק רולים ופלואים שהוא היה מחובר אליהם בעבר??
+
+    }
+
+    @Override
+    public DTOListContinuationFlowName setListContinuationFlowNameWeb(String flowName, UUID uuidFlow)
+    {
+        User user = this.executedFlowsMap.get(uuidFlow).getUserExecute();
+        Set<String> flowsNameAvailableForUser = new HashSet<>();
+
+        for(Map.Entry<String, RoleImpl> entry : user.getAssociatedRole().entrySet())
+        {
+            flowsNameAvailableForUser.addAll(entry.getValue().getFlowsAllowed());
+        }
+
+        DTOListContinuationFlowName listContinuationFlowName = new DTOListContinuationFlowName();
+        FlowDefinition currFlowDefinition = getFlowDefinitionByFlowNameJavaFX(flowName);
+
+        for(Continuation continuation :currFlowDefinition.getContinuationsList())
+        {
+            if(flowsNameAvailableForUser.contains(continuation.getTargetFlow()))
+                listContinuationFlowName.getListContinuationFlowName().add(continuation.getTargetFlow());
+        }
+        return listContinuationFlowName;
+    }
+
+    @Override
     public String getAdminName() {
         return this.userManager.getAdminName();
     }
@@ -928,5 +1039,22 @@ public class SystemEngine implements SystemEngineInterface {
     @Override
     public void addUser(String username, boolean isManager) {
         this.userManager.addUser(username, isManager);
+    }
+
+    @Override
+    public FlowDefinition getFlowDefinitionByFlowNameAndOptionalFlowsWeb(FlowsDefinition optionalFlowsDefinition, String flowName) {
+
+        for (FlowDefinition flowDefinition : optionalFlowsDefinition.getListFlowsDefinition()) {
+            if (flowDefinition.getName().equals(flowName))
+                return flowDefinition;
+        }
+
+        for(FlowDefinition flowDefinition: currentFlowsDefinition.getListFlowsDefinition())
+        {
+            if(flowDefinition.getName().equals(flowName))
+                return flowDefinition;
+        }
+
+        return null;
     }
 }

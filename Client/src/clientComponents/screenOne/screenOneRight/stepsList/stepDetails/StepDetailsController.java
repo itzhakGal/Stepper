@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 
 public class StepDetailsController {
     private clientComponents.screenOne.screenOneRight.stepsList.StepListController mainStepListController;
-    //private SystemEngineInterface systemEngine;
-
     @FXML
     private ListView<String> inputListLV;
     @FXML
@@ -76,10 +74,6 @@ public class StepDetailsController {
 
     public void setMainController(StepListController mainStepListController) {
         this.mainStepListController = mainStepListController;
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
     }
 
     public void initialDataInAllOfLabelOfTheContent(DTOStepDefinitionJavaFX stepDefinitionJavaFX) {

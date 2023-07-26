@@ -88,6 +88,9 @@ public class AppController {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    handleFailure((e.getMessage()));
+                });
             }
 
             @Override
@@ -104,10 +107,8 @@ public class AppController {
                         Platform.runLater(() -> {
                                     if (!message.equals("1"))
                                         setFirstAdmin(false);
-
                                     else
                                         setFirstAdmin(true);
-
                                     if (!isFirstAdmin) { //זה לא הפעם הראשונה שיש אדמין אז יש נתונים במערכת
                                         headerComponentController.updatePushTabButtons();
                                         headerComponentController.openTabUserManager();
@@ -140,7 +141,9 @@ public class AppController {
         HttpClientUtil.runSync(finalUrl, new Callback() {  //בקשה סינכרונית לא יוצא עד שהיא מתבצעת כראוי
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure((e.getMessage()));
+                });
             }
 
             @Override
@@ -167,6 +170,14 @@ public class AppController {
     public void handleFailureAdminLogin(String errorMessage){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
+    }
+
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
         alert.setContentText(errorMessage);
         alert.setWidth(300);
         alert.show();

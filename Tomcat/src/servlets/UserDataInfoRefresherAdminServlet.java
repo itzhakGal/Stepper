@@ -46,7 +46,7 @@ public class UserDataInfoRefresherAdminServlet extends HttpServlet {
 
         List<String> totalFlowsPreformedBySpecificUser  = systemEngine.getFlowsExecutedNameByUserName(specificUser);
 
-        DTOUserDataFullInfo dtoUserDataFullInfo = new DTOUserDataFullInfo(specificUser, assignedRoles,totalFlowsPreformedBySpecificUser);
+        DTOUserDataFullInfo dtoUserDataFullInfo = new DTOUserDataFullInfo(specificUser, assignedRoles, totalFlowsPreformedBySpecificUser);
         String dtoUserDataFullInfoToJSON = new Gson().toJson(dtoUserDataFullInfo, new TypeToken<DTOUserDataFullInfo>(){}.getType());
         response.getWriter().write(dtoUserDataFullInfoToJSON);
         response.setStatus(HttpServletResponse.SC_OK);

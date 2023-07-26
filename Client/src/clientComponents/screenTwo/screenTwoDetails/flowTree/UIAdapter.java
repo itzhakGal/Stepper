@@ -8,8 +8,6 @@ import java.util.function.Consumer;
 
 public class UIAdapter {
     private final Consumer<DTOFullDetailsPastRunWeb> updateFlowResult;
-
-  //  private final Runnable hideSpinner;
     public UIAdapter(Consumer<DTOFullDetailsPastRunWeb> updateFlowResult) {
         this.updateFlowResult = updateFlowResult;
     }

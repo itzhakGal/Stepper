@@ -18,7 +18,6 @@ import java.util.List;
 public class InputDetailsListController {
 
     private clientComponents.screenThree.lowerScreen.stepListDetails.StepListDetailsController maimStepListDetailsController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private HBox inputDetailsComponent;
     @FXML
@@ -31,11 +30,6 @@ public class InputDetailsListController {
         if (inputDetailsComponentController != null) {
             inputDetailsComponentController.setMainController(this);
         }
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //inputDetailsComponentController.setSystemEngine(systemEngine);
     }
 
     public void setMainController(StepListDetailsController maimStepListDetailsController) {

@@ -13,7 +13,6 @@ import utils.DTOFullDetailsPastRun;
 public class FlowDetailsController {
 
     private FlowExecuteDetailsController maimFlowExecuteDetailsController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private Label flowName;
     @FXML
@@ -41,15 +40,10 @@ public class FlowDetailsController {
         uniqueName.textProperty().bind(uniqueNameProperty);
         flowResult.textProperty().bind(flowResultProperty);
         totalRunningTime.textProperty().bind(totalRunningTimeProperty);
-        //totalRunningTime.textProperty().bind(Bindings.format("%,d", totalRunningTimeProperty));
     }
 
     public void setMainController(FlowExecuteDetailsController maimFlowExecuteDetailsController) {
         this.maimFlowExecuteDetailsController = maimFlowExecuteDetailsController;
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
     }
 
     public void updateDetailsFlowRun(DTOFullDetailsPastRunWeb endOFlowExecution) {

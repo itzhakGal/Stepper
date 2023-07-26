@@ -5,8 +5,6 @@ import com.google.gson.Gson;
 
 public class Constants {
     // Server resources locations
-    //public final static int REFRESH_RATE = 10000;
-
     public final static int REFRESH_RATE1 = 1000;
     public final static int REFRESH_RATE = 2000;
     public final static String BASE_DOMAIN = "localhost";
@@ -31,7 +29,7 @@ public class Constants {
     public final static String FLOW_DEFINITION_REFRESHER = FULL_SERVER_PATH + "/flowDefinitionRefresher";
     public final static String USER_DATA_REFRESHER = FULL_SERVER_PATH + "/userDataRefresher";
     public final static String UPDATE_MANDATORY = FULL_SERVER_PATH + "/updateMandatory";
-
+    public final static String LOGIN_OUT_CLIENT = FULL_SERVER_PATH + "/logOutClient";
     // GSON instance
     public final static Gson GSON_INSTANCE = new Gson();
 }

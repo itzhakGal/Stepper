@@ -15,7 +15,6 @@ public enum StepDefinitionRegistry
     COLLECT_FILES_IN_FOLDER(new CollectFilesInFolderStep()),
     ZIPPER(new ZipperStep()),
     COMMAND_LINE(new CommandLineStep()),
-
     HTTP_CALL(new HTTPCall()),
     TO_JSON(new ToJson()),
     JSON_DATA_EXTRACTOR(new JsonDataExtractor());

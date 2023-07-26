@@ -21,6 +21,10 @@ public class UserDataRefresherClientServlet extends HttpServlet {
 
         String usernameFromParameter = request.getParameter("username");
 
+        if (usernameFromParameter == null) {
+            return;
+        }
+
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             //UserManager userManager = ServletUtils.getUserManager(getServletContext());

@@ -6,13 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import stepper.step.api.LoggerImpl;
-import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.screenThree.lowerScreen.stepListDetails.StepListDetailsController;
 
 public class LogDetailsController {
-
-    //private SystemEngineInterface systemEngine;
-
     private StepListDetailsController mainStepListDetailsController;
     @FXML
     private TextArea logDetailsTextArea;
@@ -41,8 +37,5 @@ public class LogDetailsController {
     {
         logDetailsTextAreaProperty.set(log.getLog());
         logTimeLabelProperty.set(log.getLogTimeAsString());
-    }
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
     }
 }

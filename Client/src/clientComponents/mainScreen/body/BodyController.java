@@ -32,7 +32,6 @@ import java.util.List;
 public class BodyController {
 
     private AppController mainController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private clientComponents.screenOne.flowDefinitionScreen.FlowDefinitionScreenController flowDefinitionScreenComponentController;
     @FXML
@@ -85,13 +84,6 @@ public class BodyController {
         this.mainController = mainController;
     }
 
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //flowDefinitionScreenComponentController.setSystemEngine(systemEngine);
-        //flowExecutionScreenComponentController.setSystemEngine(systemEngine);
-        //flowExecutionHistoryScreenComponentController.setSystemEngine(systemEngine);
-    }
-
     public void updatePushTabButtons()
     {
         flowDefinitionButton.setDisable(false);
@@ -112,36 +104,6 @@ public class BodyController {
     void executionsHistoryButtonAction(Event event) {
 
         flowExecutionHistoryScreenComponentController.getTableFlowExecutionController().refresherDataFlowsExecution();
-
-        /*String finalUrl = HttpUrl
-                .parse(Constants.LIST_FLOWS_EXECUTION_CLIENT)
-                .newBuilder()
-                .addQueryParameter("userName", mainController.currentUserNameProperty().getValue())
-                .build()
-                .toString();
-
-        HttpClientUtil.runAsync(finalUrl, new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    DTOListFullDetailsPastRunWeb dtoListFullDetailsPastRun = new Gson().fromJson(response.body().string(), DTOListFullDetailsPastRunWeb.class);
-                    List<DTOFullDetailsPastRunWeb> flowsExecutedList = dtoListFullDetailsPastRun.getDtoListFullDetailsPastRun();
-
-
-                    Platform.runLater(() -> {
-                        flowExecutionHistoryScreenComponentController.updateListOfExecutedFlows(flowsExecutedList);
-                    });
-                }
-            }
-        });*/
-
-        //List<DTOFullDetailsPastRun> flowsExecutedList = systemEngine.getFlowsExecutedDataDTOHistory();
-        //flowExecutionHistoryScreenComponentController.updateListOfExecutedFlows(flowsExecutedList);
     }
 
 
@@ -211,7 +173,6 @@ public class BodyController {
 
 
     public void initListener() {
-       // flowDefinitionScreenComponentController.initListener();
         flowExecutionScreenComponentController.initListener();
         flowExecutionHistoryScreenComponentController.initListener();
     }

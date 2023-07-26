@@ -6,10 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
-import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.screenThree.lowerScreen.stepListDetails.StepListDetailsController;
 import utilWebApp.DTOOutputDetailsWeb;
-import utilsDesktopApp.DTOOutputDetailsJAVAFX;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +15,6 @@ import java.util.List;
 public class OutputDetailsListController {
 
     private StepListDetailsController maimStepListDetailsController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private HBox outputDetailsComponent;
     @FXML
@@ -30,11 +27,6 @@ public class OutputDetailsListController {
         if (outputDetailsComponentController != null) {
             outputDetailsComponentController.setMainController(this);
         }
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //outputDetailsComponentController.setSystemEngine(systemEngine);
     }
 
     public void setMainController(StepListDetailsController maimStepListDetailsController) {

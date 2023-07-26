@@ -16,9 +16,6 @@ import java.io.IOException;
 public class StepListController {
 
     private clientComponents.screenOne.screenOneRight.SelectedFlowDetailsController mainSelectedFlowDetailsController;
-
-    //private SystemEngineInterface systemEngine;
-
     @FXML
     private Accordion stepsListAccordion;
     @FXML
@@ -37,12 +34,6 @@ public class StepListController {
     public void setMainController(SelectedFlowDetailsController mainSelectedFlowDetailsController) {
         this.mainSelectedFlowDetailsController = mainSelectedFlowDetailsController;
     }
-
-    public void setSystemEngine(SystemEngineInterface engineManager) {
-        //this.systemEngine = engineManager;
-    }
-
-
 
     public void setFlowSelectedDetails(DTOFlowDefinition dtoFlowDefinition) {
         stepsListAccordion.getPanes().clear();

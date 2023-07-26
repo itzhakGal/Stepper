@@ -36,7 +36,6 @@ public class LowerManagementController {
     @FXML
     private Label labelMassage;
     private List<String> saveListOfFlowConnectedToRole;
-    //private List<String> allFlowInTheSystem;
     private DTORole newRole;
     private SimpleStringProperty isRoleNameEmptyProperty;
     private SimpleStringProperty isRoleDescriptionEmptyProperty;
@@ -62,8 +61,6 @@ public class LowerManagementController {
     }
     @FXML
     void saveRoleAction(ActionEvent event) {
-
-        //this.mainRolesManagementController.getTopManagementComponentController().getNewRoleButton().setDisable(false);
 
         String finalUrl = HttpUrl
                 .parse(Constants.NEW_ROLE_DATA_TO_SAVE)

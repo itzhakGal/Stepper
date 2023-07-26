@@ -1,5 +1,6 @@
 package adminComponents.screenOne;
 
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -7,7 +8,6 @@ import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 import util.Constants;
 import util.http.HttpClientUtil;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +32,9 @@ public class UserListRefresher extends TimerTask {
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure((e.getMessage()));
+                });
             }
 
             @Override

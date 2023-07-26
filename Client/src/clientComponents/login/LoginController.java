@@ -7,10 +7,7 @@ import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import okhttp3.Call;
@@ -44,9 +41,6 @@ public class LoginController {
     @FXML
     public void initialize() {
         errorMessageLabel.textProperty().bind(errorMessageProperty);
-        /*HttpClientUtil.setCookieManagerLoggingFacility(line ->
-                Platform.runLater(() ->
-                        updateHttpStatusLine(line)));*/
     }
 
     @FXML
@@ -57,7 +51,6 @@ public class LoginController {
             return;
         }
 
-        //noinspection ConstantConditions
         String finalUrl = HttpUrl
                 .parse(Constants.LOGIN_PAGE)
                 .newBuilder()
@@ -70,7 +63,7 @@ public class LoginController {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(() -> {
-                        errorMessageProperty.set("Something went wrongMM: " + e.getMessage());
+                        errorMessageProperty.set("Something went wrong: " + e.getMessage());
                         loginSuccessful = false;
                 });
             }
@@ -81,17 +74,12 @@ public class LoginController {
                     if (response.code() != 200) {
                         String responseBody = response.body().string();
                         Platform.runLater(() -> {
-                                errorMessageProperty.set("Something went wrongSS: " + responseBody);
+                                errorMessageProperty.set("Something went wrong: " + responseBody);
                                 loginSuccessful = false;
                         });
                     } else {
                         Platform.runLater(() -> {
                             loginSuccessful = true;
-
-                            //mainAppController.switchToClientApp(mainAppController);
-                            //mainAppController.updateUserName(userName);
-                            //mainAppController.updatePushTabButtons();
-                            //mainAppController.openTabFlowDefinition();
 
                             changeSceneToMainApp(userName);
                             mainAppController.updateUserName(userName);
@@ -122,26 +110,67 @@ public class LoginController {
     @FXML
     void quitButtonClicked(ActionEvent event) {
 
+        String userName = userNameTextField.getText();
+
+        if (userName.isEmpty()) {
+            errorMessageProperty.set("User name is empty. You can't log out with empty user name");
+        }
+
+        //noinspection ConstantConditions
+        String finalUrl = HttpUrl
+                .parse(Constants.LOGIN_OUT_CLIENT)
+                .newBuilder()
+                .addQueryParameter("username", userName)
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    handleFailure((e.getMessage()));
+                });
+            }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (response.isSuccessful()) {
+                        String errorMessage = "Client log out from the system";
+                        Platform.runLater(() -> {
+                            errorMessageProperty.set(errorMessage);
+                            primaryStage.close();
+                        });
+                    }
+                } finally {
+                    response.close();
+                }
+            }
+        });
     }
 
     @FXML
     void userNameKeyTyped(KeyEvent event) {
-
     }
-
     public void setMainAppController(AppController mainAppController) {
         this.mainAppController = mainAppController;
     }
-
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
-
     public AppController getMainAppController() {
         return mainAppController;
     }
-
     public boolean isLoginSuccessful() {
         return loginSuccessful;
     }
+
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
+    }
+
 }

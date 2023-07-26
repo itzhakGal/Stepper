@@ -45,17 +45,17 @@ public class RoleNewInfoSavedServlet extends HttpServlet {
 
     public void insertNewDataToRoleInMap(RoleImpl roleData, Map<String, User> usersMap, DTOSavaNewInfoForRole dtoSavaNewInfoForRole) {
 
-        /*for (Map.Entry<String, User> entry : usersMap.entrySet()) {
-            if(!entry.getValue().getAssociatedRole().containsKey(dtoSavaNewInfoForRole.getRoleName()))
-            {
-                entry.getValue().getAssociatedRole().put(dtoSavaNewInfoForRole.getRoleName(), roleData);
-            }
-        }*/
-
         for (Map.Entry<String, User> entry : usersMap.entrySet()) {
             if(dtoSavaNewInfoForRole.getListUserToAddToTheRole().contains(entry.getKey()))
             {
                 entry.getValue().getAssociatedRole().put(dtoSavaNewInfoForRole.getRoleName(), roleData);
+            }
+        }
+        // אם קיימים יוזרים להורדה מהרול, נוריד את הרול הזה מרשימת הרולים של היוזר הזה
+        for (Map.Entry<String, User> entry : usersMap.entrySet()) {
+            if(dtoSavaNewInfoForRole.getListUsersToRemoveFromTheRole().contains(entry.getKey()))
+            {
+                entry.getValue().getAssociatedRole().remove(dtoSavaNewInfoForRole.getRoleName(), roleData);
             }
         }
     }
@@ -64,6 +64,12 @@ public class RoleNewInfoSavedServlet extends HttpServlet {
         for(String flow : dtoSavaNewInfoForRole.getListFlowsToAddToTheRole()) {
             if (!roleData.getFlowsAllowed().contains(flow)) {
                 roleData.getFlowsAllowed().add(flow);
+            }
+        }
+
+        for(String flow : dtoSavaNewInfoForRole.getListFlowsToRemoveFromTheRole()) {
+            if (roleData.getFlowsAllowed().contains(flow)) {
+                roleData.getFlowsAllowed().remove(flow);
             }
         }
     }

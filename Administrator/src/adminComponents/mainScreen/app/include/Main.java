@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import adminComponents.mainScreen.app.AppController;
 import javafx.stage.WindowEvent;
-
 import java.io.IOException;
 import java.net.URL;
 

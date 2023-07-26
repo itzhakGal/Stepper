@@ -21,6 +21,11 @@ public class ListFlowExecutionClientServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
         String userName = req.getParameter("userName");
+
+        if (userName == null) {
+            return;
+        }
+
         SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
         Gson gson = new Gson();
         DTOListFullDetailsPastRunWeb dtoListFullDetailsPastRun = new DTOListFullDetailsPastRunWeb();

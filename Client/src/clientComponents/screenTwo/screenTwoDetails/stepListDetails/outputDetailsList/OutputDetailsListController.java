@@ -17,7 +17,6 @@ import java.util.List;
 public class OutputDetailsListController {
 
     private clientComponents.screenTwo.screenTwoDetails.stepListDetails.StepListDetailsController maimStepListDetailsController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private HBox outputDetailsComponent;
     @FXML
@@ -30,11 +29,6 @@ public class OutputDetailsListController {
         if (outputDetailsComponentController != null) {
             outputDetailsComponentController.setMainController(this);
         }
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //outputDetailsComponentController.setSystemEngine(systemEngine);
     }
 
     public void setMainController(StepListDetailsController maimStepListDetailsController) {

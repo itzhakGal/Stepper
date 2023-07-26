@@ -60,6 +60,8 @@ public class TopScreenController implements Initializable , Closeable {
     private TableColumn<clientComponents.screenThree.topScreen.ExecutionData, String> resultExecutionColumn;
     @FXML
     private TableColumn<clientComponents.screenThree.topScreen.ExecutionData, String> userNameTableColum;
+    @FXML
+    private TableColumn<clientComponents.screenThree.topScreen.ExecutionData, String> isManagerColum;
     @FXML private ComboBox<String> resultComboBox;
     @FXML private VBox continuationComponent;
     @FXML private ContinuationController continuationComponentController;
@@ -72,8 +74,8 @@ public class TopScreenController implements Initializable , Closeable {
     private SimpleBooleanProperty selectedNameTableView;
     private List<DTOFullDetailsPastRunWeb> flowsExecutedList ;
     private SimpleBooleanProperty rerunFlowButtonProperty;
-    private String chosenFlowId;
-    private String chosenFlowName;
+    private String chosenFlowId = "";
+    private String chosenFlowName = "";
 
     public TopScreenController()
     {
@@ -103,7 +105,9 @@ public class TopScreenController implements Initializable , Closeable {
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -127,11 +131,14 @@ public class TopScreenController implements Initializable , Closeable {
 
     }
     public void init() {
+
         tableFlowExecution.setOnMouseClicked(event -> {
             clientComponents.screenThree.topScreen.ExecutionData selectedFlow = tableFlowExecution.getSelectionModel().getSelectedItem();
             if (selectedFlow != null) {
                 chosenFlowNameProperty.set(selectedFlow.getFlowName());
                 chosenFlowIdProperty.set(selectedFlow.getFlowId().toString());
+                this.chosenFlowId = chosenFlowIdProperty.get();
+                this.chosenFlowName = chosenFlowNameProperty.get();
                 rerunFlowButton.setDisable(false);
                 updateContinuationDetails(selectedFlow.getFlowName());
             }
@@ -147,10 +154,12 @@ public class TopScreenController implements Initializable , Closeable {
         startDateColumn.setCellValueFactory(new PropertyValueFactory<clientComponents.screenThree.topScreen.ExecutionData, String>("startDate"));
         resultExecutionColumn.setCellValueFactory(new PropertyValueFactory<clientComponents.screenThree.topScreen.ExecutionData, String>("resultExecutions"));
         userNameTableColum.setCellValueFactory(new PropertyValueFactory<clientComponents.screenThree.topScreen.ExecutionData, String>("userName"));
+        isManagerColum.setCellValueFactory(new PropertyValueFactory<clientComponents.screenThree.topScreen.ExecutionData, String>("isManager"));
         setRightToLeftAlignment(flowNameColumn);
         setRightToLeftAlignment(startDateColumn);
         setRightToLeftAlignment(resultExecutionColumn);
         setRightToLeftAlignment(userNameTableColum);
+        setRightToLeftAlignment(isManagerColum);
         initialComboBox();
         addAnimation();
     }
@@ -199,10 +208,6 @@ public class TopScreenController implements Initializable , Closeable {
     public void setMainController(clientComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController mainFlowExecutionHistoryController) {
         this.mainFlowExecutionHistoryController = mainFlowExecutionHistoryController;
     }
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //continuationComponentController.setSystemEngine(systemEngine);
-    }
     public SimpleStringProperty getChosenFlowIdProperty() {
         return chosenFlowIdProperty;
     }
@@ -210,12 +215,23 @@ public class TopScreenController implements Initializable , Closeable {
         return chosenFlowNameProperty;
     }
     public void setTableView(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
-        chosenFlowIdProperty.set("");
+        //chosenFlowIdProperty.set("");
         setDetailsFlowExecutionHistory(flowsExecutedList);
     }
-
     public void setDetailsFlowExecutionHistory(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
         ObservableList<clientComponents.screenThree.topScreen.ExecutionData> data = tableFlowExecution.getItems();
+        String userName = mainFlowExecutionHistoryController.getMainBodyController().getMainController().getHeaderComponentController().getClientName().getText();
+        String isManager = mainFlowExecutionHistoryController.getMainBodyController().getMainController().getHeaderComponentController().getIsManager().getText();
+        //אם יש מנהל ואז הוא הוסר צריך למחוק את האקסקיושן של השאר
+        if (mainFlowExecutionHistoryController.getMainBodyController().getMainController().getHeaderComponentController().getIsManager().getText().equals("False")) {
+            Iterator<ExecutionData> iterator = tableFlowExecution.getItems().iterator();
+            while (iterator.hasNext()) {
+                ExecutionData executionData = iterator.next();
+                if (!executionData.getUserName().equals(userName)) {
+                    iterator.remove(); // Remove the row from tableFlowExecution
+                }
+            }
+        }
 
         List<UUID> listUuid = new ArrayList<>();
         for (clientComponents.screenThree.topScreen.ExecutionData uuidData : data) {
@@ -235,7 +251,7 @@ public class TopScreenController implements Initializable , Closeable {
             UUID flowId = flowDetails.getUniqueId();
 
             if (!listUuid.contains(flowId)) {
-                clientComponents.screenThree.topScreen.ExecutionData executionData = new clientComponents.screenThree.topScreen.ExecutionData(flowDetails.getFlowName(), flowResult, activationDate, flowId, flowDetails.getUserName());
+                clientComponents.screenThree.topScreen.ExecutionData executionData = new clientComponents.screenThree.topScreen.ExecutionData(flowDetails.getFlowName(), flowResult, activationDate, flowId, flowDetails.getUserName(), isManager);
                 tableFlowExecution.getItems().add(executionData);
             } else {
                 for (ExecutionData executionData : tableFlowExecution.getItems()) {
@@ -258,61 +274,7 @@ public class TopScreenController implements Initializable , Closeable {
 
         this.flowsExecutedList = flowsExecutedList;
     }
-    /*public void setDetailsFlowExecutionHistory(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
-        ObservableList<clientComponents.screenThree.topScreen.ExecutionData> data = tableFlowExecution.getItems();
 
-        List <UUID> listUuid = new ArrayList<>();
-        for(clientComponents.screenThree.topScreen.ExecutionData uuidData :data)
-        {
-            listUuid.add(uuidData.getFlowId()) ;
-        }
-        //data.clear();
-
-        for (DTOFullDetailsPastRunWeb flowDetails : flowsExecutedList) {
-            String flowResult;
-            String activationDate = flowDetails.getActivationDate();
-            if (flowDetails.getFinalResult() != null)
-                flowResult = flowDetails.getFinalResult().getDescription();
-            else
-                flowResult = "The flow is still in progress";
-
-            UUID flowId = flowDetails.getUniqueId();
-
-            if(!listUuid.contains(flowId)) {
-                clientComponents.screenThree.topScreen.ExecutionData executionData = new clientComponents.screenThree.topScreen.ExecutionData(flowDetails.getFlowName(), flowResult, activationDate, flowId, flowDetails.getUserName());
-                tableFlowExecution.getItems().add(executionData);
-            }
-
-            for(ExecutionData executionData : tableFlowExecution.getItems()){
-                if(executionData.getResultExecutions().equals("The flow is still in progress") && !flowResult.equals("The flow is still in progress"))
-                {
-                    //executionData.setResultExecutions(flowDetails.getFinalResult().getDescription());
-                    tableFlowExecution.getItems().remove(executionData);
-                    clientComponents.screenThree.topScreen.ExecutionData newExecutionData = new clientComponents.screenThree.topScreen.ExecutionData(flowDetails.getFlowName(), flowResult, activationDate, flowId, flowDetails.getUserName());
-                    tableFlowExecution.getItems().add(executionData);
-                }
-            }
-        }
-        this.flowsExecutedList = flowsExecutedList;
-    }*/
-    /*public void setDetailsFlowExecutionHistory(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
-        ObservableList<clientComponents.screenThree.topScreen.ExecutionData> data = tableFlowExecution.getItems();
-        data.clear();
-
-        for (DTOFullDetailsPastRunWeb flowDetails : flowsExecutedList) {
-            String flowResult;
-            String activationDate = flowDetails.getActivationDate();
-            if (flowDetails.getFinalResult() != null)
-                 flowResult = flowDetails.getFinalResult().getDescription();
-            else
-                flowResult = "The flow is still in progress";
-
-            UUID flowId = flowDetails.getUniqueId();
-            clientComponents.screenThree.topScreen.ExecutionData executionData = new clientComponents.screenThree.topScreen.ExecutionData(flowDetails.getFlowName(), flowResult, activationDate, flowId, flowDetails.getUserName());
-            tableFlowExecution.getItems().add(executionData);
-        }
-        this.flowsExecutedList = flowsExecutedList;
-    }*/
     public void filterTableDataByResult(String selectedFilter) {
         setDetailsFlowExecutionHistory(flowsExecutedList);
         if (!selectedFilter.equals("All")) {
@@ -327,16 +289,22 @@ public class TopScreenController implements Initializable , Closeable {
     }
     public void updateContinuationDetails(String flowName) {
 
+        UUID flowId = mainFlowExecutionHistoryController.getMainBodyController().getFlowExecutionScreenComponentController().getFreeInputDetailsComponentController().getCurrFlowId();
+
         String finalUrl = HttpUrl
                 .parse(Constants.LIST_CONTINUATION_FLOW_NAME)
                 .newBuilder()
                 .addQueryParameter("flowName", flowName)
+                .addQueryParameter("flowUUID", flowId.toString())
                 .build()
                 .toString();
 
         HttpClientUtil.runAsync(finalUrl, new okhttp3.Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -383,25 +351,16 @@ public class TopScreenController implements Initializable , Closeable {
                 });
         continuationComponentController.initListener();
 
-        /*mainFlowExecutionHistoryController.getMainBodyController().getFlowExecutionScreenComponentController().getFlowTreeComponentController().getIsTaskFinished()
-                .addListener((observable, oldValue, newValue) -> {
-                    if (newValue) {
-                        refresherDataFlowsExecution();
-                    }
-                });*/
     }
     private void updateUserFlowsExecution(List<DTOFullDetailsPastRunWeb> flowsExecutedList) {
         Platform.runLater(() -> {
-            chosenFlowNameProperty.set(this.chosenFlowName);
-            //chosenFlowIdProperty.set("");
-            chosenFlowIdProperty.set(this.chosenFlowId);
+            //chosenFlowNameProperty.set(this.chosenFlowName);
+            //chosenFlowIdProperty.set(this.chosenFlowId);
             mainFlowExecutionHistoryController.updateListOfExecutedFlows(flowsExecutedList);
-            insertData();
+            //insertData();
         });
     }
     public void refresherDataFlowsExecution() {
-        this.chosenFlowId = chosenFlowIdProperty.get();
-        this.chosenFlowName = chosenFlowNameProperty.get();
         dataRefresher = new UserFlowsExecutionRefresher(
                 mainFlowExecutionHistoryController.getMainBodyController().getMainController().currentUserNameProperty().getValue(),
                 this::updateUserFlowsExecution);
@@ -411,21 +370,25 @@ public class TopScreenController implements Initializable , Closeable {
     public Button getRerunFlowButton() {
         return rerunFlowButton;
     }
-
-
     public void insertData()
     {
         mainFlowExecutionHistoryController.getFlowTreeComponentController().insertDataToTreeView();
         mainFlowExecutionHistoryController.getTableFlowExecutionController().getContinuationComponentController().getContinueToFlowButton().setVisible(false);
         mainFlowExecutionHistoryController.getTableFlowExecutionController().getContinuationComponentController().getFlowNameContinuationListView().getItems().clear();
-
     }
     @Override
     public void close() {
-        //listOfUsers.getItems().clear();
         if (dataRefresher != null && timer != null) {
             dataRefresher.cancel();
             timer.cancel();
         }
+    }
+
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
     }
 }

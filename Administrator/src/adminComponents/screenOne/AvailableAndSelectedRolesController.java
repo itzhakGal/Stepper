@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
-
 import java.util.List;
 
 public class AvailableAndSelectedRolesController {
@@ -39,11 +38,14 @@ public class AvailableAndSelectedRolesController {
 
         mainController.getListRolesToAddToTheUser().addAll(sourceListView.getItems());
         sourceListView.getItems().clear();
+
+        if(mainController.getListRolesToRemoveFromTheUser().contains(sourceListView.getItems()))
+            mainController.getListRolesToRemoveFromTheUser().remove(sourceListView.getItems());
     }
 
     @FXML
     void availableOneMoveSelectedButtonAction(ActionEvent event) {
-// Move the selected item from sourceListView to targetListView
+        // Move the selected item from sourceListView to targetListView
         String selectedItem = sourceListView.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             targetListView.getItems().add(selectedItem);
@@ -51,6 +53,10 @@ public class AvailableAndSelectedRolesController {
         }
         sourceListView.getSelectionModel().clearSelection();
         mainController.getListRolesToAddToTheUser().add(selectedItem);
+
+        //אם הוא נמצא בליסט של המחיקה תוריד משם
+        if(mainController.getListRolesToRemoveFromTheUser().contains(selectedItem))
+            mainController.getListRolesToRemoveFromTheUser().remove(selectedItem);
     }
     @FXML
     void selectedMoveAllAvailableButtonAction(ActionEvent event) {
@@ -59,6 +65,9 @@ public class AvailableAndSelectedRolesController {
 
         mainController.getListRolesToRemoveFromTheUser().addAll(targetListView.getItems());
         targetListView.getItems().clear();
+
+        if(mainController.getListRolesToAddToTheUser().contains(targetListView.getItems()))
+            mainController.getListRolesToAddToTheUser().remove(targetListView.getItems());
     }
     @FXML
     void selectedOneMoveAvailableButtonAction(ActionEvent event) {
@@ -70,6 +79,10 @@ public class AvailableAndSelectedRolesController {
         }
         targetListView.getSelectionModel().clearSelection();
         mainController.getListRolesToRemoveFromTheUser().add(selectedItem);
+
+        //אם הוא כבר קיים בלהוסיף צריך להסיר אותו משם
+        if(mainController.getListRolesToAddToTheUser().contains(selectedItem))
+            mainController.getListRolesToAddToTheUser().remove(selectedItem);
     }
 
     public void initListener() {
@@ -98,9 +111,13 @@ public class AvailableAndSelectedRolesController {
         sourceListView.getItems().clear();
         targetListView.getItems().clear();
 
+        mainController.getListRolesToAddToTheUser().clear();
+        mainController.getListRolesToRemoveFromTheUser().clear();
+
         sourceListView.getItems().addAll(selectedAssignedRoles);
         targetListView.getItems().addAll(listOfRoles);
     }
+
     public void setMainController(UsersManagementController usersManagementController) {
         this.mainController=usersManagementController;
     }
@@ -111,5 +128,10 @@ public class AvailableAndSelectedRolesController {
 
     public ListView<String> getTargetListView() {
         return targetListView;
+    }
+
+    public void cleanData() {
+        sourceListView.getItems().clear();
+        targetListView.getItems().clear();
     }
 }

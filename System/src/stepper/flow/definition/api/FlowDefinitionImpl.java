@@ -384,8 +384,13 @@ public class FlowDefinitionImpl implements FlowDefinition {
 
             CheckTheCorrectnessOfCustomMapping(customMapping, originalNameSourceData, originalNameTargetData);
            // DataNecessity dataNecessityTargetData = stepInputs.get(customMapping.getTargetStep()).get(customMapping.getTargetData()).getNecessity();
-            this.stepInputs.get(customMapping.getTargetStep()).put(customMapping.getTargetData(), map.get(originalNameSourceData));
-          //  this.stepInputs.get(customMapping.getTargetStep()).get(customMapping.getTargetData()).setNecessity(dataNecessityTargetData);
+
+
+            //this.stepInputs.get(customMapping.getTargetStep()).put(customMapping.getTargetData(), map.get(originalNameSourceData));   זה האחרון
+            this.stepInputs.get(customMapping.getTargetStep()).put(originalNameTargetData, map.get(originalNameSourceData));
+
+
+            //  this.stepInputs.get(customMapping.getTargetStep()).get(customMapping.getTargetData()).setNecessity(dataNecessityTargetData);
         }
     }
     @Override

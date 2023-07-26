@@ -42,15 +42,12 @@ import java.util.UUID;
 public class FlowsExecutionScreenController {
 
     private clientComponents.mainScreen.body.BodyController mainBodyController;
-    //private SystemEngineInterface systemEngine;
-
     @FXML
     private GridPane flowExecutionScreenGridPane;
     @FXML
     private GridPane freeInputDetailsComponent;
     @FXML
     private clientComponents.screenTwo.freeInputs.FreeInputsController freeInputDetailsComponentController;
-
     @FXML
     private HBox detailsAnchorPane;
     @FXML
@@ -67,11 +64,8 @@ public class FlowsExecutionScreenController {
     @FXML private ProgressBar progressBar;
     private String flowName;
     private final SimpleStringProperty currentFlowNameProperty;
-
     private SimpleStringProperty executedFlowIDProperty;
-
     private SimpleBooleanProperty rerunButtonProperty;
-
     private ExecutedFlowDataController executedFlowDataController = new ExecutedFlowDataController();
 
     public FlowsExecutionScreenController() {
@@ -106,7 +100,9 @@ public class FlowsExecutionScreenController {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -125,12 +121,6 @@ public class FlowsExecutionScreenController {
                 }
             }
         });
-
-        /*DTOFullDetailsPastRun fullDetailsPastRun = systemEngine.getFlowExecutedDataDTO(flowId);
-        mainBodyController.getFlowExecutionScreenComponentController().getFreeInputDetailsComponentController().updateFreeInputForRerunExecution(fullDetailsPastRun.getInputs(), fullDetailsPastRun.getFlowName());
-        mainBodyController.openFlowExecutionTab();
-        rerunButtonProperty.set(true);*/
-
     }
 
 
@@ -139,15 +129,6 @@ public class FlowsExecutionScreenController {
         this.mainBodyController = mainBodyController;
         flowTreeViewComponentController.init(mainBodyController);
         executedFlowDataController.init(mainBodyController);
-    }
-
-    public void setSystemEngine(SystemEngineInterface engineManager) {
-        //this.systemEngine = engineManager;
-        //freeInputDetailsComponentController.setSystemEngine(systemEngine);
-        //flowTreeViewComponentController.setSystemEngine(systemEngine);
-        //flowContinuationComponentController.setSystemEngine(systemEngine);
-        //executedFlowDataController.setSystemEngine(systemEngine);
-
     }
 
     public void updateDetailsFlowExecution(String flowName, boolean isContinuation)
@@ -165,7 +146,9 @@ public class FlowsExecutionScreenController {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -183,8 +166,6 @@ public class FlowsExecutionScreenController {
             }
         });
 
-        //DTOFlowExecution dtoFlowExecution = systemEngine.readInputsJavaFX(flowName);
-        //freeInputDetailsComponentController.updateDetailsFreeInputs(dtoFlowExecution, isContinuation);
     }
     public void updateDetailsFlowRun(DTOFullDetailsPastRunWeb endOFlowExecution)
     {
@@ -193,16 +174,22 @@ public class FlowsExecutionScreenController {
 
     public void updateContinuationDetails(String flowName) {
 
+        UUID flowId = freeInputDetailsComponentController.getCurrFlowId();
+
         String finalUrl = HttpUrl
                 .parse(Constants.LIST_CONTINUATION_FLOW_NAME)
                 .newBuilder()
                 .addQueryParameter("flowName", flowName)
+                .addQueryParameter("flowUUID", flowId.toString())
                 .build()
                 .toString();
 
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -221,12 +208,6 @@ public class FlowsExecutionScreenController {
                 }
             }
         });
-
-        /*DTOListContinuationFlowName listContinuationFlowName = systemEngine.setListContinuationFlowName(flowName);
-        if(!listContinuationFlowName.getListContinuationFlowName().isEmpty()) {
-            flowContinuationComponent.setVisible(true);
-            flowContinuationComponentController.updateContinuationDetails(listContinuationFlowName);
-        }*/
     }
 
     public void setFlowName(String flowName) {
@@ -313,6 +294,9 @@ public class FlowsExecutionScreenController {
                         HttpClientUtil.runAsync(finalUrl, new Callback() {
                             @Override
                             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                                Platform.runLater(() -> {
+                                    handleFailure(e.getMessage());
+                                });
                             }
 
                             @Override
@@ -328,15 +312,8 @@ public class FlowsExecutionScreenController {
                                     }}finally {
                                 response.close();
                             }
-
-
                             }
                         });
-
-                        /*FlowExecutionResult result = systemEngine.getExecutedFlowsMap().get(freeInputDetailsComponentController.getCurrFlowId()).getFlowExecutionResult();
-                        if (!newValue && (result != null)) {
-                            flowExecutionScreenGridPane.setVisible(false);
-                        }*/
                     }
                 });
 
@@ -365,5 +342,12 @@ public class FlowsExecutionScreenController {
 
     public VBox getFlowContinuationComponent() {
         return flowContinuationComponent;
+    }
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
     }
 }

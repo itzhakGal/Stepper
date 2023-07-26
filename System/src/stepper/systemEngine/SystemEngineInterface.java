@@ -130,15 +130,17 @@ public interface SystemEngineInterface extends Serializable {
     DTOListFlowsDetails readFlowsDetailsWeb(User userName);
     void initialUserMapFlowsDefinition(DTOSavaNewInfoForUser dtoSavaNewInfoForUser);
     Map<User, FlowsDefinition> getUserFlowsDefinitionMap();
-
     void initialUserMapFlowsDefinitionFromUpdateRole(DTOSavaNewInfoForRole dtoSavaNewInfoForRole);
-
     List<DTOFullDetailsPastRunWeb> getFlowsExecutedDataDTOHistoryByUserName(String userName);
-
     String getAdminName();
     void setAdminName(String username);
-
     void addUser(String username, boolean isManager);
     List<String> getFlowsExecutedNameByUserName(User user);
+    void removeUserFromTheUserManager(String userName);
+    DTOListContinuationFlowName setListContinuationFlowNameWeb(String flowName, UUID uuidFlow);
+
+    FlowDefinition getFlowDefinitionByFlowNameAndOptionalFlowsWeb(FlowsDefinition optionalFlowsDefinition, String flowName);
+
+    void updateMandatoryInputJson(String labelValue, String value);
 }
 

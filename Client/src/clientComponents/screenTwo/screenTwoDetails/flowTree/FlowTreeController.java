@@ -21,7 +21,6 @@ import java.util.UUID;
 
 public class FlowTreeController {
     public FlowsExecutionScreenController mainFlowsExecutionScreenController;
-    //private SystemEngineInterface engineManager;
     @FXML private TreeView<String> flowTreeView;
     private BodyController bodyController;
     private final clientComponents.screenTwo.screenTwoDetails.flowTree.Logic logic;
@@ -76,11 +75,7 @@ public class FlowTreeController {
                         flowTreeView.setRoot(null);
                     }
                 });
-
-
         }
-
-
 
     private void fetchData() {
 

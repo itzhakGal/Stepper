@@ -34,7 +34,7 @@ public class RolesListRefresher extends TimerTask {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(() -> {
-                    handleFailure(e.getMessage());
+                    handleFailure((e.getMessage()));
                 });
             }
 

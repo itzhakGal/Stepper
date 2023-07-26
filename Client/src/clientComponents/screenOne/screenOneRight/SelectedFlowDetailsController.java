@@ -30,7 +30,6 @@ import java.io.IOException;
 
 public class SelectedFlowDetailsController {
     private clientComponents.screenOne.flowDefinitionScreen.FlowDefinitionScreenController mainFlowDefinitionScreenController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private GridPane selectedFlowDetailsGridPane;
     @FXML
@@ -52,12 +51,9 @@ public class SelectedFlowDetailsController {
     private GridPane outputGridPaneComponent;
     @FXML
     private OutputDetailsController outputGridPaneComponentController;
-
     @FXML
     private Button executeFlowButton;
-
     private SimpleBooleanProperty isExecuteFlowButtonClicked;
-
     @FXML
     public void executeFlowButtonAction(Event event)
     {
@@ -79,15 +75,8 @@ public class SelectedFlowDetailsController {
     public SelectedFlowDetailsController() {
         isExecuteFlowButtonClicked = new SimpleBooleanProperty(false);
     }
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //this.listStepAccordionComponentController.setSystemEngine(systemEngine);
-        //this.freeInputGridPaneComponentController.setSystemEngine(systemEngine);
-        //this.outputGridPaneComponentController.setSystemEngine(systemEngine);
-    }
     public void setMainController(FlowDefinitionScreenController mainFlowDefinitionScreenController) {
         this.mainFlowDefinitionScreenController = mainFlowDefinitionScreenController;
-
     }
     public void setFlowSelectedDetails(String flowName)
     {

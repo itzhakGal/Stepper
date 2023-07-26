@@ -19,4 +19,6 @@ public interface DataInFlow extends Serializable {
     void setFinalName(String finalName);
     void setNecessity(DataNecessity necessity);
     boolean isFile();
+
+    String getEnumeratorType();
 }

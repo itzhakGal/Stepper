@@ -25,10 +25,7 @@ import static util.Constants.GSON_INSTANCE;
 
 public class HeaderDataRefresher extends TimerTask {
     private final Consumer<User> usersDataConsumer;
-
     private final String userName;
-    //private final BooleanProperty shouldUpdate;
-
 
     public HeaderDataRefresher(String userName, Consumer<User> userDataConsumer) {
         //this.shouldUpdate = shouldUpdate;

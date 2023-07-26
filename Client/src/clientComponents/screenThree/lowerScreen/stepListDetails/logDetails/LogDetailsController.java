@@ -11,8 +11,6 @@ import stepper.systemEngine.SystemEngineInterface;
 
 public class LogDetailsController {
 
-    //private SystemEngineInterface systemEngine;
-
     private clientComponents.screenThree.lowerScreen.stepListDetails.StepListDetailsController mainStepListDetailsController;
     @FXML
     private TextArea logDetailsTextArea;
@@ -41,8 +39,5 @@ public class LogDetailsController {
     {
         logDetailsTextAreaProperty.set(log.getLog());
         logTimeLabelProperty.set(log.getLogTimeAsString());
-    }
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
     }
 }

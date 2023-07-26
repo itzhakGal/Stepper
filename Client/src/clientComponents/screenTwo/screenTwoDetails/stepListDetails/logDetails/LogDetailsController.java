@@ -9,9 +9,6 @@ import stepper.systemEngine.SystemEngineInterface;
 import clientComponents.screenTwo.screenTwoDetails.stepListDetails.StepListDetailsController;
 
 public class LogDetailsController {
-
-    //private SystemEngineInterface systemEngine;
-
     private StepListDetailsController mainStepListDetailsController;
     @FXML
     private TextArea logDetailsTextArea;
@@ -40,8 +37,5 @@ public class LogDetailsController {
     {
         logDetailsTextAreaProperty.set(log.getLog());
         logTimeLabelProperty.set(log.getLogTimeAsString());
-    }
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
     }
 }

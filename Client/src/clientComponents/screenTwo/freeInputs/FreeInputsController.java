@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -32,7 +33,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FreeInputsController {
 
     private FlowsExecutionScreenController mainFlowsExecutionScreenController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private GridPane freeInputsGridPane;
     @FXML
@@ -40,19 +40,12 @@ public class FreeInputsController {
     private final SimpleBooleanProperty startButtonClickProperty = new SimpleBooleanProperty(false);
     private UUID flowIdRerun;
     private UUID currFlowId;
-
-
     @FXML
     public void initialize() {
-
     }
 
     public void setMainController(FlowsExecutionScreenController mainFlowsExecutionScreenController) {
         this.mainFlowsExecutionScreenController = mainFlowsExecutionScreenController;
-    }
-
-    public void setSystemEngine(SystemEngineInterface engineManager) {
-        //this.systemEngine = engineManager;
     }
 
     private IntWrapper createTitleFreeInputs(String text, String value, IntWrapper row) {
@@ -60,7 +53,6 @@ public class FreeInputsController {
         freeInputsGridPane.setMargin(freeInputsLabel, new javafx.geometry.Insets(10, 10, 10, 10));
         freeInputsLabel.setStyle("-fx-font-family: Georgia; -fx-text-fill: #5c88be;" + value);
         freeInputsGridPane.addRow(row.getValue(), freeInputsLabel);
-        //row++;
         row.setValue(row.getValue() + 1);
         return row;
     }
@@ -101,7 +93,9 @@ public class FreeInputsController {
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -119,26 +113,21 @@ public class FreeInputsController {
             }
         });
 
-        //this.flowIdRerun = systemEngine.updateOptionalExecution(dtoFlowExecution.getFlowName(), isContinuation);
-        //systemEngine.removeInitialFreeInputFromDTO(dtoFlowExecution);
     }
     private void updateDetailsFreeInputsWab(DTOFlowExecution dtoFlowExecution, IntWrapper row, IntWrapper amountOfMandatoryInputs, IntWrapper amountOfOptionalInput, IntWrapper countAmountUpdateData, UUID flowIdRerun){
 
         mainFlowsExecutionScreenController.setExecutedFlowID(flowIdRerun);
         row = createTitleFreeInputs("Free Inputs:", "-fx-font-weight: bold; -fx-font-size: 20", row);
         row = createTitleFreeInputs("Mandatory Inputs:", "-fx-font-weight: bold; -fx-font-size: 16", row);
-        //systemEngine.removeInitialFreeInputFromDTO(dtoFlowExecution);
 
         for(DTOInputExecution inputExecution : dtoFlowExecution.getInputsExecution())
         {
             if(inputExecution.getNecessity() == DataNecessity.MANDATORY) {
                 row = getRow(row, inputExecution, dtoFlowExecution.getFlowName(), countAmountUpdateData);
 
-                //amountOfMandatoryInputs++;
                 amountOfMandatoryInputs.setValue(amountOfMandatoryInputs.getValue() + 1);
             }
             else {
-                //amountOfOptionalInput++;
                 amountOfOptionalInput.setValue(amountOfOptionalInput.getValue() + 1);
             }
         }
@@ -165,7 +154,19 @@ public class FreeInputsController {
             GridPane content;
 
             if (inputExecution.getType().equals("EnumeratorData"))
-                fxmlLoader = new FXMLLoader(getClass().getResource("freeInputDetails/freeInputEnumerator/freeInputEnumerator.fxml"));
+            {
+                if(inputExecution.getEnumeratorType().equals("Zip"))
+                {
+                    fxmlLoader = new FXMLLoader(getClass().getResource("freeInputDetails/freeInputEnumerator/freeInputEnumerator.fxml"));
+                }
+                else if(inputExecution.getEnumeratorType().equals("Protocol")){
+                    fxmlLoader = new FXMLLoader(getClass().getResource("freeInputDetails/freeInputEnumeratorProtocol/freeInputEnumerator.fxml"));
+                }
+                else {
+                    fxmlLoader = new FXMLLoader(getClass().getResource("freeInputDetails/freeInputEnumeratorMethod/freeInputEnumerator.fxml"));
+                }
+            }
+
             else if (inputExecution.getType().equals("Integer"))
                 fxmlLoader = new FXMLLoader(getClass().getResource("freeInputDetails/freeInputNumber/freeInputNumber.fxml"));
             else
@@ -183,16 +184,6 @@ public class FreeInputsController {
             controller.updateDetails(inputExecution);
             controller.setMainController(this);
 
-            //controller.setSystemEngine(systemEngine);
-
-            /*DataInFlowExecution freeInputDataInFlow = systemEngine.findValueOfFreeInput(flowName,inputExecution.getFinalName());
-            if(freeInputDataInFlow.getItem() != null)
-            {
-                controller.setFreeInput(freeInputDataInFlow.getItem());
-                countAmountUpdateData.setValue(countAmountUpdateData.getValue() + 1);
-            }*/
-
-
             String finalUrl = HttpUrl
                     .parse(Constants.FIND_VALUE_OF_FREE_INPUT)
                     .newBuilder()
@@ -205,33 +196,10 @@ public class FreeInputsController {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
                     Platform.runLater(() -> {
-                        createTitleFreeInputs("getRow", "-fx-font-weight: bold; -fx-font-size: 12", row);
-                    });
-
+                    handleFailure(e.getMessage());
+                });
                 }
-                // יום רביעי עם חריגות
-                /*@Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    try {
-                        if (response.isSuccessful()) {
-                            String responseBody = response.body().string(); // Read the response body once and store it in a variable
 
-                            Platform.runLater(() -> {
-                                //DTODataInFlowExecution freeInputDataInFlow = new Gson().fromJson(responseBody, DTODataInFlowExecution.class);
-                                DataInFlowExecution freeInputDataInFlow = gson.fromJson(responseBody, DataInFlowExecution.class);
-
-                                if (freeInputDataInFlow.getItem() != null) {
-                                    controller.setFreeInput(freeInputDataInFlow.getItem());
-                                    countAmountUpdateData.setValue(countAmountUpdateData.getValue() + 1);
-                                }
-
-                                //freeInputsGridPane.addRow(row.getValue(), content);
-                                //row.setValue(row.getValue() + 1);
-                            });
-                        }}finally {
-                        response.close();
-                    }
-                }*/
 
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -249,7 +217,13 @@ public class FreeInputsController {
                             }
 
                         });
-                    }}finally {
+                    }
+                    else{
+                        Platform.runLater(() -> {
+                            createTitleFreeInputs("getRow", "-fx-font-weight: bold; -fx-font-size: 12", row);
+                        });
+                    }
+                    }finally {
                         response.close();
                     }
                 }
@@ -301,7 +275,6 @@ public class FreeInputsController {
             }
         }
     }
-
     private void handleButtonClick1(int amountOfMandatoryInputs, DTOFlowExecution dtoFlowExecution) {
         CollectionInputs controller;
 
@@ -327,7 +300,7 @@ public class FreeInputsController {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
                             Platform.runLater(() -> {
-                                    createTitleFreeInputs("The input value is not an int", "-fx-font-weight: bold; -fx-font-size: 12", row);
+                                handleFailure(e.getMessage());
                             });
                         }
 
@@ -341,6 +314,11 @@ public class FreeInputsController {
                                         mainFlowsExecutionScreenController.getRerunButtonProperty().set(false);
                                         mainFlowsExecutionScreenController.getProgressBar().setVisible(true);
                                     });
+                                }
+                                else{
+                                    Platform.runLater(() -> {
+                                        createTitleFreeInputs("The input value is not an int", "-fx-font-weight: bold; -fx-font-size: 12", row);
+                                    });
                                 }} finally {
                                 response.close();
                             }
@@ -348,22 +326,6 @@ public class FreeInputsController {
                         }
                     });
 
-                    /*if (type.equals("Integer")) {
-                        try {
-                            // Try to parse the value as an integer
-                            int intValue = Integer.parseInt(value);
-                            //systemEngine.updateMandatoryInput(labelValue, intValue);
-                        } catch (NumberFormatException e) {
-                            // Throw a NumberFormatException with an appropriate error message if the value is not an integer
-                             createTitleFreeInputs("The input value is not an int", "-fx-font-weight: bold; -fx-font-size: 12", row);
-                           // throw new NumberFormatException("The input value is not an int.");
-                        }
-                    } else  if (type.equals("EnumeratorData"))
-                    {
-                        //systemEngine.updateMandatoryInputEnumerator(labelValue, value);
-                    }else {
-                        //systemEngine.updateMandatoryInput(labelValue, value);
-                    }*/
                 }
             }
         }
@@ -385,6 +347,7 @@ public class FreeInputsController {
                 listDtoMandatoryInput.add(new DTOMandatoryInputsWeb(type, labelValue, value));
             }
         }
+
         ListDTOMandatoryInputsWeb listDTOMandatoryInputsWeb = new ListDTOMandatoryInputsWeb(listDtoMandatoryInput);
 
 
@@ -399,8 +362,9 @@ public class FreeInputsController {
         HttpClientUtil.runAsyncPost(finalUrl, body, new Callback(){
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -432,6 +396,9 @@ public class FreeInputsController {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -451,13 +418,6 @@ public class FreeInputsController {
             }
 
         });
-
-
-        /*DTOFullDetailsPastRun fullDetails = systemEngine.flowActivationAndExecutionJavaFX(dtoFlowExecution.getFlowName());
-        currFlowId = fullDetails.getUniqueId();
-        runButton.setDisable(true);
-        mainFlowsExecutionScreenController.updateDetailsFlowRun(fullDetails);
-        startButtonClickProperty.set(true);*/
     }
     public SimpleBooleanProperty getStartButtonClickProperty() {
         return this.startButtonClickProperty;
@@ -482,6 +442,9 @@ public class FreeInputsController {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -506,19 +469,6 @@ public class FreeInputsController {
                 }
             }
         });
-
-
-        /*DTOFlowExecution dtoFlowExecution = systemEngine.readInputsJavaFX(flowName);
-        int amountOfMandatoryInputs = dtoFlowExecution.getAmountOfMandatoryInputs();
-        for (Node node : freeInputsGridPane.getChildren()) {
-            if (node instanceof GridPane) {
-                GridPane childGridPane = (GridPane) node;
-                CollectionInputs controller = (CollectionInputs) childGridPane.getProperties().get("controller");
-                DTOInputFlowPast inputFlowPast = findDTOInputFlowPastByName(controller.getName(), inputs);
-                if (inputFlowPast.getValue() != null)
-                    controller.setFreeInput(inputFlowPast.getValue());
-            }
-        }*/
     }
 
     private DTOInputFlowPastWeb findDTOInputFlowPastByName(String name, List<DTOInputFlowPastWeb> inputs) {
@@ -538,4 +488,11 @@ public class FreeInputsController {
         return currFlowId;
     }
 
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
+    }
 }

@@ -1,6 +1,4 @@
 package clientComponents.screenTwo.continuation;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -8,9 +6,9 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -24,14 +22,12 @@ import clientComponents.screenTwo.FlowsExecutionScreenController;
 import util.Constants;
 import util.http.HttpClientUtil;
 import utilsDesktopApp.DTOListContinuationFlowName;
-
 import java.io.IOException;
 import java.util.List;
 
 public class ContinuationController {
 
     private FlowsExecutionScreenController mainFlowsExecutionScreenController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private Button continueToFlowButton;
     @FXML
@@ -75,6 +71,9 @@ public class ContinuationController {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    handleFailure(e.getMessage());
+                });
             }
 
             @Override
@@ -91,21 +90,10 @@ public class ContinuationController {
             }
         });
 
-       /*systemEngine.continuationToOtherFlow(mainFlowsExecutionScreenController.getFreeInputDetailsComponentController().getFlowIdRerun(), sourceFlowName, targetFlowName);
-       mainFlowsExecutionScreenController.updateDetailsFlowExecution(targetFlowName, true);
-       mainFlowsExecutionScreenController.setVisibleDetails(false);
-       mainFlowsExecutionScreenController.setVisibleContinuation();
-       continueToFlowButton.setVisible(false);
-       continuationButtonPressed.set(true);*/
-
     }
 
     public void setMainController(FlowsExecutionScreenController mainFlowsExecutionScreenController) {
         this.mainFlowsExecutionScreenController = mainFlowsExecutionScreenController;
-    }
-
-    public void setSystemEngine(SystemEngineInterface engineManager) {
-        //this.systemEngine = engineManager;
     }
 
     public void updateContinuationDetails(DTOListContinuationFlowName listContinuationFlowName) {
@@ -167,6 +155,12 @@ public class ContinuationController {
                     }
                 });
     }
-
+    public void handleFailure(String errorMessage){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error In The Server");
+        alert.setContentText(errorMessage);
+        alert.setWidth(300);
+        alert.show();
+    }
 
 }

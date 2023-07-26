@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import stepper.systemEngine.SystemEngineInterface;
 import utilWebApp.DTOFullDetailsPastRunWeb;
-import utils.DTOFullDetailsPastRun;
 import utils.ServletUtils;
 
 import java.io.IOException;
@@ -19,6 +18,9 @@ public class FlowExecutionServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
         String flowName = req.getParameter("flowName");
+
+        if(flowName == null)
+            return;
 
         SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
         Gson gson = new Gson();

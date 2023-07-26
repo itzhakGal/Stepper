@@ -19,6 +19,10 @@ public class RerunExecutionServlet extends HttpServlet {
 
         String flowName = req.getParameter("flowName");
 
+        if (flowName == null) {
+            return;
+        }
+
         SystemEngineInterface systemEngine = ServletUtils.getSystemManager(getServletContext());
         Gson gson = new Gson();
 

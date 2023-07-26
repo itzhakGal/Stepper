@@ -17,7 +17,7 @@
          </columnConstraints>
          <rowConstraints>
             <RowConstraints vgrow="ALWAYS" />
-            <RowConstraints vgrow="ALWAYS" />
+            <RowConstraints prefHeight="80.0" vgrow="ALWAYS" />
          </rowConstraints>
          <children>
             <Label contentDisplay="TOP" minWidth="110.0" style="-fx-font-weight: bold;" text="Type:" textOverrun="CLIP" wrapText="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">

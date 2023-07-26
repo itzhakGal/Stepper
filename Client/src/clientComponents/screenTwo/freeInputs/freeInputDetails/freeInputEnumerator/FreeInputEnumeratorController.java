@@ -16,7 +16,6 @@ import java.util.List;
 
 public class FreeInputEnumeratorController implements CollectionInputs {
     private FreeInputsController mainFreeInputsController;
-    //private SystemEngineInterface systemEngine;
 
     @FXML
     private Label userStringLabel;

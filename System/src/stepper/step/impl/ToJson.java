@@ -1,8 +1,6 @@
 package stepper.step.impl;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import stepper.dataDefinition.impl.DataDefinitionRegistry;
 import stepper.dataDefinition.impl.Enumerator.EnumeratorData;
 import stepper.dataDefinition.impl.json.JsonData;
@@ -21,23 +19,10 @@ public class ToJson extends AbstractStepDefinition {
     public ToJson() {
         super("To Json", true);
         // step inputs
-        addInput(new DataDefinitionDeclarationImpl("CONTENT", DataNecessity.MANDATORY, "Content", DataDefinitionRegistry.STRING, false));
+        addInput(new DataDefinitionDeclarationImpl("CONTENT", DataNecessity.MANDATORY, "Content", DataDefinitionRegistry.STRING, false,""));
 
         //step outputs
-        addOutput(new DataDefinitionDeclarationImpl("JSON", DataNecessity.NA, "Json representation", DataDefinitionRegistry.JSON, false));
-    }
-
-    public static JsonObject convertToJson(String text) {
-        Gson gson = new Gson();
-        JsonObject jsonObject = null;
-
-        try {
-            jsonObject = gson.fromJson(text, JsonObject.class);
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        }
-
-        return jsonObject;
+        addOutput(new DataDefinitionDeclarationImpl("JSON", DataNecessity.NA, "Json representation", DataDefinitionRegistry.JSON, false,""));
     }
 
     @Override
@@ -45,25 +30,23 @@ public class ToJson extends AbstractStepDefinition {
 
         String CONTENT = context.getDataValue("CONTENT", String.class, this);
         JsonData JSON = new JsonData();
-        //לא החזרתי את הטיפוס המתאים לשאול את אביעד!!
 
         StepResult stepResult;
         long startTime = System.nanoTime();
         LocalTime localStartTime = LocalTime.now();
 
+        Gson gson = new Gson();
 
-        context.storeLogsData("Content is JSON string. Converting it to json");
+        try {
+            gson.fromJson(CONTENT, Object.class);
 
-        JsonObject result = convertToJson(CONTENT);
-        if (result != null) {
+            context.updateLogDataAndSummeryLine("Content is JSON string. Converting to json...");
+            JSON.setJson(gson.fromJson((String) CONTENT, JsonElement.class));
             stepResult = StepResult.SUCCESS;
-            context.updateLogDataAndSummeryLine("The conversion was done successfully");
-        } else {
-            String errorMessage = "Content is not a valid JSON representation:";
+        } catch (Exception e) {
+            context.updateLogDataAndSummeryLine("Content is not a valid JSON representation");
             stepResult = StepResult.FAILURE;
-            context.updateLogDataAndSummeryLine(errorMessage);
         }
-
 
         LocalTime localEndTime = LocalTime.now();
         context.storeTotalTimeStep(localStartTime, localEndTime, startTime);

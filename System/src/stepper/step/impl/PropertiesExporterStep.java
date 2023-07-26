@@ -20,10 +20,10 @@ public class PropertiesExporterStep extends AbstractStepDefinition {
         super("Properties Exporter", true);
 
         // step inputs
-        addInput(new DataDefinitionDeclarationImpl("SOURCE", DataNecessity.MANDATORY, "Source data", DataDefinitionRegistry.RELATION, false));
+        addInput(new DataDefinitionDeclarationImpl("SOURCE", DataNecessity.MANDATORY, "Source data", DataDefinitionRegistry.RELATION, false,""));
 
         // step outputs
-        addOutput(new DataDefinitionDeclarationImpl("RESULT", DataNecessity.NA, "Properties export result", DataDefinitionRegistry.STRING, false));
+        addOutput(new DataDefinitionDeclarationImpl("RESULT", DataNecessity.NA, "Properties export result", DataDefinitionRegistry.STRING, false,""));
     }
 
 

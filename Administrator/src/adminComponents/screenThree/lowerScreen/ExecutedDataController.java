@@ -29,7 +29,6 @@ import java.util.List;
 
 public class ExecutedDataController {
 
-
     private FlowExecutionHistoryController flowExecutionHistoryController;
 
     public void init(FlowExecutionHistoryController flowExecutionHistoryController) {

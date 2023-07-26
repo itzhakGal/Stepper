@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import stepper.dataDefinition.impl.fileList.FileListData;
 import stepper.dataDefinition.impl.list.ListData;
@@ -21,7 +22,6 @@ import java.util.*;
 public class OutputBodyController {
 
     private clientComponents.screenTwo.screenTwoDetails.flowExecuteDetails.outputDetailsList.OutputDetailsListController mainOutputDetailsListController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private Label type;
     @FXML
@@ -40,9 +40,6 @@ public class OutputBodyController {
 
     public void setMainController(OutputDetailsListController mainOutputDetailsListController) {
         this.mainOutputDetailsListController = mainOutputDetailsListController;
-    }
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
     }
 
     public void setFlowData(DTOOutPutFlowPastWeb output) {
@@ -194,17 +191,15 @@ public class OutputBodyController {
     }
 
     private void createStringContent(String content) {
-        Label label = new Label(content);
-        label.setPadding(new Insets(10, 0, 0, 0)); // Add 10 pixels of padding from the top
+        TextArea textArea = new TextArea(content);
+        textArea.setWrapText(true);
+        textArea.setEditable(false);
+        AnchorPane.setTopAnchor(textArea, 0.0);
+        AnchorPane.setLeftAnchor(textArea, 0.0);
+        AnchorPane.setBottomAnchor(textArea, 0.0);
+        AnchorPane.setRightAnchor(textArea, 0.0);
 
-        AnchorPane.setTopAnchor(label, 0.0); // Anchor the label to the top of the AnchorPane
-        AnchorPane.setLeftAnchor(label, 0.0); // Align the label to the left of the AnchorPane
-
-        outputContentAnchorPane.getChildren().add(label);
+        outputContentAnchorPane.getChildren().add(textArea);
     }
 
-    public void setOutputData(DTOOutputDetailsJAVAFX output) {
-        typeProperty.set(output.getType());
-        // להשלים תוכן
-    }
 }

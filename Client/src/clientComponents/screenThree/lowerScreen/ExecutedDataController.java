@@ -15,34 +15,21 @@ import okhttp3.HttpUrl;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 import stepper.step.api.StepResult;
-import stepper.systemEngine.SystemEngineInterface;
 import clientComponents.screenThree.lowerScreen.stepListDetails.StepListDetailsController;
 import util.Constants;
 import util.http.HttpClientUtil;
 import utilWebApp.DTOFullDetailsPastRunWeb;
 import utilWebApp.DTOStepFlowPastWeb;
 import utils.DTOFullDetailsPastRun;
-import utils.DTOStepFlowPast;
-import utilsDesktopApp.DTOListFlowsDetails;
-
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 public class ExecutedDataController {
-
-    //private SystemEngineInterface systemEngine;
 
     private clientComponents.screenThree.flowExecutionHistory.FlowExecutionHistoryController flowExecutionHistoryController;
 
     public void init(FlowExecutionHistoryController flowExecutionHistoryController) {
         this.flowExecutionHistoryController = flowExecutionHistoryController;
-
-     /*   bodyController.getFlowExecutionScreenComponentController().getContinuation().getContinuationButtonPressed()
-                .addListener((observable, oldValue, newValue) -> {
-                    if (newValue)
-                        bodyController.getFlowExecutionScreenComponentController().getDetailsAnchorPane().getChildren().clear();
-                });*/
 
         this.flowExecutionHistoryController.getFlowTreeComponentController().getSelectedItem()
                 .addListener((observable, oldValue, newValue) -> {
@@ -75,7 +62,6 @@ public class ExecutedDataController {
         String finalUrl = HttpUrl
                 .parse(Constants.FLOW_EXECUTION_TASK)
                 .newBuilder()
-                // .addQueryParameter("flowUUID", this.flowExecutionHistoryController.getTableFlowExecutionController().getChosenFlowIdProperty().getValue()
                 .addQueryParameter("flowId", this.flowExecutionHistoryController.getTableFlowExecutionController().getChosenFlowIdProperty().getValue())
                 .build()
                 .toString();
@@ -151,10 +137,6 @@ public class ExecutedDataController {
                 return stepDetails;
         }
         return null;
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
     }
     public void handleFailure(String errorMessage){
         Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -19,7 +19,6 @@ import java.io.IOException;
 public class InputDetailsListController {
 
     private clientComponents.screenThree.lowerScreen.flowExecuteDetails.FlowExecuteDetailsController maimFlowExecuteDetailsController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private HBox inputDetailsComponent;
     @FXML
@@ -32,11 +31,6 @@ public class InputDetailsListController {
         if (inputDetailsComponentController != null) {
             inputDetailsComponentController.setMainController(this);
         }
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //inputDetailsComponentController.setSystemEngine(systemEngine);
     }
 
     public void setMainController(FlowExecuteDetailsController maimFlowExecuteDetailsController) {

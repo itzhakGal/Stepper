@@ -10,9 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import stepper.step.api.LoggerImpl;
-import stepper.systemEngine.SystemEngineInterface;
 import utilWebApp.DTOStepFlowPastWeb;
-import utils.DTOStepFlowPast;
 
 import java.io.IOException;
 
@@ -20,7 +18,6 @@ import java.io.IOException;
 public class StepListDetailsController {
 
    private FlowExecutionHistoryController mainFlowExecutionHistoryController;
-    //private SystemEngineInterface systemEngine;
     @FXML
     private BorderPane outputListComponent;
     @FXML
@@ -46,11 +43,6 @@ public class StepListDetailsController {
         this.mainFlowExecutionHistoryController = mainFlowExecutionHistoryController;
     }
 
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //outputListComponentController.setSystemEngine(systemEngine);
-        //inputListComponentController.setSystemEngine(systemEngine);
-    }
 
     public void updateDetailsFlowRun(DTOStepFlowPastWeb stepDetails) {
 

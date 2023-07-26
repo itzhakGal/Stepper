@@ -1,6 +1,5 @@
 package adminComponents.screenThree.lowerScreen.flowExecuteDetails.inputDetailsList;
 
-
 import adminComponents.screenThree.lowerScreen.flowExecuteDetails.inputDetailsList.inputBody.InputBodyController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,15 +10,14 @@ import stepper.systemEngine.SystemEngineInterface;
 import adminComponents.screenThree.lowerScreen.flowExecuteDetails.FlowExecuteDetailsController;
 import utilWebApp.DTOFullDetailsPastRunWeb;
 import utilWebApp.DTOInputFlowPastWeb;
-import utils.DTOFullDetailsPastRun;
-import utils.DTOInputFlowPast;
+
 
 import java.io.IOException;
 
 public class InputDetailsListController {
 
     private FlowExecuteDetailsController maimFlowExecuteDetailsController;
-    //private SystemEngineInterface systemEngine;
+
     @FXML
     private HBox inputDetailsComponent;
     @FXML
@@ -32,11 +30,6 @@ public class InputDetailsListController {
         if (inputDetailsComponentController != null) {
             inputDetailsComponentController.setMainController(this);
         }
-    }
-
-    public void setSystemEngine(SystemEngineInterface systemEngine) {
-        //this.systemEngine = systemEngine;
-        //inputDetailsComponentController.setSystemEngine(systemEngine);
     }
 
     public void setMainController(FlowExecuteDetailsController maimFlowExecuteDetailsController) {
