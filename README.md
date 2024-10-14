@@ -25,22 +25,23 @@
 ## 📸 Screenshots
 
 ### Admin Panel
-![Admin Panel](./screenshots/Admin-Panel.png)
+<img src="./screenshots/Admin-Panel.png" alt="Admin Panel" width="600">
 
 ### User Details & Flow Management
-![User Details](./screenshots/User-Details.png)
+<img src="./screenshots/User-Details.png" alt="User Details" width="600">
 
 ### Flow Execution - Client Side
-![Flow Execution Client](./screenshots/Flow-Execution-Client.png)
+<img src="./screenshots/Flow-Execution-Client.png" alt="Flow Execution Client" width="600">
 
 ### Execution History - Admin Side
-![Execution History Admin](./screenshots/Execution-History-Admin.png)
+<img src="./screenshots/Execution-History-Admin.png" alt="Execution History Admin" width="600">
 
 ### Execution History - Client Side
-![Execution History Client](./screenshots/Execution-History-Client.png)
+<img src="./screenshots/Execution-History-Client.png" alt="Execution History Client" width="600">
 
 ### Statistics Dashboard
-![Statistics Dashboard](./screenshots/Statistics-Dashboard.png)
+<img src="./screenshots/Statistics-Dashboard.png" alt="Statistics Dashboard" width="600">
+
 
 ---
 
