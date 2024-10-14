@@ -31,16 +31,16 @@
 <img src="./screenshots/User-Details.png" alt="User Details" width="600">
 
 ### Flow Execution - Client Side
-<img src="./screenshots/Flow-Execution-Client.png" alt="Flow Execution Client" width="600">
+<img src="./screenshots/Flow-Execution-Client.png" alt="Flow Execution Client" width="800">
 
 ### Execution History - Admin Side
-<img src="./screenshots/Execution-History-Admin.png" alt="Execution History Admin" width="600">
+<img src="./screenshots/Execution-History-Admin.png" alt="Execution History Admin" width="800">
 
 ### Execution History - Client Side
-<img src="./screenshots/Execution-History-Client.png" alt="Execution History Client" width="600">
+<img src="./screenshots/Execution-History-Client.png" alt="Execution History Client" width="800">
 
 ### Statistics Dashboard
-<img src="./screenshots/Statistics-Dashboard.png" alt="Statistics Dashboard" width="600">
+<img src="./screenshots/Statistics-Dashboard.png" alt="Statistics Dashboard" width="800">
 
 
 ---
