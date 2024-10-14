@@ -25,10 +25,10 @@
 ## 📸 Screenshots
 
 ### Admin Panel
-<img src="./screenshots/Admin-Panel.png" alt="Admin Panel" width="600">
+<img src="./screenshots/Admin-Panel.png" alt="Admin Panel" width="800">
 
 ### User Details & Flow Management
-<img src="./screenshots/User-Details.png" alt="User Details" width="600">
+<img src="./screenshots/User-Details.png" alt="User Details" width="800">
 
 ### Flow Execution - Client Side
 <img src="./screenshots/Flow-Execution-Client.png" alt="Flow Execution Client" width="800">
